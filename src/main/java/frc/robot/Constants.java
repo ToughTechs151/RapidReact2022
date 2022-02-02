@@ -15,11 +15,14 @@ package frc.robot;
 public final class Constants {
     // Scale Factor
     public static final int SCALED_DRIVE = 2;
-    // PWM Ports
-    public static int FRONT_LEFT_MOTOR = 3;
-    public static int FRONT_RIGHT_MOTOR = 1;
-    public static int REAR_LEFT_MOTOR = 4;
+    // CAN ID
+    public static int FRONT_LEFT_MOTOR = 4;
+    public static int FRONT_RIGHT_MOTOR = 3;
+    public static int REAR_LEFT_MOTOR = 1;
     public static int REAR_RIGHT_MOTOR = 2;
+
+    public static int INTAKE_MOTOR = 6;
+    public static int ARM_MOTOR = 6;
 
     // OI ports
     public static int DRIVER_OI = 0;

@@ -15,6 +15,7 @@ public class DriveWithJoystickCommand extends CommandBase {
   private DriverOI driverOI_ = null;  
   /** Creates a new DriveWithJoystickCommand. */
   public DriveWithJoystickCommand(RobotContainer robotcontainer, DriverOI driverOI) {
+    driverOI_ = driverOI;
     chassisSubsystem_ = robotcontainer.getChassisSubsystem();
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(chassisSubsystem_);
