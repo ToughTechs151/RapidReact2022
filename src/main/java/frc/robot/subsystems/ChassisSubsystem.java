@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -80,16 +81,20 @@ public class ChassisSubsystem extends SubsystemBase {
   private static double softwareDeadband = 0.05;
 
   //arcade drive constant
-private double turnGain = 0.75;
+  private double turnGain = 0.75;
   
   /**
    * The direction which is "forward"; 1 represents the hatch side and -1 represents the cargo side.
    */
-  private int dir = 0;
+  private int dir = Constants.REVERSE;
 
   /** Creates a new ChassisSubsystem. */
   public ChassisSubsystem() {
     rightMotors_.setInverted(true);
+    frontLeftMotor_.setIdleMode(IdleMode.kCoast);
+    frontRightMotor_.setIdleMode(IdleMode.kCoast);
+    rearLeftMotor_.setIdleMode(IdleMode.kCoast);
+    rearRightMotor_.setIdleMode(IdleMode.kCoast);
 
     frontLeftEncoder_ = frontLeftMotor_.getEncoder();
     frontRightEncoder_ = frontRightMotor_.getEncoder();
@@ -113,15 +118,15 @@ private double turnGain = 0.75;
 
   public void drive(DriverOI driverOI, int scale) {
     speedMultiplier = driverOI.getJoystick().getRawButton(Constants.RIGHT_BUMPER) ? crawl : normal;
-    dir = driverOI.getJoystick().getRawButton(Constants.LEFT_BUMPER) ? 1 : -1;
+    dir = driverOI.getJoystick().getRawButton(Constants.LEFT_BUMPER) ? Constants.FORWARD : Constants.REVERSE;
 
     double rightVal = 0;
     double leftVal = 0;
 
-    if(dir == -1) {
+    if(dir == Constants.REVERSE) {
         rightVal = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.RIGHT_JOYSTICK_Y), scale, RobotSide.RIGHT);
         leftVal = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.LEFT_JOYSTICK_Y), scale, RobotSide.LEFT);
-    } else if(dir == -1) {
+    } else if(dir == Constants.FORWARD) {
         rightVal = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.LEFT_JOYSTICK_Y), scale, RobotSide.RIGHT);
         leftVal = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.RIGHT_JOYSTICK_Y), scale, RobotSide.LEFT);
     }

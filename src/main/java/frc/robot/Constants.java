@@ -15,6 +15,11 @@ package frc.robot;
 public final class Constants {
     // Scale Factor
     public static final int SCALED_DRIVE = 2;
+
+    // Directions
+    public static final int FORWARD = 1;
+    public static final int REVERSE = -1;
+
     // CAN ID
     public static int FRONT_LEFT_MOTOR = 4;
     public static int FRONT_RIGHT_MOTOR = 3;

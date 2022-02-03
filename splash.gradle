@@ -53,8 +53,12 @@ task versionTxt()  {
         new File("$resourcesDir/commit.txt").text = getGitHash()
         new File("$resourcesDir/changes.txt").text = getGitFilesChanged()
         new File("$resourcesDir/remote.txt").text = getGitRemote()
-        new File("$resourcesDir/buildtime.txt").text =
-          new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date())
+
+        String hostname = System.getenv("COMPUTERNAME")
+        String projectDir = "Loal hostname: $hostname " + "and project folder: $projectDir\n"
+
+        new File("$resourcesDir/buildtime.txt").text = projectDir +
+            "Build Date Time: " + new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date())
     }
 }
 
@@ -87,12 +91,10 @@ task ensureResources() {
 build.dependsOn versionTxt
 tasks.getByName('versionTxt').dependsOn(ensureResources)
 tasks.getByName('deploy').dependsOn(deployHost)
-tasks.getByName('simulateExternalJava').dependsOn(deployHost)
 
 // Remove the next two sections if you don't want Oblog and the halsim_ds_socket plugin.
 dependencies {
     implementation 'com.github.Oblarg.Oblog:lib:3.1.0'
-    simulation "edu.wpi.first.halsim:halsim_ds_socket:${wpi.wpilibVersion}:${wpi.platforms.desktop}@zip"
 }
 repositories {
     maven {
