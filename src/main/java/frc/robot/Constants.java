@@ -27,7 +27,7 @@ public final class Constants {
     public static int REAR_RIGHT_MOTOR = 2;
 
     public static int INTAKE_MOTOR = 6;
-    public static int ARM_MOTOR = 6;
+    public static int ARM_MOTOR = 5;
 
     // OI ports
     public static int DRIVER_OI = 0;

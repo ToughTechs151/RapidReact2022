@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.commands.DriveWithJoystickCommand;
 import frc.robot.oi.CoDriverOI;
 import frc.robot.oi.DriverOI;
+import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ChassisSubsystem;
 
 /**
@@ -22,12 +23,14 @@ import frc.robot.subsystems.ChassisSubsystem;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private ChassisSubsystem chassisSubsystem_ = null;
+  private ArmSubsystem armSubsystem_ = null;
   private DriverOI driverOI_ = null;
   private CoDriverOI coDriverOI_ = null;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     chassisSubsystem_ = new ChassisSubsystem();
+    armSubsystem_ = new ArmSubsystem();
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -60,4 +63,11 @@ public class RobotContainer {
    * @return
    */
   public ChassisSubsystem getChassisSubsystem() { return chassisSubsystem_; }
+
+  /**
+   * retrieves the arm subsystem
+   * 
+   * @return
+   */
+  public ArmSubsystem getArmSubsystem() { return armSubsystem_; }
 }
