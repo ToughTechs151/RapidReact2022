@@ -12,6 +12,7 @@ import frc.robot.commands.DriveWithJoystickCommand;
 import frc.robot.oi.CoDriverOI;
 import frc.robot.oi.DriverOI;
 import frc.robot.subsystems.ChassisSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -24,10 +25,12 @@ public class RobotContainer {
   private ChassisSubsystem chassisSubsystem_ = null;
   private DriverOI driverOI_ = null;
   private CoDriverOI coDriverOI_ = null;
+  private IntakeSubsystem intakeSubsystem = null;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     chassisSubsystem_ = new ChassisSubsystem();
+    intakeSubsystem = new IntakeSubsystem();
     // Configure the button bindings
     configureButtonBindings();
   }
@@ -39,10 +42,13 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    // create driver & codriver oi
     driverOI_ = new DriverOI(Constants.DRIVER_OI, this);
     coDriverOI_ = new CoDriverOI(Constants.CODRIVE_OI, this);
 
+    // drive with joysticks
     chassisSubsystem_.setDefaultCommand(new DriveWithJoystickCommand(this, driverOI_));
+    
   }
 
   /**
@@ -59,5 +65,12 @@ public class RobotContainer {
    * retrieves chassis subsystem
    * @return
    */
-  public ChassisSubsystem getChassisSubsystem() { return chassisSubsystem_; }
+  public ChassisSubsystem getChassisSubsystem() { 
+    return chassisSubsystem_;
+  }
+
+  public IntakeSubsystem getIntakeSubsystem() {
+    return intakeSubsystem;
+  }
+
 }
