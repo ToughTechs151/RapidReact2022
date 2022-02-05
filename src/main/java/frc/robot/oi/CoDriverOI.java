@@ -9,6 +9,7 @@ package frc.robot.oi;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.commands.ControlArmCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.StopIntakeCommand;
 
@@ -16,11 +17,9 @@ import frc.robot.commands.StopIntakeCommand;
  * CoDriver OI Controls
  */
 public class CoDriverOI extends OI {
-    private RobotContainer robotContainer_ = null;
 
     public CoDriverOI(int channel, RobotContainer robotContainer) {
         super(channel);
-        robotContainer_ = robotContainer;
         
         rightBumper = new JoystickButton(joystick, Constants.RIGHT_BUMPER);
         rightBumper.whileHeld(new IntakeCommand(robotContainer, Constants.FORWARD));
@@ -32,11 +31,11 @@ public class CoDriverOI extends OI {
 
         // ARM Control Up
         a = new JoystickButton(joystick, Constants.A);
-        // a.whenPressed(new ChangeLauncherSpeedCommand(-1500, robotContainer));
+        a.whenPressed(new ControlArmCommand(robotContainer, Constants.UP));
 
         // ARM Control down
         b = new JoystickButton(joystick, Constants.B);
-        // b.whenPressed(new DisableElevatorCommand(robotContainer));
+        b.whenPressed(new ControlArmCommand(robotContainer, Constants.DOWN));
     
         leftJoystick = new JoystickButton(joystick, Constants.LEFT_JOYSTICK);
         rightJoystick = new JoystickButton(joystick, Constants.RIGHT_JOYSTICK);

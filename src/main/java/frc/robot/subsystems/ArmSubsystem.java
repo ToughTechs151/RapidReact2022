@@ -23,4 +23,17 @@ public class ArmSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
   }
+
+  /**
+   * change the ARM position until it hits the limit switch and hold the position
+   * @param position
+   */
+  public void changePosition(int position) {
+    if (position == Constants.UP) {
+
+    }
+    else if (position == Constants.DOWN) {
+
+    }
+  }
 }
