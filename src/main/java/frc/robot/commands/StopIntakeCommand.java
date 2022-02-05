@@ -6,18 +6,16 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
-import frc.robot.oi.CoDriverOI;
-import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 
-public class ControlArmCommand extends CommandBase {
-  private ArmSubsystem armSubsystem_ = null;
-  private RobotContainer robotContainer_ = null;
-  private CoDriverOI coDriveOI_ = null;
-
-  /** Creates a new ControlArmCommand. */
-  public ControlArmCommand(RobotContainer robotcontainer) {
-    robotContainer_ = robotcontainer;
-    addRequirements(robotcontainer.getArmSubsystem()); // here to declare subsystem dependencies.
+public class StopIntakeCommand extends CommandBase {
+  private IntakeSubsystem intakeSubsystem_ = null;
+  private boolean isFinished_ = false;
+  /** Creates a new StopIntakeCommand. */
+  public StopIntakeCommand(RobotContainer robotContainer) {
+    intakeSubsystem_ = robotContainer.getIntakeSubsystem();
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(intakeSubsystem_);
   }
 
   // Called when the command is initially scheduled.
@@ -27,7 +25,7 @@ public class ControlArmCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
+    intakeSubsystem_.stopIntake();
   }
 
   // Called once the command ends or is interrupted.
@@ -37,6 +35,6 @@ public class ControlArmCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return isFinished_;
   }
 }
