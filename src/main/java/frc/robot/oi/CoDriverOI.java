@@ -9,38 +9,33 @@ package frc.robot.oi;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.commands.ControlArmCommand;
+import frc.robot.commands.IntakeCommand;
+import frc.robot.commands.StopIntakeCommand;
 
 /**
  * CoDriver OI Controls
  */
 public class CoDriverOI extends OI {
-    private RobotContainer robotContainer_ = null;
 
     public CoDriverOI(int channel, RobotContainer robotContainer) {
         super(channel);
-        robotContainer_ = robotContainer;
         
-        // start = new JoystickButton(joystick, Constants.START);
-        // start.whenPressed(new IncrementHopperCommand(0.35, robotContainer));
-
-        // back = new JoystickButton(joystick, Constants.BACK);
-        // back.whenPressed(new IncrementHopperCommand(-0.35, robotContainer));
-
-        // rightBumper = new JoystickButton(joystick, Constants.RIGHT_BUMPER);
-        // rightBumper.whileHeld(new ReleaseBallPerSecondThroughHopperCommandGroup());
+        rightBumper = new JoystickButton(joystick, Constants.RIGHT_BUMPER);
+        rightBumper.whileHeld(new IntakeCommand(robotContainer, Constants.FORWARD));
+        rightBumper.whenReleased(new StopIntakeCommand(robotContainer));
     
-        // leftBumper = new JoystickButton(joystick, Constants.LEFT_BUMPER);    
-        // leftBumper.whenPressed(new ReleaseBallThroughCartridgeCommandGroup());
+        leftBumper = new JoystickButton(joystick, Constants.LEFT_BUMPER);    
+        leftBumper.whileHeld(new IntakeCommand(robotContainer, Constants.REVERSE));
+        leftBumper.whenReleased(new StopIntakeCommand(robotContainer));
 
-        // a = new JoystickButton(joystick, Constants.A);
-        // a.whenPressed(new ChangeLauncherSpeedCommand(-1500, robotContainer));
+        // ARM Control Up
+        a = new JoystickButton(joystick, Constants.A);
+        a.whenPressed(new ControlArmCommand(robotContainer, Constants.UP));
 
-        // b = new JoystickButton(joystick, Constants.B);
-        // b.whenPressed(new DisableElevatorCommand(robotContainer));
-
-        // b = new JoystickButton(joystick, Constants.B);
-        // y = new JoystickButton(joystick, Constants.Y);
-        // x = new JoystickButton(joystick, Constants.X);
+        // ARM Control down
+        b = new JoystickButton(joystick, Constants.B);
+        b.whenPressed(new ControlArmCommand(robotContainer, Constants.DOWN));
     
         leftJoystick = new JoystickButton(joystick, Constants.LEFT_JOYSTICK);
         rightJoystick = new JoystickButton(joystick, Constants.RIGHT_JOYSTICK);

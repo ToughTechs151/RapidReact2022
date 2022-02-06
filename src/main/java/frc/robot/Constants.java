@@ -20,14 +20,19 @@ public final class Constants {
     public static final int FORWARD = 1;
     public static final int REVERSE = -1;
 
-    // CAN ID
+    // Position
+    public static final int UP = 1;
+    public static final int DOWN = 0;
+
+    // Drive Train CAN IDs
     public static int FRONT_LEFT_MOTOR = 4;
     public static int FRONT_RIGHT_MOTOR = 3;
     public static int REAR_LEFT_MOTOR = 1;
     public static int REAR_RIGHT_MOTOR = 2;
 
+    // Mechanism CAN IDs
     public static int INTAKE_MOTOR = 6;
-    public static int ARM_MOTOR = 6;
+    public static int ARM_MOTOR = 5;
 
     // OI ports
     public static int DRIVER_OI = 0;

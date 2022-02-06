@@ -148,6 +148,9 @@ gradle-app.setting
 # Cache of project
 .gradletasknamecache
 
+# gradle splash generated files
+resources
+
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
 
@@ -156,7 +159,11 @@ gradle-app.setting
 .classpath
 .project
 .settings/
+.Glass
 bin/
 
 # Simulation GUI and other tools window save file
 *-window.json
+
+# Robot deploy directory
+deploy
