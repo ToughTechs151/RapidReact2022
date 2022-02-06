@@ -9,6 +9,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -25,7 +26,9 @@ public class ChassisSubsystem extends SubsystemBase {
   private CANSparkMax frontLeftMotor_ = new CANSparkMax(Constants.FRONT_LEFT_MOTOR, MotorType.kBrushless);
   private CANSparkMax frontRightMotor_ = new CANSparkMax(Constants.FRONT_RIGHT_MOTOR, MotorType.kBrushless);
   private CANSparkMax rearLeftMotor_ = new CANSparkMax(Constants.REAR_LEFT_MOTOR, MotorType.kBrushless);
-  private CANSparkMax rearRightMotor_ = new CANSparkMax(Constants.REAR_RIGHT_MOTOR, MotorType.kBrushless);
+  private CANSparkMax rearRightMotor_ = new CANSparkMax(Constants.REAR_RIGHT_MOTOR, MotorType.kBrushless);  
+  // The gyro sensor
+  private final ADXRS450_Gyro m_gyro = new ADXRS450_Gyro();
 
   // Encoder declarations
   private RelativeEncoder frontLeftEncoder_ = null;
@@ -137,6 +140,7 @@ public class ChassisSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Front Right Motor RPM", frontRightEncoder_.getVelocity());
     SmartDashboard.putNumber("Rear Left Motor RPM", rearLeftEncoder_.getVelocity());
     SmartDashboard.putNumber("Rear Right Motor RPM", rearRightEncoder_.getVelocity());
+    SmartDashboard.putNumber("Gyro angle", m_gyro.getAngle());
     
     tankDrive(leftVal * speedMultiplier * dir, rightVal * speedMultiplier * dir);
   }
