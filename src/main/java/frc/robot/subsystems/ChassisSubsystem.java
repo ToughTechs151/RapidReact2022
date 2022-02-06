@@ -11,6 +11,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.oi.DriverOI;
@@ -130,6 +131,12 @@ public class ChassisSubsystem extends SubsystemBase {
         rightVal = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.LEFT_JOYSTICK_Y), scale, RobotSide.RIGHT);
         leftVal = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.RIGHT_JOYSTICK_Y), scale, RobotSide.LEFT);
     }
+    
+    // Use these to plot the input vs RPM onto a plot
+    SmartDashboard.putNumber("Front Left Motor RPM", frontLeftEncoder_.getVelocity());
+    SmartDashboard.putNumber("Front Right Motor RPM", frontRightEncoder_.getVelocity());
+    SmartDashboard.putNumber("Rear Left Motor RPM", rearLeftEncoder_.getVelocity());
+    SmartDashboard.putNumber("Rear Right Motor RPM", rearRightEncoder_.getVelocity());
     
     tankDrive(leftVal * speedMultiplier * dir, rightVal * speedMultiplier * dir);
   }
