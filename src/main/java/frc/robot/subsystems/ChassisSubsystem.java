@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.oi.DriverOI;
 
 public class ChassisSubsystem extends SubsystemBase {
@@ -23,24 +24,24 @@ public class ChassisSubsystem extends SubsystemBase {
   }
 
   // Motor declarations
-  private CANSparkMax frontLeftMotor_ = new CANSparkMax(Constants.FRONT_LEFT_MOTOR, MotorType.kBrushless);
-  private CANSparkMax frontRightMotor_ = new CANSparkMax(Constants.FRONT_RIGHT_MOTOR, MotorType.kBrushless);
-  private CANSparkMax rearLeftMotor_ = new CANSparkMax(Constants.REAR_LEFT_MOTOR, MotorType.kBrushless);
-  private CANSparkMax rearRightMotor_ = new CANSparkMax(Constants.REAR_RIGHT_MOTOR, MotorType.kBrushless);  
+  private CANSparkMax frontLeftMotor = new CANSparkMax(Constants.FRONT_LEFT_MOTOR, MotorType.kBrushless);
+  private CANSparkMax frontRightMotor = new CANSparkMax(Constants.FRONT_RIGHT_MOTOR, MotorType.kBrushless);
+  private CANSparkMax rearLeftMotor = new CANSparkMax(Constants.REAR_LEFT_MOTOR, MotorType.kBrushless);
+  private CANSparkMax rearRightMotor = new CANSparkMax(Constants.REAR_RIGHT_MOTOR, MotorType.kBrushless);  
   // The gyro sensor
   private final ADXRS450_Gyro m_gyro = new ADXRS450_Gyro();
 
   // Encoder declarations
-  private RelativeEncoder frontLeftEncoder_ = null;
-  private RelativeEncoder frontRightEncoder_ = null;
-  private RelativeEncoder rearLeftEncoder_ = null;
-  private RelativeEncoder rearRightEncoder_ = null;
+  private RelativeEncoder frontLeftEncoder;
+  private RelativeEncoder frontRightEncoder;
+  private RelativeEncoder rearLeftEncoder;
+  private RelativeEncoder rearRightEncoder;
 
-  private MotorControllerGroup leftMotors_ = new MotorControllerGroup(frontLeftMotor_, rearLeftMotor_);
-  private MotorControllerGroup rightMotors_ = new MotorControllerGroup(frontRightMotor_, rearRightMotor_);
+  private MotorControllerGroup leftMotors;
+  private MotorControllerGroup rightMotors;
 
-  private DifferentialDrive driveTrain_ = new DifferentialDrive(leftMotors_, rightMotors_);
-
+  private DifferentialDrive driveTrain;
+  
   //drive constants
   /**
   * The scaling factor between the joystick value and the speed controller
@@ -94,55 +95,87 @@ public class ChassisSubsystem extends SubsystemBase {
 
   /** Creates a new ChassisSubsystem. */
   public ChassisSubsystem() {
-    rightMotors_.setInverted(true);
-    frontLeftMotor_.setIdleMode(IdleMode.kCoast);
-    frontRightMotor_.setIdleMode(IdleMode.kCoast);
-    rearLeftMotor_.setIdleMode(IdleMode.kCoast);
-    rearRightMotor_.setIdleMode(IdleMode.kCoast);
+    frontLeftMotor.setIdleMode(IdleMode.kCoast);
+    frontRightMotor.setIdleMode(IdleMode.kCoast);
+    rearLeftMotor.setIdleMode(IdleMode.kCoast);
+    rearRightMotor.setIdleMode(IdleMode.kCoast);
 
-    frontLeftEncoder_ = frontLeftMotor_.getEncoder();
-    frontRightEncoder_ = frontRightMotor_.getEncoder();
-    rearLeftEncoder_ = rearLeftMotor_.getEncoder();
-    rearRightEncoder_ = rearRightMotor_.getEncoder();
+    // TODO: set motor following
+    // rearLeftMotor.follow(frontLeftMotor);
+    // rearRightMotor.follow(frontRightMotor);
+
+    frontLeftEncoder = frontLeftMotor.getEncoder();
+    frontRightEncoder = frontRightMotor.getEncoder();
+    rearLeftEncoder = rearLeftMotor.getEncoder();
+    rearRightEncoder = rearRightMotor.getEncoder();
+
+    leftMotors = new MotorControllerGroup(frontLeftMotor, rearLeftMotor);
+    rightMotors = new MotorControllerGroup(frontRightMotor, rearRightMotor);
+    driveTrain = new DifferentialDrive(leftMotors, rightMotors);
+    rightMotors.setInverted(true);    
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    // Use these to plot the input vs RPM onto a plot
+    SmartDashboard.putNumber("Front Left Motor RPM", frontLeftEncoder.getVelocity());
+    SmartDashboard.putNumber("Front Right Motor RPM", frontRightEncoder.getVelocity());
+    SmartDashboard.putNumber("Rear Left Motor RPM", rearLeftEncoder.getVelocity());
+    SmartDashboard.putNumber("Rear Right Motor RPM", rearRightEncoder.getVelocity());
+    SmartDashboard.putNumber("Gyro angle", m_gyro.getAngle());    
   }
 
-    /**
-   * 
+  /**
+   * tankDrive - drive the chassis using tank drive method
    * @param leftspeed - The left joystick controller spped -1 to 1
    * @param rightspeed - The right joystick controller speed -1 to 1
    */
   public void tankDrive(double leftSpeed, double rightSpeed) {
-    driveTrain_.tankDrive(leftSpeed, rightSpeed);
+    driveTrain.tankDrive(leftSpeed, rightSpeed);
   }
 
-  public void drive(DriverOI driverOI, int scale) {
+
+  /**
+   * arcadeDrive - drive the chassis using arcade drive method
+   * @param speed
+   * @param rotation
+   */
+  public void arcadeDrive(double speed, double rotation) {
+    driveTrain.arcadeDrive(speed, rotation);
+  }
+
+  /**
+   * drive - set speed to chassis with the joystick input with a scale
+   * @param driverOI
+   * @param scale
+   */
+  public void drive(RobotContainer robotContainer, DriverOI driverOI, int scale) {
     speedMultiplier = driverOI.getJoystick().getRawButton(Constants.RIGHT_BUMPER) ? crawl : normal;
     dir = driverOI.getJoystick().getRawButton(Constants.LEFT_BUMPER) ? Constants.FORWARD : Constants.REVERSE;
+    
+    RobotContainer.DriveTrainType driveTrainType = robotContainer.getDriveTrainType();
 
-    double rightVal = 0;
-    double leftVal = 0;
-
-    if(dir == Constants.REVERSE) {
+    if (driveTrainType == RobotContainer.DriveTrainType.TANK) {
+      double rightVal = 0.0;  
+      double leftVal = 0.0;
+      if(dir == Constants.REVERSE) {
         rightVal = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.RIGHT_JOYSTICK_Y), scale, RobotSide.RIGHT);
         leftVal = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.LEFT_JOYSTICK_Y), scale, RobotSide.LEFT);
-    } else if(dir == Constants.FORWARD) {
+      } else if(dir == Constants.FORWARD) {
         rightVal = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.LEFT_JOYSTICK_Y), scale, RobotSide.RIGHT);
         leftVal = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.RIGHT_JOYSTICK_Y), scale, RobotSide.LEFT);
+      }
+      SmartDashboard.putNumber("Left Speed", leftVal);
+      SmartDashboard.putNumber("Right Speed", rightVal);
+      tankDrive(leftVal * speedMultiplier * dir, rightVal * speedMultiplier * dir);
+    } else if (driveTrainType == RobotContainer.DriveTrainType.ARCADE) {
+      double speed = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.LEFT_JOYSTICK_Y), scale, RobotSide.LEFT) * dir;
+      double rotation = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.RIGHT_JOYSTICK_X), scale, RobotSide.RIGHT);
+      SmartDashboard.putNumber("Speed", speed);
+      SmartDashboard.putNumber("Rotation", rotation);
+      arcadeDrive(speed, rotation);
     }
-    
-    // Use these to plot the input vs RPM onto a plot
-    SmartDashboard.putNumber("Front Left Motor RPM", frontLeftEncoder_.getVelocity());
-    SmartDashboard.putNumber("Front Right Motor RPM", frontRightEncoder_.getVelocity());
-    SmartDashboard.putNumber("Rear Left Motor RPM", rearLeftEncoder_.getVelocity());
-    SmartDashboard.putNumber("Rear Right Motor RPM", rearRightEncoder_.getVelocity());
-    SmartDashboard.putNumber("Gyro angle", m_gyro.getAngle());
-    
-    tankDrive(leftVal * speedMultiplier * dir, rightVal * speedMultiplier * dir);
   }
 
   /**

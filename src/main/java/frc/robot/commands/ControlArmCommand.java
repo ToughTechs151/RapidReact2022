@@ -9,7 +9,7 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.ArmSubsystem;
 
 public class ControlArmCommand extends CommandBase {
-  private ArmSubsystem armSubsystem_ = null;
+  private ArmSubsystem armSubsystem;
 
   /**
    * ControlArmCommand - commanding the arm to move up or down and hold its position
@@ -18,8 +18,8 @@ public class ControlArmCommand extends CommandBase {
    * @param position
    */
   public ControlArmCommand(RobotContainer robotcontainer, int position) {
-    armSubsystem_ = robotcontainer.getArmSubsystem();
-    addRequirements(armSubsystem_); // here to declare subsystem dependencies.
+    armSubsystem = robotcontainer.getArmSubsystem();
+    addRequirements(armSubsystem); // here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.

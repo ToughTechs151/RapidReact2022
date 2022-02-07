@@ -21,23 +21,25 @@ public class CoDriverOI extends OI {
     public CoDriverOI(int channel, RobotContainer robotContainer) {
         super(channel);
         
-        rightBumper = new JoystickButton(joystick, Constants.RIGHT_BUMPER);
+        if (getJoystick().isConnected()) {
+            rightBumper = new JoystickButton(joystick, Constants.RIGHT_BUMPER);
         rightBumper.whileHeld(new IntakeCommand(robotContainer, Constants.INTAKE_SPEED));
-        rightBumper.whenReleased(new StopIntakeCommand(robotContainer));
-    
-        leftBumper = new JoystickButton(joystick, Constants.LEFT_BUMPER);    
+            rightBumper.whenReleased(new StopIntakeCommand(robotContainer));
+        
+            leftBumper = new JoystickButton(joystick, Constants.LEFT_BUMPER);    
         leftBumper.whileHeld(new IntakeCommand(robotContainer, -Constants.INTAKE_SPEED));
-        leftBumper.whenReleased(new StopIntakeCommand(robotContainer));
+            leftBumper.whenReleased(new StopIntakeCommand(robotContainer));
 
-        // ARM Control Up
-        a = new JoystickButton(joystick, Constants.A);
-        a.whenPressed(new ControlArmCommand(robotContainer, Constants.UP));
+            // ARM Control Up
+            a = new JoystickButton(joystick, Constants.A);
+            a.whenPressed(new ControlArmCommand(robotContainer, Constants.UP));
 
-        // ARM Control down
-        b = new JoystickButton(joystick, Constants.B);
-        b.whenPressed(new ControlArmCommand(robotContainer, Constants.DOWN));
-    
-        leftJoystick = new JoystickButton(joystick, Constants.LEFT_JOYSTICK);
-        rightJoystick = new JoystickButton(joystick, Constants.RIGHT_JOYSTICK);
+            // ARM Control down
+            b = new JoystickButton(joystick, Constants.B);
+            b.whenPressed(new ControlArmCommand(robotContainer, Constants.DOWN));
+        
+            leftJoystick = new JoystickButton(joystick, Constants.LEFT_JOYSTICK);
+            rightJoystick = new JoystickButton(joystick, Constants.RIGHT_JOYSTICK);
+        }
     }
 }
