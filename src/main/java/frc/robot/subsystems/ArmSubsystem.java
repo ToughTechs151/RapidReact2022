@@ -22,9 +22,11 @@ public class ArmSubsystem extends PIDSubsystem {
   // here. Call these from Commands.
   private static PIDController pid;
 
-  private static CANSparkMax armMotor_ = new CANSparkMax(Constants.ARM_MOTOR, MotorType.kBrushless);
+  private CANSparkMax armMotor = new CANSparkMax(Constants.ARM_MOTOR, MotorType.kBrushless);
   /** Creates a new ArmSubsystem. */
   private static RelativeEncoder Encoder1 = armMotor_.getEncoder(); 
+    armMotor.setIdleMode(IdleMode.kBrake);
+  }
 
   public ArmSubsystem(PIDController inPID) {
     super(inPID);
@@ -34,8 +36,13 @@ public class ArmSubsystem extends PIDSubsystem {
 
    /**
    * runs periodically when enabled
+  /**
+   * change the ARM position until it hits the limit switch and hold the position
+   * @param position
    */
-
+  public void changePosition(int position) {
+    if (position == Constants.UP) {
+    } else if (position == Constants.DOWN) {
   public void periodic() {
     // setSetpoint(RobotContainer.coDriverOI.getY()); NEVER EVER DO THIS
     super.periodic();

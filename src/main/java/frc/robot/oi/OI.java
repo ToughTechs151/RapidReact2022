@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class OI {
-	Joystick joystick = null;
+	Joystick joystick;
 
 	protected JoystickButton x;
 	protected JoystickButton a;

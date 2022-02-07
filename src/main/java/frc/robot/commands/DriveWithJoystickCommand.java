@@ -11,14 +11,17 @@ import frc.robot.oi.DriverOI;
 import frc.robot.subsystems.ChassisSubsystem;
 
 public class DriveWithJoystickCommand extends CommandBase {
-  private ChassisSubsystem chassisSubsystem_ = null;
-  private DriverOI driverOI_ = null;  
+  private ChassisSubsystem chassisSubsystem;
+  private DriverOI driverOI;  
+  private RobotContainer robotContainer;
+  
   /** Creates a new DriveWithJoystickCommand. */
-  public DriveWithJoystickCommand(RobotContainer robotcontainer, DriverOI driverOI) {
-    driverOI_ = driverOI;
-    chassisSubsystem_ = robotcontainer.getChassisSubsystem();
+  public DriveWithJoystickCommand(RobotContainer robotContainer, DriverOI driverOI) {
+    this.robotContainer = robotContainer;
+    this.driverOI = driverOI;
+    chassisSubsystem = this.robotContainer.getChassisSubsystem();
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(chassisSubsystem_);
+    addRequirements(chassisSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -28,7 +31,7 @@ public class DriveWithJoystickCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    chassisSubsystem_.drive(driverOI_, Constants.SCALED_DRIVE);
+    chassisSubsystem.drive(robotContainer, driverOI, Constants.SCALED_DRIVE);
   }
 
   // Called once the command ends or is interrupted.

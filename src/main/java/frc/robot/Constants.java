@@ -15,6 +15,11 @@ import io.github.oblarg.oblog.annotations.Log;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+    // Robot preferences
+    public static final String DRIVE_TRAIN_TYPE = "DriveTrainType";
+    public static final String TANK = "Tank";
+    public static final String ARCADE = "Arcade";    
+
     // Scale Factor
     public static final int SCALED_DRIVE = 2;
 
