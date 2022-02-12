@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import io.github.oblarg.oblog.annotations.Log;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -32,7 +34,7 @@ public final class Constants {
 
     // Mechanism CAN IDs
     public static int INTAKE_MOTOR = 6;
-    public static int ARM_MOTOR = 5;
+    public static int ARM_MOTOR = 10;
 
     // OI ports
     public static int DRIVER_OI = 0;
@@ -57,5 +59,15 @@ public final class Constants {
 	public static final int BACK = 7;
 	public static final int START = 8;
 	public static final int LEFT_JOYSTICK = 9;
-    public static final int RIGHT_JOYSTICK = 10;    
+    public static final int RIGHT_JOYSTICK = 10;
+
+    //public static final String Constants = null;    
+
+     // Original Gains
+    @Log
+    public static double LAUNCHERKP=0.0003;
+    @Log
+    public static double LAUNCHERKI=0.00032;
+    @Log
+    public static double LAUNCHERKD=0.000000003;
 }

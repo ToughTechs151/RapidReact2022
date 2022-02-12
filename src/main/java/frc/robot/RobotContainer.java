@@ -4,10 +4,13 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import frc.robot.commands.AutonomousDrive;
 import frc.robot.commands.DriveWithJoystickCommand;
 import frc.robot.oi.CoDriverOI;
 import frc.robot.oi.DriverOI;
@@ -22,7 +25,8 @@ import frc.robot.subsystems.IntakeSubsystem;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
+  public static PIDController armSubsystemPID;
+    // The robot's subsystems and commands are defined here...
   private ChassisSubsystem chassisSubsystem_ = null;
   private ArmSubsystem armSubsystem_ = null;
   private DriverOI driverOI_ = null;
@@ -32,7 +36,8 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     chassisSubsystem_ = new ChassisSubsystem();
-    armSubsystem_ = new ArmSubsystem();
+    armSubsystemPID = new PIDController(Constants.LAUNCHERKP, Constants.LAUNCHERKI, Constants.LAUNCHERKD);
+    armSubsystem_ = new ArmSubsystem(armSubsystemPID);
     intakeSubsystem = new IntakeSubsystem();
     // Configure the button bindings
     configureButtonBindings();
