@@ -26,7 +26,7 @@ public class CoDriverOI extends OI {
         rightBumper.whenReleased(new StopIntakeCommand(robotContainer));
     
         leftBumper = new JoystickButton(joystick, Constants.LEFT_BUMPER);    
-        leftBumper.whileHeld(new IntakeCommand(robotContainer, Constants.REVERSE));
+        leftBumper.whileHeld(new IntakeCommand(robotContainer, -Constants.INTAKE_SPEED));
         leftBumper.whenReleased(new StopIntakeCommand(robotContainer));
 
         // ARM Control Up
