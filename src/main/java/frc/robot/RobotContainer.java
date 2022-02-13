@@ -53,8 +53,6 @@ public class RobotContainer {
   public RobotContainer() {
     chassisSubsystem = new ChassisSubsystem();
     armSubsystem = new ArmSubsystem();
-    armSubsystemPID = new PIDController(Constants.LAUNCHERKP, Constants.LAUNCHERKI, Constants.LAUNCHERKD);
-    armSubsystem_ = new ArmSubsystem(armSubsystemPID);
     intakeSubsystem = new IntakeSubsystem();
     // Configure the button bindings for all buttons
     configureButtonBindings();
