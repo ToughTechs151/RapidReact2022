@@ -34,7 +34,9 @@ public final class Constants {
 
     // Mechanism CAN IDs
     public static int INTAKE_MOTOR = 6;
-    public static int ARM_MOTOR = 10;
+    public static int ARM_MOTOR = 5;
+    //Intake Subsystem Speed
+    public static final double INTAKE_SPEED = 0.5;
 
     // OI ports
     public static int DRIVER_OI = 0;
