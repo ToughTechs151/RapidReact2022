@@ -10,13 +10,13 @@ import frc.robot.subsystems.IntakeSubsystem;
 
 public class IntakeCommand extends CommandBase {
   private IntakeSubsystem intakeSubsystem = null;
-  private int dir_ = 1;
+  private double dir_ = 1;
 
   /** Creates a new RunIntake. */
-  public IntakeCommand(RobotContainer robotcontainer, int dir) {
+  public IntakeCommand(RobotContainer robotcontainer, double speed) {
     // Use addRequirements() here to declare subsystem dependencies.
     intakeSubsystem = robotcontainer.getIntakeSubsystem();
-    dir_ = dir;
+    dir_ = speed;
     addRequirements(intakeSubsystem);
   }
 
