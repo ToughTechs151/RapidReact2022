@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * project.
  */
 public class Robot extends TimedRobot {
-  private String driveTrainType;
   private Command autonomousCommand;
 
   private RobotContainer robotContainer;
@@ -27,10 +26,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    // set default DriveTrainType preference
-    if (!Preferences.containsKey(Constants.DRIVE_TRAIN_TYPE)) {
-      Preferences.setString(Constants.DRIVE_TRAIN_TYPE, Constants.TANK);
-    }
+      Preferences.initString(Constants.DRIVE_TRAIN_TYPE, "DEFAULT");
     
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
@@ -57,8 +53,6 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    driveTrainType = Preferences.getString(Constants.DRIVE_TRAIN_TYPE, Constants.TANK);
-    robotContainer.setDriveTrainType(driveTrainType);
   }
 
   @Override
@@ -88,8 +82,6 @@ public class Robot extends TimedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
-    //driveTrainType = Preferences.getString(Constants.DRIVE_TRAIN_TYPE, Constants.TANK);
-    //robotContainer.setDriveTrainType(driveTrainType);
   }
 
   /** This function is called periodically during operator control. */

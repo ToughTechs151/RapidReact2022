@@ -27,18 +27,9 @@ import frc.robot.subsystems.IntakeSubsystem;
 public class RobotContainer {
   public static PIDController armSubsystemPID;
   public enum DriveTrainType {
-    TANK("Tank"),
-    ARCADE("Arcade");
-
-    private String type;
-      
-    DriveTrainType(String type) {
-      this.type = type;
-    }
-
-    public String getType() {
-      return type;
-    }
+    TANK,
+    ARCADE,
+    DEFAULT
   }
 
     // The robot's subsystems and commands are defined here...
@@ -47,7 +38,6 @@ public class RobotContainer {
   private DriverOI driverOI;
   private CoDriverOI codriverOI;
   private IntakeSubsystem intakeSubsystem;
-  private DriveTrainType driveTrainType = DriveTrainType.TANK;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -72,27 +62,6 @@ public class RobotContainer {
     // drive with joysticks
     chassisSubsystem.setDefaultCommand(new DriveWithJoystickCommand(this, driverOI));
     
-  }
-
-  /**
-   * set the drive train type
-   * @param type
-   */
-  public void setDriveTrainType(String type) {
-    SmartDashboard.putString(Constants.DRIVE_TRAIN_TYPE, type);
-    if (type.equals(Constants.TANK)) {
-      driveTrainType = DriveTrainType.TANK;
-    } else if (type.equals(Constants.ARCADE)) {
-      driveTrainType = DriveTrainType.ARCADE;
-    }
-  }
-
-  /**
-   * getDriveTrainType
-   * @return returns the DriveTrainType - Tank Drive or Arcade Drive
-   */
-  public DriveTrainType getDriveTrainType() {
-    return driveTrainType;
   }
 
   /**

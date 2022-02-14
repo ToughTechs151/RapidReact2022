@@ -12,6 +12,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -151,30 +152,41 @@ public class ChassisSubsystem extends SubsystemBase {
    * @param scale
    */
   public void drive(RobotContainer robotContainer, DriverOI driverOI, int scale) {
+    String driveTrainType = Preferences.getString(Constants.DRIVE_TRAIN_TYPE, "DEFAULT");
     speedMultiplier = driverOI.getJoystick().getRawButton(Constants.RIGHT_BUMPER) ? crawl : normal;
     dir = driverOI.getJoystick().getRawButton(Constants.LEFT_BUMPER) ? Constants.FORWARD : Constants.REVERSE;
-    
-    RobotContainer.DriveTrainType driveTrainType = robotContainer.getDriveTrainType();
 
-    if (driveTrainType == RobotContainer.DriveTrainType.TANK) {
-      double rightVal = 0.0;  
-      double leftVal = 0.0;
-      if(dir == Constants.REVERSE) {
-        rightVal = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.RIGHT_JOYSTICK_Y), scale, RobotSide.RIGHT);
-        leftVal = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.LEFT_JOYSTICK_Y), scale, RobotSide.LEFT);
-      } else if(dir == Constants.FORWARD) {
-        rightVal = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.LEFT_JOYSTICK_Y), scale, RobotSide.RIGHT);
-        leftVal = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.RIGHT_JOYSTICK_Y), scale, RobotSide.LEFT);
-      }
-      SmartDashboard.putNumber("Left Speed", leftVal);
-      SmartDashboard.putNumber("Right Speed", rightVal);
-      tankDrive(leftVal * speedMultiplier * dir, rightVal * speedMultiplier * dir);
-    } else if (driveTrainType == RobotContainer.DriveTrainType.ARCADE) {
-      double speed = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.LEFT_JOYSTICK_Y), scale, RobotSide.LEFT) * dir;
-      double rotation = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.RIGHT_JOYSTICK_X), scale, RobotSide.RIGHT);
-      SmartDashboard.putNumber("Speed", speed);
-      SmartDashboard.putNumber("Rotation", rotation);
-      arcadeDrive(speed, rotation);
+    switch (driveTrainType) {
+      case "TANK":
+        double rightVal = 0.0;
+        double leftVal = 0.0;
+        if (dir == Constants.REVERSE) {
+          rightVal = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.RIGHT_JOYSTICK_Y), scale,
+              RobotSide.RIGHT);
+          leftVal = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.LEFT_JOYSTICK_Y), scale, RobotSide.LEFT);
+        } else if (dir == Constants.FORWARD) {
+          rightVal = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.LEFT_JOYSTICK_Y), scale,
+              RobotSide.RIGHT);
+          leftVal = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.RIGHT_JOYSTICK_Y), scale,
+              RobotSide.LEFT);
+        }
+        SmartDashboard.putNumber("Left Speed", leftVal);
+        SmartDashboard.putNumber("Right Speed", rightVal);
+        SmartDashboard.putNumber("Speed", 0);
+        SmartDashboard.putNumber("Rotation", 0);
+        tankDrive(leftVal * speedMultiplier * dir, rightVal * speedMultiplier * dir);
+        break;
+      default:
+        double speed = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.LEFT_JOYSTICK_Y), scale,
+            RobotSide.LEFT) * dir;
+        double rotation = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.RIGHT_JOYSTICK_X), scale,
+            RobotSide.RIGHT);
+        SmartDashboard.putNumber("Speed", speed);
+        SmartDashboard.putNumber("Rotation", rotation);
+        SmartDashboard.putNumber("Left Speed", 0);
+        SmartDashboard.putNumber("Right Speed", 0);
+        arcadeDrive(speed, rotation);
+
     }
   }
 
