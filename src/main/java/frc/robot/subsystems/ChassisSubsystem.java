@@ -36,8 +36,8 @@ public class ChassisSubsystem extends SubsystemBase {
   private RelativeEncoder rearLeftEncoder_ = null;
   private RelativeEncoder rearRightEncoder_ = null;
 
-  private MotorControllerGroup leftMotors_ = new MotorControllerGroup(frontLeftMotor_, rearLeftMotor_);
-  private MotorControllerGroup rightMotors_ = new MotorControllerGroup(frontRightMotor_, rearRightMotor_);
+  private MotorControllerGroup leftMotors_ = new MotorControllerGroup(frontLeftMotor_);
+  private MotorControllerGroup rightMotors_ = new MotorControllerGroup(frontRightMotor_);
 
   private DifferentialDrive driveTrain_ = new DifferentialDrive(leftMotors_, rightMotors_);
 
@@ -94,7 +94,20 @@ public class ChassisSubsystem extends SubsystemBase {
 
   /** Creates a new ChassisSubsystem. */
   public ChassisSubsystem() {
-    rightMotors_.setInverted(true);
+    frontLeftMotor_.restoreFactoryDefaults();
+    frontRightMotor_.restoreFactoryDefaults();
+    rearLeftMotor_.restoreFactoryDefaults();
+    rearRightMotor_.restoreFactoryDefaults();
+
+    rearLeftMotor_.follow(frontLeftMotor_);
+    rearRightMotor_.follow(frontRightMotor_);
+    frontRightMotor_.setInverted(true);
+
+    frontLeftMotor_.setSmartCurrentLimit(30);
+    frontRightMotor_.setSmartCurrentLimit(30);
+    rearLeftMotor_.setSmartCurrentLimit(30);
+    rearRightMotor_.setSmartCurrentLimit(30);
+
     frontLeftMotor_.setIdleMode(IdleMode.kCoast);
     frontRightMotor_.setIdleMode(IdleMode.kCoast);
     rearLeftMotor_.setIdleMode(IdleMode.kCoast);
