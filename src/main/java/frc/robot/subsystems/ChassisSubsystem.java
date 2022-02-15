@@ -8,7 +8,6 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
-
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -228,5 +227,31 @@ public class ChassisSubsystem extends SubsystemBase {
    */
   private double deadzone(double val) {
     return Math.abs(val) > softwareDeadband ? val : 0;
+  }
+
+  public double getGyroAngle() {
+    return m_gyro.getAngle();
+  }
+
+  /** Reset the gyro. */
+  public void resetGyro() {
+    m_gyro.reset();
+  }
+
+  public void resetEncoders() {
+    ((ADXRS450_Gyro) frontLeftEncoder).reset();
+    ((ADXRS450_Gyro) frontRightEncoder).reset();
+  }
+
+  public double getLeftDistanceInch() {
+    return frontLeftEncoder.getPosition();
+  }
+
+  public double getRightDistanceInch() {
+    return frontRightEncoder.getPosition();
+  }
+
+  public double getAverageDistanceInch() {
+    return (getLeftDistanceInch() + getRightDistanceInch()) / 2.0;
   }
 }

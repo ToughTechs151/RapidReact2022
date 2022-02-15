@@ -80,4 +80,10 @@ public final class Constants {
     public static final double DRIVE_GEAR_RATIO = 2;
     public static final double DRIVE_WHEEL_DIAMETER = 6;
 
+
+    //PID Value
+    public static final double DRIVETRAIN_KP=0.06;
+    public static final double DRIVETRAIN_KI=0;
+    public static final double DRIVETRAIN_KD=0;
+
 }
