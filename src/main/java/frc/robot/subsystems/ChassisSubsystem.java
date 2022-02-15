@@ -46,7 +46,7 @@ public class ChassisSubsystem extends SubsystemBase {
   /**
   * The scaling factor between the joystick value and the speed controller
   */
-  private static double speedMultiplier = 1.0;
+  private double speedMultiplier = 1.0;
 
   /**
    * The scale factor for normal mode
@@ -135,7 +135,6 @@ public class ChassisSubsystem extends SubsystemBase {
     driveTrain.tankDrive(leftSpeed, rightSpeed);
   }
 
-
   /**
    * arcadeDrive - drive the chassis using arcade drive method
    * @param speed
@@ -157,12 +156,12 @@ public class ChassisSubsystem extends SubsystemBase {
     RobotContainer.DriveTrainType driveTrainType = robotContainer.getDriveTrainType();
 
     if (driveTrainType == RobotContainer.DriveTrainType.TANK) {
-      double rightVal = 0.0;  
-      double leftVal = 0.0;
+      double rightVal;  
+      double leftVal;
       if(dir == Constants.REVERSE) {
         rightVal = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.RIGHT_JOYSTICK_Y), scale, RobotSide.RIGHT);
         leftVal = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.LEFT_JOYSTICK_Y), scale, RobotSide.LEFT);
-      } else if(dir == Constants.FORWARD) {
+      } else {
         rightVal = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.LEFT_JOYSTICK_Y), scale, RobotSide.RIGHT);
         leftVal = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.RIGHT_JOYSTICK_Y), scale, RobotSide.LEFT);
       }

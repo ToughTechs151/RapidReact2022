@@ -13,6 +13,9 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
+    private Constants() {}
+
     // Robot preferences
     public static final String DRIVE_TRAIN_TYPE = "DriveTrainType";
     public static final String TANK = "Tank";
@@ -27,7 +30,8 @@ public final class Constants {
 
     // Position
     public static final int UP = 1;
-    public static final int DOWN = 0;
+    public static final int DOWN = -1;
+    public static final int STOP = 0;
 
     // Drive Train CAN IDs
     public static int FRONT_LEFT_MOTOR = 4;
@@ -37,7 +41,8 @@ public final class Constants {
 
     // Mechanism CAN IDs
     public static int INTAKE_MOTOR = 6;
-    public static int ARM_MOTOR = 5;
+    public static int ARM_MOTOR = 10;
+    //public static int ARM_MOTOR = 5;
     //Intake Subsystem Speed
     public static final double INTAKE_SPEED = 0.5;
 
@@ -66,7 +71,9 @@ public final class Constants {
 	public static final int LEFT_JOYSTICK = 9;
     public static final int RIGHT_JOYSTICK = 10;
 
-    public static double ARMKP=0.0003;
-    public static double ARMKI=0.00032;
-    public static double ARMKD=0.000000003;
+    public static final double ARM_REVOLUTION = 1.5;
+    public static final double POSTOLERANCE = 0.005;
+    public static final double ARM_KP = 0.05;
+    public static final double ARM_KI = 0.0;
+    public static final double ARM_KD = 0.0;
 }

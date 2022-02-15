@@ -6,6 +6,8 @@
 /*----------------------------------------------------------------------------*/
 
 package frc.robot.oi;
+import java.net.CookieStore;
+
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
@@ -23,11 +25,11 @@ public class CoDriverOI extends OI {
         
         if (getJoystick().isConnected()) {
             rightBumper = new JoystickButton(joystick, Constants.RIGHT_BUMPER);
-        rightBumper.whileHeld(new IntakeCommand(robotContainer, Constants.INTAKE_SPEED));
+            rightBumper.whileHeld(new IntakeCommand(robotContainer, Constants.FORWARD));
             rightBumper.whenReleased(new StopIntakeCommand(robotContainer));
         
             leftBumper = new JoystickButton(joystick, Constants.LEFT_BUMPER);    
-        leftBumper.whileHeld(new IntakeCommand(robotContainer, -Constants.INTAKE_SPEED));
+            leftBumper.whileHeld(new IntakeCommand(robotContainer, Constants.REVERSE));
             leftBumper.whenReleased(new StopIntakeCommand(robotContainer));
 
             // ARM Control Up
