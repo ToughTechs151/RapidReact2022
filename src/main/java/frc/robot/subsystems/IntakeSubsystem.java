@@ -4,48 +4,33 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class IntakeSubsystem extends SubsystemBase { 
-  WPI_TalonSRX intakemotor_ = new WPI_TalonSRX(Constants.INTAKE_MOTOR);
-  //Error range for middle to prevent oscillations
-  private double timeStarted = 0.0;
-  private double timeElapsed = 4.5;
-  private double currentTime;
-
-  //Drop and raise the intake to load in balls
-  public boolean deployIntake(int direction) {
-    //Check if method has been called before
-    if (timeStarted == 0.0) {
-      timeStarted = Timer.getFPGATimestamp();
-    }
-
-    currentTime = Timer.getFPGATimestamp();
-    if (currentTime - timeStarted >= timeElapsed) {
-      //System.out.println("Time Elapsed is " + (currentTime-timeStarted) + " seconds");
-      timeStarted = 0.0;
-      intakemotor_.set(0);
-      return true;
-    }
-    return false;
-  }
-
+  WPI_TalonSRX intakemotor = new WPI_TalonSRX(Constants.INTAKE_MOTOR);
+  boolean isStop;
+  
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
   }
 
-  public void runIntake(double dir_) {
-      intakemotor_.set(ControlMode.PercentOutput, dir_);
+  public void runIntake(double dir) {
+    isStop = false;
+    intakemotor.set(ControlMode.PercentOutput, Constants.INTAKE_SPEED * dir);
   }
 
   public void stopIntake() {
-    intakemotor_.set(ControlMode.PercentOutput, 0);
+    isStop = true;
+    intakemotor.set(ControlMode.PercentOutput, 0);
+  }
+
+  public boolean isStop() {
+    return isStop;
   }
 }
 

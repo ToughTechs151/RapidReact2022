@@ -19,9 +19,11 @@ public class DriverOI extends OI {
     public DriverOI(int channel, RobotContainer robotContainer) {
         super(channel);
         
-        a = new JoystickButton(joystick, Constants.A);
-        y = new JoystickButton(joystick, Constants.Y);
-        b = new JoystickButton(joystick, Constants.B);
-        a = new JoystickButton(joystick, Constants.A);
+        if (getJoystick().isConnected()) {
+            a = new JoystickButton(joystick, Constants.A);
+            y = new JoystickButton(joystick, Constants.Y);
+            b = new JoystickButton(joystick, Constants.B);
+            a = new JoystickButton(joystick, Constants.A);
+        }
     }
 }
