@@ -6,93 +6,66 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
-import frc.robot.RobotContainer;
-import io.github.oblarg.oblog.annotations.Config;
-import io.github.oblarg.oblog.annotations.Log;
 import edu.wpi.first.math.controller.PIDController;
 
 public class ArmSubsystem extends PIDSubsystem {
     // Put methods for controlling this subsystem
   // here. Call these from Commands.
-  private static PIDController pid;
+  private PIDController pid;
+  private CANSparkMax armMotor = new CANSparkMax(Constants.ARM_MOTOR, MotorType.kBrushless);
+  private RelativeEncoder armEncoder = armMotor.getEncoder(); 
 
-  private static CANSparkMax armMotor_ = new CANSparkMax(Constants.ARM_MOTOR, MotorType.kBrushless);
   /** Creates a new ArmSubsystem. */
-  private static RelativeEncoder Encoder1 = armMotor_.getEncoder(); 
-
-  public ArmSubsystem(PIDController inPID) {
-    super(inPID);
-    armMotor_.setInverted(false);
-    mySetSetpoint(50);
+  public ArmSubsystem() {
+    super(new PIDController(Constants.ARM_KP, Constants.ARM_KI, Constants.ARM_KD));
+    armMotor.restoreFactoryDefaults();
+    armMotor.setInverted(false);
+    armMotor.setIdleMode(IdleMode.kBrake);
+    resetEncoder();
+    pid = getController();
+    pid.setTolerance(Constants.POSTOLERANCE);
   }
-
-   /**
-   * runs periodically when enabled
-   */
 
   public void periodic() {
     // setSetpoint(RobotContainer.coDriverOI.getY()); NEVER EVER DO THIS
     super.periodic();
-    //useOutput(Encoder1.getVelocity(), setpoint);
-    SmartDashboard.putNumber("UpperLauncherSpeed in RPM", Encoder1.getVelocity());
-    SmartDashboard.putNumber("UpperLauncher Current", armMotor_.getOutputCurrent());
-    SmartDashboard.putNumber("UpperLauncherSetpoint in RPM", getSetpoint());
-    SmartDashboard.putNumber("UpperLauncher get", armMotor_.get());
-    SmartDashboard.putNumber("UpperLauncher getCPR", Encoder1.getCountsPerRevolution());
-    SmartDashboard.putNumber("UpperLauncher getPosition", Encoder1.getPosition());
-    SmartDashboard.putNumber("UpperLauncher getVelocityConversionFactor", Encoder1.getVelocityConversionFactor());
+
+    SmartDashboard.putNumber("ARM Speed in RPM", armEncoder.getVelocity());
+    SmartDashboard.putNumber("ARM Current", armMotor.getOutputCurrent());
+    SmartDashboard.putNumber("ARMSetpoint in RPM", getSetpoint());
+    SmartDashboard.putNumber("ARM get", armMotor.get());
+    SmartDashboard.putNumber("ARM getCPR", armEncoder.getCountsPerRevolution());
+    SmartDashboard.putNumber("ARM getPosition", armEncoder.getPosition());
+    SmartDashboard.putNumber("ARM getVelocityConversionFactor", armEncoder.getVelocityConversionFactor());
   }
 
   @Override
   protected void useOutput(double output, double setpoint) {
-    armMotor_.set(output);
-    double viewOutput = output;
-    SmartDashboard.putNumber("Launcher output value", viewOutput);
-    /*if (Math.abs(setpoint) >= Math.abs(getController().getSetpoint())) {
-      setpoint = (getController().getSetpoint() * 10.0 / 9.0);
-      if (setpoint >= this.setpoint - 100 && setpoint <= this.setpoint + 100) {
-        setpoint = this.setpoint;
-      }
-    } else if (Math.abs(setpoint) < Math.abs(getController().getSetpoint())) {
-      setpoint = (getController().getSetpoint() * 0.9);
-      if (setpoint >= this.setpoint - 100 && setpoint <= this.setpoint + 100) {
-        setpoint=this.setpoint;
-      }
-    }
-    output=getController().calculate(output,setpoint)/Encoder1.getVelocityConversionFactor();
-    launcher1.set(output);*/
-    //launcher1.set(output*0.95);    
-    //System.out.println("UpperLauncher:" + output*0.95);
-    //launcher2.set(output); 
-}
+    SmartDashboard.putNumber("ARM output value", output);
+    armMotor.set(output);
+  }
 
-@Override
-protected double getMeasurement() {
-  return Encoder1.getVelocity();
-}
+  @Override
+  protected double getMeasurement() {
+    return armEncoder.getPosition();
+  }
 
-public void mySetSetpoint(double mySetpoint){
-  m_enabled = true;
-  setSetpoint(mySetpoint);
-}
+  public void resetEncoder() {
+    armEncoder.setPosition(Constants.STOP);
+    setSetpoint(Constants.STOP);
+  }
 
-public void disableM_Enabled(){
-  setSetpoint(0);
-  m_enabled = false;
-}
+  public void armSetpoint(double armSetpoint){
+    setSetpoint(armSetpoint);
+    enable();
+  }
 
-/**
- * sets the launcher speed
- * @param s the speed to change to
- */
-/*public static void setSpeed(double s){
-  launcher1.set(s/Encoder1.getVelocityConversionFactor());
-
-}*/
+  public boolean atSetpoint() {
+    return pid.atSetpoint();
+  }
 }

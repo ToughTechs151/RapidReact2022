@@ -9,14 +9,15 @@ import frc.robot.RobotContainer;
 import frc.robot.subsystems.IntakeSubsystem;
 
 public class IntakeCommand extends CommandBase {
-  private IntakeSubsystem intakeSubsystem = null;
-  private double dir_ = 1;
+  private IntakeSubsystem intakeSubsystem;
+  boolean isFinished;
+  private int dir = 1;
 
   /** Creates a new RunIntake. */
-  public IntakeCommand(RobotContainer robotcontainer, double speed) {
+  public IntakeCommand(RobotContainer robotcontainer, int dir) {
     // Use addRequirements() here to declare subsystem dependencies.
     intakeSubsystem = robotcontainer.getIntakeSubsystem();
-    dir_ = speed;
+    this.dir = dir;
     addRequirements(intakeSubsystem);
   }
 
@@ -27,7 +28,10 @@ public class IntakeCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    intakeSubsystem.runIntake(dir_);
+    intakeSubsystem.runIntake(dir);
+    if (intakeSubsystem.isStop()) {
+      isFinished = true;
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -37,6 +41,6 @@ public class IntakeCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return isFinished;
   }
 }
