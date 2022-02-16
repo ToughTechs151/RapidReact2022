@@ -170,3 +170,7 @@ src/main/resources/*.txt
 
 # Robot deploy directory
 deploy
+
+### NetworkTable Persistence ###
+networktables.ini
+networktables.ini.bak
