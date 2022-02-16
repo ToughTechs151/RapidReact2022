@@ -37,9 +37,6 @@ public class ChassisSubsystem extends SubsystemBase {
   private RelativeEncoder rearLeftEncoder;
   private RelativeEncoder rearRightEncoder;
 
-  private MotorControllerGroup leftMotors;
-  private MotorControllerGroup rightMotors;
-
   private DifferentialDrive driveTrain;
   
   //drive constants
@@ -95,24 +92,32 @@ public class ChassisSubsystem extends SubsystemBase {
 
   /** Creates a new ChassisSubsystem. */
   public ChassisSubsystem() {
+
+    frontLeftMotor.restoreFactoryDefaults();
+    frontRightMotor.restoreFactoryDefaults();
+    rearLeftMotor.restoreFactoryDefaults();
+    rearRightMotor.restoreFactoryDefaults();
+
+    frontLeftMotor.setSmartCurrentLimit(Constants.MOTOR_CURRENT_LIMITS);
+    frontRightMotor.setSmartCurrentLimit(Constants.MOTOR_CURRENT_LIMITS);
+    rearLeftMotor.setSmartCurrentLimit(Constants.MOTOR_CURRENT_LIMITS);
+    rearRightMotor.setSmartCurrentLimit(Constants.MOTOR_CURRENT_LIMITS);
+
     frontLeftMotor.setIdleMode(IdleMode.kCoast);
     frontRightMotor.setIdleMode(IdleMode.kCoast);
     rearLeftMotor.setIdleMode(IdleMode.kCoast);
     rearRightMotor.setIdleMode(IdleMode.kCoast);
 
-    // TODO: set motor following
-    // rearLeftMotor.follow(frontLeftMotor);
-    // rearRightMotor.follow(frontRightMotor);
+    rearLeftMotor.follow(frontLeftMotor);
+    rearRightMotor.follow(frontRightMotor);
 
     frontLeftEncoder = frontLeftMotor.getEncoder();
     frontRightEncoder = frontRightMotor.getEncoder();
     rearLeftEncoder = rearLeftMotor.getEncoder();
     rearRightEncoder = rearRightMotor.getEncoder();
 
-    leftMotors = new MotorControllerGroup(frontLeftMotor, rearLeftMotor);
-    rightMotors = new MotorControllerGroup(frontRightMotor, rearRightMotor);
-    driveTrain = new DifferentialDrive(leftMotors, rightMotors);
-    rightMotors.setInverted(true);    
+    driveTrain = new DifferentialDrive(frontLeftMotor, frontRightMotor);
+    frontRightMotor.setInverted(true);    
   }
 
   @Override

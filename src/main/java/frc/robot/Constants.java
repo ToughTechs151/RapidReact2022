@@ -41,8 +41,10 @@ public final class Constants {
 
     // Mechanism CAN IDs
     public static int INTAKE_MOTOR = 6;
-    public static int ARM_MOTOR = 10;
-    //public static int ARM_MOTOR = 5;
+    public static int ARM_MOTOR = 5;
+
+    public static final int MOTOR_CURRENT_LIMITS = 30;
+
     //Intake Subsystem Speed
     public static final double INTAKE_SPEED = 0.5;
 
@@ -71,7 +73,7 @@ public final class Constants {
 	public static final int LEFT_JOYSTICK = 9;
     public static final int RIGHT_JOYSTICK = 10;
 
-    public static final double ARM_REVOLUTION = 1.5;
+    public static final double ARM_REVOLUTION = 0.5;
     public static final double POSTOLERANCE = 0.005;
     public static final double ARM_KP = 0.05;
     public static final double ARM_KI = 0.0;
