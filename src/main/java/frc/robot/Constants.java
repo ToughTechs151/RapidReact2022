@@ -22,7 +22,7 @@ public final class Constants {
     public static final String ARCADE = "Arcade";    
 
     // Scale Factor
-    public static final int SCALED_DRIVE = 2;
+    public static final int SCALED_DRIVE = 0;
 
     // Directions
     public static final int FORWARD = 1;
@@ -72,7 +72,7 @@ public final class Constants {
 	public static final int LEFT_JOYSTICK = 9;
     public static final int RIGHT_JOYSTICK = 10;
 
-    public static final double ARM_REVOLUTION = 0.5;
+    public static final double ARM_REVOLUTION = 4.5;
     public static final double POSTOLERANCE = 0.005;
     public static final double ARM_KP = 0.05;
     public static final double ARM_KI = 0.0;

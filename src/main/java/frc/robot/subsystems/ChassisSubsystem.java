@@ -174,7 +174,7 @@ public class ChassisSubsystem extends SubsystemBase {
       tankDrive(leftVal * speedMultiplier * dir, rightVal * speedMultiplier * dir);
     } else if (driveTrainType == RobotContainer.DriveTrainType.ARCADE) {
       double speed = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.LEFT_JOYSTICK_Y), scale, RobotSide.LEFT) * dir;
-      double rotation = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.RIGHT_JOYSTICK_X), scale, RobotSide.RIGHT);
+      double rotation = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.LEFT_JOYSTICK_X), scale, RobotSide.RIGHT);
       SmartDashboard.putNumber("Speed", speed);
       SmartDashboard.putNumber("Rotation", rotation);
       arcadeDrive(speed, rotation);
