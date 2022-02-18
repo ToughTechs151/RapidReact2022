@@ -4,7 +4,6 @@
 
 package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.ArmSubsystem;
 
@@ -21,8 +20,8 @@ public class ControlArmCommand extends CommandBase {
   public ControlArmCommand(RobotContainer robotcontainer, int position) {
     armSubsystem = robotcontainer.getArmSubsystem();
     addRequirements(armSubsystem); // here to declare subsystem dependencies.
-    setPoint = Constants.ARM_REVOLUTION * position;
-  }
+    setPoint = position;
+ }
 
   // Called when the command is initially scheduled.
   @Override

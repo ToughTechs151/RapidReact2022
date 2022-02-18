@@ -29,9 +29,8 @@ public final class Constants {
     public static final int REVERSE = -1;
 
     // Position
-    public static final int UP = 1;
-    public static final int DOWN = -1;
-    public static final int STOP = 0;
+    public static final int ARM_UP = 0;
+    public static final int ARM_DOWN = -15;
 
     // Drive Train CAN IDs
     public static int FRONT_LEFT_MOTOR = 4;
@@ -78,4 +77,7 @@ public final class Constants {
     public static final double ARM_KP = 0.05;
     public static final double ARM_KI = 0.0;
     public static final double ARM_KD = 0.0;
+    public static final double DRIVE_GEAR_RATIO = 2;
+    public static final double DRIVE_WHEEL_DIAMETER = 6;
+
 }
