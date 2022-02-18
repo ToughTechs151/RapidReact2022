@@ -238,11 +238,6 @@ public class ChassisSubsystem extends SubsystemBase {
     m_gyro.reset();
   }
 
-  public void resetEncoders() {
-    ((ADXRS450_Gyro) frontLeftEncoder).reset();
-    ((ADXRS450_Gyro) frontRightEncoder).reset();
-  }
-
   public double getLeftDistanceInch() {
     return frontLeftEncoder.getPosition();
   }

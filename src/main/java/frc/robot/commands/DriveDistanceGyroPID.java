@@ -12,10 +12,10 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveDistanceGyroPID extends CommandBase {
-  private final ChassisSubsystem m_drive;
-  private final double m_distance;
-  private final double m_speed;
-  private final PIDController m_controller = new PIDController(Constants.DRIVETRAIN_KP, Constants.DRIVETRAIN_KI, Constants.DRIVETRAIN_KD);
+  private final ChassisSubsystem drive;
+  private final double distance;
+  private final double speed;
+  private final PIDController controller = new PIDController(Constants.DRIVETRAIN_KP, Constants.DRIVETRAIN_KI, Constants.DRIVETRAIN_KD);
 
   /**
    * Creates a new DriveDistance. This command will drive your your robot for a desired distance at
@@ -26,9 +26,9 @@ public class DriveDistanceGyroPID extends CommandBase {
    * @param drive The drivetrain subsystem on which this command will run
    */
   public DriveDistanceGyroPID(double speed, double inches, ChassisSubsystem drive) {
-    m_distance = inches;
-    m_speed = speed;
-    m_drive = drive;
+    distance = inches;
+    this.speed = speed;
+    this.drive = drive;
     addRequirements(drive);
   }
 
@@ -36,41 +36,34 @@ public class DriveDistanceGyroPID extends CommandBase {
   @Override
   public void initialize() {
     // Set motors to stop, read encoder values for starting point
-    m_drive.arcadeDrive(0, 0);
-    m_drive.resetEncoders();
-    m_drive.resetGyro();
+    drive.tankDrive(0, 0);
+    //drive.resetEncoders();
+    drive.resetGyro();
     // Sets the error tolerance to 5, and the error derivative tolerance to 10 per second
-    m_controller.setTolerance(1, 5);
+    controller.setTolerance(1, 5);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //double error = -m_drive.getGyroAngleZ();
-    //double turn_power = Constants.DIVIDER  * error;
-    
-    var pidOutput = 
-    
-    m_controller.calculate(m_drive.getGyroAngle(), m_distance);
-
-    // Clamps the controller output to between -0.5 and 0.5
-    pidOutput = MathUtil.clamp(pidOutput, -m_speed, m_speed);
+    var pidOutput = controller.calculate(drive.getGyroAngle(), 0) / 10;
 
     //smartdashboard
     SmartDashboard.putNumber("DriveStraightPID", pidOutput);
-    m_drive.arcadeDrive(m_speed, pidOutput);
+    drive.tankDrive(speed + pidOutput, speed - pidOutput);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_drive.arcadeDrive(0, 0);
+    drive.tankDrive(0, 0);
+    controller.setSetpoint(0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     // Compare distance travelled from start to desired distance
-    return Math.abs(m_drive.getAverageDistanceInch()) >= m_distance;
+    return Math.abs(drive.getAverageDistanceInch()) >= distance;
   }
 }
