@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -16,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * project.
  */
 public class Robot extends TimedRobot {
+  
   private String driveTrainType;
   private Command autonomousCommand;
 
@@ -29,9 +31,12 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     // set default DriveTrainType preference
     if (!Preferences.containsKey(Constants.DRIVE_TRAIN_TYPE)) {
-      Preferences.setString(Constants.DRIVE_TRAIN_TYPE, Constants.TANK);
+      Preferences.setString(Constants.DRIVE_TRAIN_TYPE, Constants.ARCADE);
     }
     
+    // Start the Camera server
+    CameraServer.startAutomaticCapture();
+
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     Splash.printAllStatusFiles();
@@ -57,7 +62,7 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    driveTrainType = Preferences.getString(Constants.DRIVE_TRAIN_TYPE, Constants.TANK);
+    driveTrainType = Preferences.getString(Constants.DRIVE_TRAIN_TYPE, Constants.ARCADE);
     robotContainer.setDriveTrainType(driveTrainType);
   }
 
