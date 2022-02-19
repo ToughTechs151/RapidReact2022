@@ -126,6 +126,8 @@ public class ChassisSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Front Right Motor RPM", frontRightEncoder.getVelocity());
     SmartDashboard.putNumber("Rear Left Motor RPM", rearLeftEncoder.getVelocity());
     SmartDashboard.putNumber("Rear Right Motor RPM", rearRightEncoder.getVelocity());
+    SmartDashboard.putNumber("Left  POS", frontLeftEncoder.getPosition());
+    SmartDashboard.putNumber("Right POS", frontRightEncoder.getPosition());
     SmartDashboard.putNumber("Gyro angle", m_gyro.getAngle());    
   }
 
@@ -239,11 +241,12 @@ public class ChassisSubsystem extends SubsystemBase {
   }
 
   public double getLeftDistanceInch() {
-    return frontLeftEncoder.getPosition();
+    return frontLeftEncoder.getPosition() / Constants.DRIVE_GEAR_RATIO * Math.PI * Constants.DRIVE_WHEEL_DIAMETER;
+    
   }
 
   public double getRightDistanceInch() {
-    return frontRightEncoder.getPosition();
+    return frontRightEncoder.getPosition() / Constants.DRIVE_GEAR_RATIO * Math.PI * Constants.DRIVE_WHEEL_DIAMETER;
   }
 
   public double getAverageDistanceInch() {
