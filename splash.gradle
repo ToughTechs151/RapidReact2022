@@ -55,7 +55,7 @@ task versionTxt()  {
         new File("$resourcesDir/remote.txt").text = getGitRemote()
 
         String hostname = System.getenv("COMPUTERNAME")
-        String projectDir = "Loal hostname: $hostname " + "and project folder: $projectDir\n"
+        String projectDir = "Local hostname: $hostname " + "and project folder: $projectDir\n"
 
         new File("$resourcesDir/buildtime.txt").text = projectDir +
             "Build Date Time: " + new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date())
