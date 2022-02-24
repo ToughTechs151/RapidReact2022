@@ -240,6 +240,11 @@ public class ChassisSubsystem extends SubsystemBase {
     m_gyro.reset();
   }
 
+  public void resetEncoders() {
+    frontLeftEncoder.setPosition(0);
+    frontRightEncoder.setPosition(0);
+  }
+
   public double getLeftDistanceInch() {
     return frontLeftEncoder.getPosition() / Constants.DRIVE_GEAR_RATIO * Math.PI * Constants.DRIVE_WHEEL_DIAMETER;
     

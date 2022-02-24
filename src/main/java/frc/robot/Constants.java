@@ -77,7 +77,7 @@ public final class Constants {
     public static final double ARM_KP = 0.05;
     public static final double ARM_KI = 0.0;
     public static final double ARM_KD = 0.0;
-    public static final double DRIVE_GEAR_RATIO = 2;
+    public static final double DRIVE_GEAR_RATIO = 10.71;
     public static final double DRIVE_WHEEL_DIAMETER = 6;
 
 
