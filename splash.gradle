@@ -117,7 +117,7 @@ deploy.targets.roborio.artifacts.frcStaticFileDeploy.dependsOn(deployHost)
 // Remove the next two sections if you don't want Oblog.
 // Remember to update the Oblog version number.
 dependencies {
-    implementation 'com.github.Oblarg.Oblog:lib:4.0.9'
+    implementation 'com.github.Oblarg:Oblog:4.0.9'
 }
 repositories {
     maven {
