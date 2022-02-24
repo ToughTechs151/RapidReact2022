@@ -42,11 +42,13 @@ def getGitUser = { ->
     
     exec {
         commandLine "git", "config", "user.name"
+        ignoreExitValue true
         standardOutput = stdout
     }
     def stdoutglobal = new ByteArrayOutputStream()
     exec {
         commandLine "git", "config", "--global", "user.name"
+        ignoreExitValue true
         standardOutput = stdoutglobal
     }
     return stdout.toString().trim() + "  global:" + stdoutglobal.toString().trim()
