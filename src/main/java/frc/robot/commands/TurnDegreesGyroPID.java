@@ -15,7 +15,7 @@ public class TurnDegreesGyroPID extends CommandBase {
   private final ChassisSubsystem drive;
   private final double degrees;
   private final double speed;
-  private final PIDController controller = new PIDController(Constants.DRIVETRAIN_KP, Constants.DRIVETRAIN_KI, Constants.DRIVETRAIN_KD);
+  private final PIDController controller = new PIDController(0.07, Constants.DRIVETRAIN_KI, Constants.DRIVETRAIN_KD);
 
 
   /**
@@ -38,6 +38,7 @@ public class TurnDegreesGyroPID extends CommandBase {
   public void initialize() {
     // Set motors to stop, read encoder values for starting point
     drive.arcadeDrive(0, 0);
+    drive.resetEncoders();
     drive.resetGyro();
     // Sets the error tolerance to 5, and the error derivative tolerance to 10 per second
     controller.setTolerance(1, 5);
@@ -48,6 +49,11 @@ public class TurnDegreesGyroPID extends CommandBase {
   public void execute() {
     var pidOutput = controller.calculate(drive.getGyroAngle(), degrees);
     // Clamps the controller output output between -0.5 and 0.5
+    if(pidOutput < 0) {
+      pidOutput = Math.min(pidOutput, -0.1);
+    } else {
+      pidOutput = Math.max(pidOutput, 0.1);
+    }
     pidOutput = MathUtil.clamp(pidOutput, -speed, speed);
     SmartDashboard.putNumber("TurnPID", pidOutput);
     SmartDashboard.putNumber("GyroValue", drive.getGyroAngle());
