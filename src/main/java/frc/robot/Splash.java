@@ -10,16 +10,19 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 
-
+@java.lang.SuppressWarnings("squid:S106")
  class Splash {
 
+    private Splash() {}
+
      public static boolean printAllStatusFiles() {
+        final String SEPLINE = "====================================================================";
 
         // Print the Splash Screen
-        System.out.println("====================================================================");
-        System.out.println("====================================================================");
-        System.out.println("====================================================================");
-        System.out.println("====================================================================");
+        System.out.println(SEPLINE);
+        System.out.println(SEPLINE);
+        System.out.println(SEPLINE);
+        System.out.println(SEPLINE);
         System.out.println("Starting robotInit for Tough Techs");
         printStatusFile("deployhost.txt", true, 0, 2, 1);
         printStatusFile("deploytime.txt", true, 0, 3, 2);
@@ -28,19 +31,20 @@ import edu.wpi.first.wpilibj.RobotBase;
         printStatusFile("commit.txt", false, 1, 0, 10);
         printStatusFile("changes.txt", false, 2, 0, 10);
         printStatusFile("remote.txt", false, 3, 0, 10);
-        System.out.println("====================================================================");
+        printStatusFile("user.txt", false, 4, 0, 10);
+        System.out.println(SEPLINE);
 
         return true;
      }
 
-    
+    @java.lang.SuppressWarnings("squid:S2095")
     private static void printStatusFile(String filename, Boolean isDeploy, int rowIndex, int colIndex, int widthIndex) {
         byte[] buffer = new byte[1024];
         InputStream statusfile;
         ShuffleboardTab tab;
         NetworkTableEntry field;
         try {
-          if (isDeploy) {
+          if (Boolean.TRUE.equals(isDeploy)) {
             if (RobotBase.isSimulation()) {
               statusfile = new BufferedInputStream(
                   new FileInputStream(Filesystem.getLaunchDirectory() + "/src/main/deploy/" + filename));
@@ -65,8 +69,9 @@ import edu.wpi.first.wpilibj.RobotBase;
             }
           } finally {
             System.out.println();
-            statusfile.close();
           }
+          statusfile.close();
+
         } catch (Exception e) {
           System.out.println("Unable to find file.");
           System.out.println(e.getMessage());
