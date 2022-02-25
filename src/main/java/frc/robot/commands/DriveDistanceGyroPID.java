@@ -35,7 +35,7 @@ public class DriveDistanceGyroPID extends CommandBase {
   @Override
   public void initialize() {
     // Set motors to stop, read encoder values for starting point
-    drive.tankDrive(0, 0);
+    //drive.tankDrive(0, 0);
     drive.resetEncoders();
     drive.resetGyro();
     // Sets the error tolerance to 5, and the error derivative tolerance to 10 per second
@@ -58,7 +58,8 @@ public class DriveDistanceGyroPID extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     drive.tankDrive(0, 0);
-    controller.setSetpoint(0);
+    // controller.setSetpoint(0);
+    System.out.println("DriveDistanceGyroPID end");
   }
 
   // Returns true when the command should end.

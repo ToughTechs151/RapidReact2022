@@ -27,11 +27,24 @@ public class ControlArmCommand extends CommandBase {
   @Override
   public void initialize() {
     armSubsystem.armSetpoint(setPoint);
+    System.out.println("arm start");
   }
+
+  public void execute() {
+    //smartdashboard
+    //SmartDashboard.putNumber("DriveStraightPID",  );
+  }
+
+   // Called once the command ends or is interrupted.
+   @Override
+   public void end(boolean interrupted) {
+     System.out.println("arm end");
+   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return armSubsystem.atSetpoint();
+    return true;
+    //return armSubsystem.atSetpoint();
   }
 }
