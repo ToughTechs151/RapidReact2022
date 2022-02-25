@@ -50,9 +50,9 @@ public class TurnDegreesGyroPID extends CommandBase {
     var pidOutput = controller.calculate(drive.getGyroAngle(), degrees);
     // Clamps the controller output output between -0.5 and 0.5
     if(pidOutput < 0) {
-      pidOutput = Math.min(pidOutput, -0.1);
+      pidOutput = Math.min(pidOutput, -0.15);
     } else {
-      pidOutput = Math.max(pidOutput, 0.1);
+      pidOutput = Math.max(pidOutput, 0.15);
     }
     pidOutput = MathUtil.clamp(pidOutput, -speed, speed);
     SmartDashboard.putNumber("TurnPID", pidOutput);
@@ -64,7 +64,8 @@ public class TurnDegreesGyroPID extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     drive.arcadeDrive(0, 0);
-    controller.setSetpoint(0);
+    // controller.setSetpoint(0);
+    System.out.println("TurnDegreesGyroPID end");
   }
 
   // Returns true when the command should end.
