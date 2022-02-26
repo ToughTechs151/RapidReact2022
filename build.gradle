@@ -6,7 +6,6 @@ plugins {
     id "com.diffplug.spotless" version "6.1.0"
 }
 
-apply from: "splash.gradle"
 sourceCompatibility = JavaVersion.VERSION_11
 targetCompatibility = JavaVersion.VERSION_11
 
@@ -42,6 +41,9 @@ deploy {
 }
 
 def deployArtifact = deploy.targets.roborio.artifacts.frcJava
+
+// This has to be after the deploy block for the dependencies to work.
+apply from: "splash.gradle"
 
 // Set to true to use debug for JNI.
 wpi.java.debugJni = false

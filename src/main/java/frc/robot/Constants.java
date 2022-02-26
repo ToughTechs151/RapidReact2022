@@ -19,7 +19,7 @@ public final class Constants {
     // Robot preferences
     public static final String DRIVE_TRAIN_TYPE = "DriveTrainType";
     public static final String TANK = "Tank";
-    public static final String ARCADE = "Arcade";    
+    public static final String ARCADE = "Arcade";
 
     // Scale Factor
     public static final int SCALED_DRIVE = 0;
@@ -29,8 +29,8 @@ public final class Constants {
     public static final int REVERSE = -1;
 
     // Position
-    public static final int ARM_UP = 0;
-    public static final int ARM_DOWN = -15;
+    public static final double ARM_UP = 0.7;
+    public static final double ARM_DOWN = -17.3;
 
     // Drive Train CAN IDs
     public static int FRONT_LEFT_MOTOR = 4;
@@ -59,7 +59,7 @@ public final class Constants {
     public static final int LEFT_TRIGGER = 2;
     public static final int RIGHT_TRIGGER = 3;
     public static final int RIGHT_JOYSTICK_VERTICAL_AXIS = 5;
-    
+
     //OI BUTTON PORTS
 	public static final int A = 1;
     public static final int B = 2;

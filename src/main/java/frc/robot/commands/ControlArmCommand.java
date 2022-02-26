@@ -17,7 +17,7 @@ public class ControlArmCommand extends CommandBase {
    * @param robotcontainer
    * @param position
    */
-  public ControlArmCommand(RobotContainer robotcontainer, int position) {
+  public ControlArmCommand(RobotContainer robotcontainer, double position) {
     armSubsystem = robotcontainer.getArmSubsystem();
     addRequirements(armSubsystem); // here to declare subsystem dependencies.
     setPoint = position;
