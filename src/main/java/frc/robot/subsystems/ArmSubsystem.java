@@ -20,7 +20,7 @@ public class ArmSubsystem extends SubsystemBase {
   private CANSparkMax armMotor = new CANSparkMax(Constants.ARM_MOTOR, MotorType.kBrushless);
   private SparkMaxPIDController m_pidController;
   private RelativeEncoder armEncoder = armMotor.getEncoder();
-  public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput;
+  public double kP, kI, kD, kIz, kFF, kMaxOutput, kMinOutput, maxVel, minVel, maxAcc;
   double m_armSetpoint;
 
   /** Creates a new ArmSubsystem. */
@@ -37,17 +37,19 @@ public class ArmSubsystem extends SubsystemBase {
      */
     m_pidController = armMotor.getPIDController();
 
+    // The following is based on SparkMax Smart Motion Example
     // PID coefficients
-    //kP = 0.1;
-    //kI = 1e-4;
-    //kD = 1;
-    kP = 0.05;
-    kI = 0;
+    kP = 5e-5;
+    kI = 1e-6;
     kD = 0;
     kIz = 0;
-    kFF = 0;
-    kMaxOutput = 0.5;
-    kMinOutput = -0.5;
+    kFF = 0.000156;
+    kMaxOutput = 10;
+    kMinOutput = -1;
+
+    // Smart Motion Coefficients
+    maxVel = 2000; // rpm
+    maxAcc = 1500;
 
     // set PID coefficients
     m_pidController.setP(kP);
@@ -57,7 +59,23 @@ public class ArmSubsystem extends SubsystemBase {
     m_pidController.setFF(kFF);
     m_pidController.setOutputRange(kMinOutput, kMaxOutput);
 
-    m_pidController.setReference(Constants.ARM_UP, ControlType.kPosition);
+    /**
+     * Smart Motion coefficients are set on a SparkMaxPIDController object
+     *
+     * - setSmartMotionMaxVelocity() will limit the velocity in RPM of
+     * the pid controller in Smart Motion mode
+     * - setSmartMotionMinOutputVelocity() will put a lower bound in
+     * RPM of the pid controller in Smart Motion mode
+     * - setSmartMotionMaxAccel() will limit the acceleration in RPM^2
+     * of the pid controller in Smart Motion mode
+     * - setSmartMotionAllowedClosedLoopError() will set the max allowed
+     * error for the pid controller in Smart Motion mode
+     */
+    int smartMotionSlot = 0;
+    m_pidController.setSmartMotionMaxVelocity(maxVel, smartMotionSlot);
+    m_pidController.setSmartMotionMinOutputVelocity(minVel, smartMotionSlot);
+    m_pidController.setSmartMotionMaxAccel(maxAcc, smartMotionSlot);
+    //m_pidController.setSmartMotionAllowedClosedLoopError(allowedErr, smartMotionSlot);
   }
 
   public void periodic() {
@@ -73,7 +91,7 @@ public class ArmSubsystem extends SubsystemBase {
 
   public void armSetpoint(double armSetpoint){
     m_armSetpoint = armSetpoint;
-    m_pidController.setReference(armSetpoint, ControlType.kPosition);
+    m_pidController.setReference(armSetpoint, ControlType.kSmartMotion);
   }
 
   public boolean atSetpoint() {
