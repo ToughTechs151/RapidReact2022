@@ -5,17 +5,17 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import frc.robot.Constants;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class ArmSubsystem extends SubsystemBase {
-    // Put methods for controlling this subsystem
+  // Put methods for controlling this subsystem
   // here. Call these from Commands.
   private CANSparkMax armMotor = new CANSparkMax(Constants.ARM_MOTOR, MotorType.kBrushless);
   private SparkMaxPIDController m_pidController;
@@ -31,16 +31,15 @@ public class ArmSubsystem extends SubsystemBase {
     armEncoder.setPosition(Constants.ARM_UP);
 
     /**
-     * In order to use PID functionality for a controller, a SparkMaxPIDController object
-     * is constructed by calling the getPIDController() method on an existing
-     * CANSparkMax object
+     * In order to use PID functionality for a controller, a SparkMaxPIDController object is
+     * constructed by calling the getPIDController() method on an existing CANSparkMax object
      */
     m_pidController = armMotor.getPIDController();
 
     // PID coefficients
-    //kP = 0.1;
-    //kI = 1e-4;
-    //kD = 1;
+    // kP = 0.1;
+    // kI = 1e-4;
+    // kD = 1;
     kP = 0.05;
     kI = 0;
     kD = 0;
@@ -68,10 +67,11 @@ public class ArmSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("ARM get", armMotor.get());
     SmartDashboard.putNumber("ARM getCPR", armEncoder.getCountsPerRevolution());
     SmartDashboard.putNumber("ARM getPosition", armEncoder.getPosition());
-    SmartDashboard.putNumber("ARM getVelocityConversionFactor", armEncoder.getVelocityConversionFactor());
+    SmartDashboard.putNumber(
+        "ARM getVelocityConversionFactor", armEncoder.getVelocityConversionFactor());
   }
 
-  public void armSetpoint(double armSetpoint){
+  public void armSetpoint(double armSetpoint) {
     m_armSetpoint = armSetpoint;
     m_pidController.setReference(armSetpoint, ControlType.kPosition);
   }

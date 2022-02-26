@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * project.
  */
 public class Robot extends TimedRobot {
-  
+
   private String driveTrainType;
   private Command autonomousCommand;
 
@@ -33,7 +33,7 @@ public class Robot extends TimedRobot {
     if (!Preferences.containsKey(Constants.DRIVE_TRAIN_TYPE)) {
       Preferences.setString(Constants.DRIVE_TRAIN_TYPE, Constants.ARCADE);
     }
-    
+
     // Start the Camera server
     CameraServer.startAutomaticCapture();
 
@@ -93,8 +93,8 @@ public class Robot extends TimedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
-    //driveTrainType = Preferences.getString(Constants.DRIVE_TRAIN_TYPE, Constants.TANK);
-    //robotContainer.setDriveTrainType(driveTrainType);
+    // driveTrainType = Preferences.getString(Constants.DRIVE_TRAIN_TYPE, Constants.TANK);
+    // robotContainer.setDriveTrainType(driveTrainType);
   }
 
   /** This function is called periodically during operator control. */

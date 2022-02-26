@@ -6,22 +6,20 @@
 /*----------------------------------------------------------------------------*/
 
 package frc.robot.oi;
-//import edu.wpi.first.wpilibj.buttons.JoystickButton;
+// import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 
-/**
- * Driver OI Controls
- */
+/** Driver OI Controls */
 public class DriverOI extends OI {
 
-    public DriverOI(int channel, RobotContainer robotContainer) {
-        super(channel);
-        
-        a = new JoystickButton(joystick, Constants.A);
-        y = new JoystickButton(joystick, Constants.Y);
-        b = new JoystickButton(joystick, Constants.B);
-        a = new JoystickButton(joystick, Constants.A);          
-    }
+  public DriverOI(int channel, RobotContainer robotContainer) {
+    super(channel);
+
+    a = new JoystickButton(joystick, Constants.A);
+    y = new JoystickButton(joystick, Constants.Y);
+    b = new JoystickButton(joystick, Constants.B);
+    a = new JoystickButton(joystick, Constants.A);
+  }
 }

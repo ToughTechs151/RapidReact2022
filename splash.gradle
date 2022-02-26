@@ -2,7 +2,8 @@ import java.text.SimpleDateFormat
 
 
 // Functions to write output to Splash Screen info
-def getGitHash = { ->
+def getGitHash = {
+    ->
     def stdout = new ByteArrayOutputStream()
     exec {
         commandLine "git", "log", "-n", "1", "--oneline", "--decorate", "HEAD"
@@ -11,7 +12,8 @@ def getGitHash = { ->
     return stdout.toString().trim()
 }
 
-def getGitBranch = { ->
+def getGitBranch = {
+    ->
     def stdout = new ByteArrayOutputStream()
     exec {
         commandLine "git", "rev-parse", "--abbrev-ref", "HEAD"
@@ -20,7 +22,8 @@ def getGitBranch = { ->
     return stdout.toString().trim()
 }
 
-def getGitFilesChanged = { ->
+def getGitFilesChanged = {
+    ->
     def stdout = new ByteArrayOutputStream()
     exec {
         commandLine "git", "diff", "--name-only", "HEAD"
@@ -29,7 +32,8 @@ def getGitFilesChanged = { ->
     return stdout.toString().trim().replace("\n", ", ").replace("src/main/java/frc/robot/", "")
 }
 
-def getGitRemote = { ->
+def getGitRemote = {
+    ->
     def stdout = new ByteArrayOutputStream()
     exec {
         commandLine "git", "remote", "--verbose"
@@ -48,7 +52,7 @@ task versionTxt()  {
         new File("$resourcesDir/buildtime.txt").text = "Empty"
     }
     doLast {
-        
+
         new File("$resourcesDir/branch.txt").text = getGitBranch()
         new File("$resourcesDir/commit.txt").text = getGitHash()
         new File("$resourcesDir/changes.txt").text = getGitFilesChanged()
@@ -58,7 +62,7 @@ task versionTxt()  {
         String projectDir = "Local hostname: $hostname " + "and project folder: $projectDir\n"
 
         new File("$resourcesDir/buildtime.txt").text = projectDir +
-            "Build Date Time: " + new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date())
+                "Build Date Time: " + new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date())
     }
 }
 
@@ -77,8 +81,8 @@ task deployHost() {
             deploy_host = "unknown"
         }
         new File("$deployDir/deployhost.txt").text = deploy_host
-        new File("$deployDir/deploytime.txt").text = 
-            new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date())
+        new File("$deployDir/deploytime.txt").text =
+                new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date())
     }
 }
 task ensureResources() {
