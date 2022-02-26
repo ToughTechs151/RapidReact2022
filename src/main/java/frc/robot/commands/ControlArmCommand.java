@@ -3,7 +3,6 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.ArmSubsystem;
@@ -13,9 +12,8 @@ public class ControlArmCommand extends CommandBase {
   private double setPoint;
 
   /**
-   * ControlArmCommand - commanding the arm to move up or down and hold its position when the arm
-   * reach the final position
-   *
+   * ControlArmCommand - commanding the arm to move up or down and hold its position
+   * when the arm reach the final position
    * @param robotcontainer
    * @param position
    */
@@ -23,7 +21,7 @@ public class ControlArmCommand extends CommandBase {
     armSubsystem = robotcontainer.getArmSubsystem();
     addRequirements(armSubsystem); // here to declare subsystem dependencies.
     setPoint = position;
-  }
+ }
 
   // Called when the command is initially scheduled.
   @Override
