@@ -10,3 +10,4 @@
 # every. Single. Line of source.
 *.gradle text eol=crlf
 *.java text eol=crlf
+*.md text eol=crlf
