@@ -8,24 +8,5 @@
 # say “CRLF” (assuming the user hasn't overridden `core.eol`), even when all of
 # the checked-out files are LF-terminated. So Spotless will throw an error for
 # every. Single. Line of source.
-#
-# The solution is to tell Git that we want all files (`*`) to be LF-terminated
-# (`eol=lf`), but we don't ever want it to do any conversions automatically
-# (`-text`).
-#
-# Some sources, including Spotless themselves (https://github.com/diffplug/
-# spotless/tree/main/plugin-gradle#line-endings-and-encodings-invisible-stuff),
-# suggest using:
-#
-#     * text eol=lf
-#
-# This forces Git to treat all files (`*`) as text (`text`) with LF-terminated
-# lines (`eol=lf`). This configuration will break any binary files checked into
-# the repository! Git will perform end-of-line mangling – sorry,
-# “normalization” – on checkout of all files it thinks contain text. If it
-# thinks your binary files are text and should have LF-terminated lines, then
-# it'll happily replace all CRLF byte sequences (0x0D0A) with just LF (0x0A).
-#
-# So, to recap: keep line ending conversions disabled, but maintain a correct
-# opinion about what the line endings should be.
-* -text eol=lf
+*.gradle text eol=crlf
+*.java text eol=crlf
