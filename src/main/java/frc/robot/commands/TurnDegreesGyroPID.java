@@ -51,9 +51,9 @@ public class TurnDegreesGyroPID extends CommandBase {
     var pidOutput = controller.calculate(drive.getGyroAngle(), degrees);
     // Clamps the controller output output between -0.5 and 0.5
     if(pidOutput < 0) {
-      pidOutput = Math.min(pidOutput, -0.15);
+      pidOutput = Math.min(pidOutput, -0.2);
     } else {
-      pidOutput = Math.max(pidOutput, 0.15);
+      pidOutput = Math.max(pidOutput, 0.2);
     }
     pidOutput = MathUtil.clamp(pidOutput, -speed, speed);
     SmartDashboard.putNumber("TurnPID", pidOutput);

@@ -33,30 +33,31 @@ public class AutonomousDrive extends SequentialCommandGroup {
       // new DriveDistanceGyroPID(0.5, 20, chassisSubsystem),
       // new TurnDegreesGyroPID(0.5, 180, chassisSubsystem)
 
-      new TurnDegreesGyroPID(0.5, 90, chassisSubsystem),
-      new TurnDegreesGyroPID(0.5, 90, chassisSubsystem),
-      new TurnDegreesGyroPID(0.5, 90, chassisSubsystem),
-      new TurnDegreesGyroPID(0.5, 90, chassisSubsystem)
+      // new TurnDegreesGyroPID(0.5, 90, chassisSubsystem),
+      // new TurnDegreesGyroPID(0.5, 90, chassisSubsystem),
+      // new TurnDegreesGyroPID(0.5, 90, chassisSubsystem),
+      // new TurnDegreesGyroPID(0.5, 90, chassisSubsystem)
 
       // new TurnDegreesGyroPID(0.5, 180, chassisSubsystem),
       // new TurnDegreesGyroPID(0.5, 180, chassisSubsystem)
 
-    // new PrintCommand("startCommand"),
-    // new DriveDistanceGyroPID(0.5, 20, chassisSubsystem),
-    // new TurnDegreesGyroPID(0.5, 22.5, chassisSubsystem),
-    // new IntakeCommand(robotContainer, Constants.FORWARD),
-    // new WaitCommand(1),
-    // new StopIntakeCommand(robotContainer),
-    // new DriveDistanceGyroPID(-0.5, 15, chassisSubsystem),
-    // new TurnDegreesGyroPID(0.5, 180, chassisSubsystem),
-    // new ControlArmCommand(robotContainer, Constants.ARM_DOWN),
-    // new DriveDistanceGyroPID(0.5, 20, chassisSubsystem),
-    // new IntakeCommand(robotContainer, Constants.REVERSE),
-    // new WaitCommand(1),
-    // new StopIntakeCommand(robotContainer),
-    // new ControlArmCommand(robotContainer, Constants.ARM_UP),
-    // new TurnDegreesGyroPID(0.5, 180, chassisSubsystem),
-    // new DriveDistanceGyroPID(0.5, 20, chassisSubsystem)
+    new PrintCommand("startCommand"),
+    new DriveDistanceGyroPID(0.5, 20, chassisSubsystem),
+    new TurnDegreesGyroPID(0.7, 22.5, chassisSubsystem),
+    new DriveDistanceGyroPID(-0.5, 15, chassisSubsystem),
+    new TurnDegreesGyroPID(0.5, 180, chassisSubsystem),
+    new ControlArmCommand(robotContainer, Constants.ARM_DOWN),
+    new DriveDistanceGyroPID(0.5, 20, chassisSubsystem),
+    new IntakeCommand(robotContainer, Constants.IN),
+    new WaitCommand(1),
+    new StopIntakeCommand(robotContainer),
+    new ControlArmCommand(robotContainer, Constants.ARM_UP),
+    new TurnDegreesGyroPID(0.5, 180, chassisSubsystem),
+    new DriveDistanceGyroPID(0.5, 35, chassisSubsystem),
+    new IntakeCommand(robotContainer, Constants.OUT),
+    new WaitCommand(1),
+    new StopIntakeCommand(robotContainer)
+    
  
      //new DriveDistanceGyroPID(0.5, -, chassisSubsystem)
     // new StopIntakeCommand(robotContainer),
