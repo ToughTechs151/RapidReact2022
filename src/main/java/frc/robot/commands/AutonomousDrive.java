@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
@@ -20,24 +21,43 @@ public class AutonomousDrive extends SequentialCommandGroup {
   public AutonomousDrive(RobotContainer robotContainer) {
     ChassisSubsystem chassisSubsystem = robotContainer.getChassisSubsystem();
     addCommands( 
-    //new IntakeCommand(robotContainer, Constants.FORWARD),
-    //new TurnDegreesGyroPID(0.5, 90, chassisSubsystem),
-    // new StopIntakeCommand(robotContainer),
-    //new TurnDegreesGyroPID(0.5, -90, chassisSubsystem)
 
+      
+      // new DriveDistanceGyroPID(0.5, 20, chassisSubsystem),
+      // new DriveDistanceGyroPID(-0.5, 20, chassisSubsystem),
+      // new DriveDistanceGyroPID(0.5, 20, chassisSubsystem),
+      // new DriveDistanceGyroPID(-0.5, 20, chassisSubsystem)
+
+      // new DriveDistanceGyroPID(0.5, 20, chassisSubsystem),
+      // new TurnDegreesGyroPID(0.5, 180, chassisSubsystem),
+      // new DriveDistanceGyroPID(0.5, 20, chassisSubsystem),
+      // new TurnDegreesGyroPID(0.5, 180, chassisSubsystem)
+
+      new TurnDegreesGyroPID(0.5, 90, chassisSubsystem),
+      new TurnDegreesGyroPID(0.5, 90, chassisSubsystem),
+      new TurnDegreesGyroPID(0.5, 90, chassisSubsystem),
+      new TurnDegreesGyroPID(0.5, 90, chassisSubsystem)
+
+      // new TurnDegreesGyroPID(0.5, 180, chassisSubsystem),
+      // new TurnDegreesGyroPID(0.5, 180, chassisSubsystem)
+
+    // new PrintCommand("startCommand"),
     // new DriveDistanceGyroPID(0.5, 20, chassisSubsystem),
     // new TurnDegreesGyroPID(0.5, 22.5, chassisSubsystem),
     // new IntakeCommand(robotContainer, Constants.FORWARD),
-    // new WaitCommand(2),
+    // new WaitCommand(1),
     // new StopIntakeCommand(robotContainer),
     // new DriveDistanceGyroPID(-0.5, 15, chassisSubsystem),
-    // new WaitCommand(2),
-    // new TurnDegreesGyroPID(0.4, 180, chassisSubsystem),
-    new ControlArmCommand(robotContainer, Constants.ARM_DOWN),
-    new IntakeCommand(robotContainer, Constants.REVERSE)
-    //new WaitCommand(2),
-    //new StopIntakeCommand(robotContainer)
-
+    // new TurnDegreesGyroPID(0.5, 180, chassisSubsystem),
+    // new ControlArmCommand(robotContainer, Constants.ARM_DOWN),
+    // new DriveDistanceGyroPID(0.5, 20, chassisSubsystem),
+    // new IntakeCommand(robotContainer, Constants.REVERSE),
+    // new WaitCommand(1),
+    // new StopIntakeCommand(robotContainer),
+    // new ControlArmCommand(robotContainer, Constants.ARM_UP),
+    // new TurnDegreesGyroPID(0.5, 180, chassisSubsystem),
+    // new DriveDistanceGyroPID(0.5, 20, chassisSubsystem)
+ 
      //new DriveDistanceGyroPID(0.5, -, chassisSubsystem)
     // new StopIntakeCommand(robotContainer),
     // new DriveDistanceGyroPID(0.5, -30, chassisSubsystem),
@@ -48,7 +68,7 @@ public class AutonomousDrive extends SequentialCommandGroup {
     // new TurnDegreesGyroPID(0.5, 180, chassisSubsystem),
     // new DriveDistanceGyroPID(0.5, 30, chassisSubsystem),
     // new IntakeCommand(robotContainer, Constants.FORWARD),
-    // new WaitCommand(2),
+    // new WaitCommand(1),
     // new StopIntakeCommand(robotContainer)
 
     //new DriveDistanceGyroPID(0.5, -20, chassisSubsystem),
@@ -65,7 +85,16 @@ public class AutonomousDrive extends SequentialCommandGroup {
     //new TurnDegreesGyroPID(0.5, 90, chassisSubsystem),
     //new DriveDistanceGyroPID(0.5, 10, chassisSubsystem),
     //new IntakeCommand(robotContainer, Constants.REVERSE) 
-    
+
+    // all possibble commands:
+      //new DriveDistanceGyroPID(0.5, 30, chassisSubsystem),
+      //new TurnDegreesGyroPID(0.5, 90, chassisSubsystem),
+      //new IntakeCommand(robotContainer, Constants.FORWARD),
+      //new IntakeCommand(robotContainer, Constants.REVERSE),
+      //new WaitCommand(2),
+      //new StopIntakeCommand(robotContainer),
+      //new ControlArmCommand(robotContainer, Constants.ARM_UP),
+      //new ControlArmCommand(robotContainer, Constants.ARM_DOWN),
     );
   } 
 }
