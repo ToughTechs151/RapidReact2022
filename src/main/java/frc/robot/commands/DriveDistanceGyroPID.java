@@ -40,6 +40,7 @@ public class DriveDistanceGyroPID extends CommandBase {
     drive.resetGyro();
     // Sets the error tolerance to 5, and the error derivative tolerance to 10 per second
     controller.setTolerance(1, 5);
+    System.out.println("DriveDistance start");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -58,7 +59,7 @@ public class DriveDistanceGyroPID extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     drive.tankDrive(0, 0);
-    // controller.setSetpoint(0);
+    controller.close();
     System.out.println("DriveDistanceGyroPID end");
   }
 

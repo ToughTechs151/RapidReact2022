@@ -37,11 +37,12 @@ public class TurnDegreesGyroPID extends CommandBase {
   @Override
   public void initialize() {
     // Set motors to stop, read encoder values for starting point
-    drive.arcadeDrive(0, 0);
+    //drive.arcadeDrive(0, 0);
     drive.resetEncoders();
     drive.resetGyro();
     // Sets the error tolerance to 5, and the error derivative tolerance to 10 per second
     controller.setTolerance(1, 5);
+    System.out.println("TurnDegrees start");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -65,7 +66,7 @@ public class TurnDegreesGyroPID extends CommandBase {
   public void end(boolean interrupted) {
     drive.arcadeDrive(0, 0);
     // controller.setSetpoint(0);
-    System.out.println("TurnDegreesGyroPID end");
+    System.out.println("TurnDegreesGyroPID end " + interrupted);
   }
 
   // Returns true when the command should end.
