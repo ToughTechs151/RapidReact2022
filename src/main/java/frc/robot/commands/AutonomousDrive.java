@@ -44,6 +44,9 @@ public class AutonomousDrive extends SequentialCommandGroup {
     new PrintCommand("startCommand"),
     new DriveDistanceGyroPID(0.5, 20, chassisSubsystem),
     new TurnDegreesGyroPID(0.7, 22.5, chassisSubsystem),
+    new IntakeCommand(robotContainer, Constants.OUT),
+    new WaitCommand(1),
+    new StopIntakeCommand(robotContainer),
     new DriveDistanceGyroPID(-0.5, 15, chassisSubsystem),
     new TurnDegreesGyroPID(0.5, 180, chassisSubsystem),
     new ControlArmCommand(robotContainer, Constants.ARM_DOWN),
@@ -53,7 +56,7 @@ public class AutonomousDrive extends SequentialCommandGroup {
     new StopIntakeCommand(robotContainer),
     new ControlArmCommand(robotContainer, Constants.ARM_UP),
     new TurnDegreesGyroPID(0.5, 180, chassisSubsystem),
-    new DriveDistanceGyroPID(0.5, 35, chassisSubsystem),
+    new DriveDistanceGyroPID(0.5, 50, chassisSubsystem),
     new IntakeCommand(robotContainer, Constants.OUT),
     new WaitCommand(1),
     new StopIntakeCommand(robotContainer)
