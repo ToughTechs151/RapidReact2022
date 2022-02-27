@@ -41,7 +41,7 @@ public class ChassisSubsystem extends SubsystemBase {
   /**
   * The scaling factor between the joystick value and the speed controller
   */
-  private double speedMultiplier = 1.0;
+  private double speedMultiplier = 0.5;
 
   /**
    * The scale factor for normal mode
@@ -51,7 +51,7 @@ public class ChassisSubsystem extends SubsystemBase {
   /**
    * The scale factor for crawl mode
    */
-  private static final double crawl = 0.5;  
+  private static final double crawl = 0.3;  
 
     /**
    * The minimum (closest to 0) speed controller command for the right side of the drive train to start moving forward. Must be empirically derived.
