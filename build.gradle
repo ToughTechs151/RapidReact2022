@@ -93,7 +93,7 @@ wpi.java.configureExecutableTasks(jar)
 wpi.java.configureTestTasks(test)
 
 spotless {
-    // ratchetFrom 'origin/main' //only format files which have changed since origin/main
+    ratchetFrom 'origin/main' //only format files which have changed since origin/main
     java {
         target fileTree('.') {
             include '**/*.java'
