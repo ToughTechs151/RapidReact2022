@@ -8,6 +8,8 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
+
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -25,9 +27,10 @@ public class ChassisSubsystem extends SubsystemBase {
   private CANSparkMax frontLeftMotor = new CANSparkMax(Constants.FRONT_LEFT_MOTOR, MotorType.kBrushless);
   private CANSparkMax frontRightMotor = new CANSparkMax(Constants.FRONT_RIGHT_MOTOR, MotorType.kBrushless);
   private CANSparkMax rearLeftMotor = new CANSparkMax(Constants.REAR_LEFT_MOTOR, MotorType.kBrushless);
-  private CANSparkMax rearRightMotor = new CANSparkMax(Constants.REAR_RIGHT_MOTOR, MotorType.kBrushless);  
+  private CANSparkMax rearRightMotor = new CANSparkMax(Constants.REAR_RIGHT_MOTOR, MotorType.kBrushless);
   // The gyro sensor
   private final ADXRS450_Gyro m_gyro = new ADXRS450_Gyro();
+  private final PIDController controller = new PIDController(Constants.DRIVETRAIN_KP, Constants.DRIVETRAIN_KI, Constants.DRIVETRAIN_KD);
 
   // Encoder declarations
   private RelativeEncoder frontLeftEncoder;
@@ -36,7 +39,8 @@ public class ChassisSubsystem extends SubsystemBase {
   private RelativeEncoder rearRightEncoder;
 
   private DifferentialDrive driveTrain;
-  
+  private double m_gyroAngle = Constants.GYRO_NOTUSED;
+
   //drive constants
   /**
   * The scaling factor between the joystick value and the speed controller
@@ -51,7 +55,7 @@ public class ChassisSubsystem extends SubsystemBase {
   /**
    * The scale factor for crawl mode
    */
-  private static final double crawl = 0.3;  
+  private static final double crawl = 0.3;
 
     /**
    * The minimum (closest to 0) speed controller command for the right side of the drive train to start moving forward. Must be empirically derived.
@@ -82,7 +86,7 @@ public class ChassisSubsystem extends SubsystemBase {
 
   //arcade drive constant
   private double turnGain = 0.75;
-  
+
   /**
    * The direction which is "forward"; 1 represents the hatch side and -1 represents the cargo side.
    */
@@ -115,7 +119,8 @@ public class ChassisSubsystem extends SubsystemBase {
     rearRightEncoder = rearRightMotor.getEncoder();
 
     driveTrain = new DifferentialDrive(frontLeftMotor, frontRightMotor);
-    frontRightMotor.setInverted(true);    
+    frontRightMotor.setInverted(true);
+    m_gyroAngle = Constants.GYRO_NOTUSED;
   }
 
   @Override
@@ -128,7 +133,7 @@ public class ChassisSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Rear Right Motor RPM", rearRightEncoder.getVelocity());
     SmartDashboard.putNumber("Left  POS", frontLeftEncoder.getPosition());
     SmartDashboard.putNumber("Right POS", frontRightEncoder.getPosition());
-    SmartDashboard.putNumber("Gyro angle", m_gyro.getAngle());    
+    SmartDashboard.putNumber("Gyro angle", m_gyro.getAngle());
   }
 
   /**
@@ -149,6 +154,15 @@ public class ChassisSubsystem extends SubsystemBase {
     driveTrain.arcadeDrive(speed, rotation);
   }
 
+  public void startDriveStraight() {
+    resetGyro();
+    m_gyroAngle = m_gyro.getAngle();
+    controller.setTolerance(1, 5);
+  }
+  public void endDriveStraight() {
+    m_gyroAngle = Constants.GYRO_NOTUSED;
+  }
+
   /**
    * drive - set speed to chassis with the joystick input with a scale
    * @param driverOI
@@ -156,12 +170,13 @@ public class ChassisSubsystem extends SubsystemBase {
    */
   public void drive(RobotContainer robotContainer, DriverOI driverOI, int scale) {
     speedMultiplier = driverOI.getJoystick().getRawButton(Constants.RIGHT_BUMPER) ? crawl : normal;
-    dir = driverOI.getJoystick().getRawButton(Constants.LEFT_BUMPER) ? Constants.OUT : Constants.IN;
-    
+    // LEFT_BUMPER is now changed to drive straight tankDrive.
+    //dir = driverOI.getJoystick().getRawButton(Constants.LEFT_BUMPER) ? Constants.OUT : Constants.IN;
+
     RobotContainer.DriveTrainType driveTrainType = robotContainer.getDriveTrainType();
 
     if (driveTrainType == RobotContainer.DriveTrainType.TANK) {
-      double rightVal;  
+      double rightVal;
       double leftVal;
       if(dir == Constants.IN) {
         rightVal = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.RIGHT_JOYSTICK_Y), scale, RobotSide.RIGHT);
@@ -170,9 +185,21 @@ public class ChassisSubsystem extends SubsystemBase {
         rightVal = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.LEFT_JOYSTICK_Y), scale, RobotSide.RIGHT);
         leftVal = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.RIGHT_JOYSTICK_Y), scale, RobotSide.LEFT);
       }
-      SmartDashboard.putNumber("Left Speed", leftVal);
-      SmartDashboard.putNumber("Right Speed", rightVal);
-      tankDrive(leftVal * speedMultiplier * dir, rightVal * speedMultiplier * dir);
+      if(m_gyroAngle != Constants.GYRO_NOTUSED)
+      {
+        var pidOutput = controller.calculate(getGyroAngle(), 0) / 10;
+
+        var speed = leftVal * speedMultiplier * dir;
+        SmartDashboard.putNumber("Left Speed", speed+pidOutput);
+        SmartDashboard.putNumber("Right Speed", speed-pidOutput);
+        tankDrive(speed + pidOutput, speed - pidOutput);
+      }
+      else
+      {
+        SmartDashboard.putNumber("Left Speed", leftVal);
+        SmartDashboard.putNumber("Right Speed", rightVal);
+        tankDrive(leftVal * speedMultiplier * dir, rightVal * speedMultiplier * dir);
+      }
     } else if (driveTrainType == RobotContainer.DriveTrainType.ARCADE) {
       double speed = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.LEFT_JOYSTICK_Y), scale, RobotSide.LEFT) * dir;
       double rotation = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.LEFT_JOYSTICK_X), scale, RobotSide.RIGHT);
@@ -184,7 +211,7 @@ public class ChassisSubsystem extends SubsystemBase {
 
   /**
    * Find the scale factor based on the input value and scale on each side of the Robot's motors
-   * 
+   *
    * @param val
    * @param scale
    * @param side
@@ -247,7 +274,6 @@ public class ChassisSubsystem extends SubsystemBase {
 
   public double getLeftDistanceInch() {
     return frontLeftEncoder.getPosition() / Constants.DRIVE_GEAR_RATIO * Math.PI * Constants.DRIVE_WHEEL_DIAMETER;
-    
   }
 
   public double getRightDistanceInch() {
