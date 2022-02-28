@@ -7,9 +7,10 @@ package frc.robot;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.commands.AutonomousDrive;
 import frc.robot.commands.DriveWithJoystickCommand;
 import frc.robot.oi.CoDriverOI;
@@ -48,6 +49,8 @@ public class RobotContainer {
   private CoDriverOI codriverOI;
   private IntakeSubsystem intakeSubsystem;
   private DriveTrainType driveTrainType = DriveTrainType.TANK;
+  private SendableChooser<Command> chooser = new SendableChooser<>();
+  private AutonomousDrive autonomousDrive;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -65,6 +68,14 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    // configure the autonomonous chooser
+    autonomousDrive = new AutonomousDrive(this);
+    chooser.setDefaultOption("Auto Drive Right", autonomousDrive);
+    chooser.addOption("No Auto", new PrintCommand("No Auto"));
+
+    // Put the chooser on the dashboard
+    SmartDashboard.putData(chooser);
+
     // create driver & codriver oi
     driverOI = new DriverOI(Constants.DRIVER_OI, this);
     codriverOI = new CoDriverOI(Constants.CODRIVE_OI, this);
@@ -101,7 +112,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new AutonomousDrive(this);    
+    return chooser.getSelected();
   }
 
   /**
