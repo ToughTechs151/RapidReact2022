@@ -21,8 +21,6 @@ public class ControlArmCommand extends CommandBase {
     armSubsystem = robotcontainer.getArmSubsystem();
     addRequirements(armSubsystem); // here to declare subsystem dependencies.
     setPoint = position;
-
-    armSubsystem.armSetpoint(setPoint);
  }
 
   // Called when the command is initially scheduled.
