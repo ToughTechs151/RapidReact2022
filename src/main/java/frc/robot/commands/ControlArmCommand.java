@@ -14,11 +14,11 @@ public class ControlArmCommand extends CommandBase {
   /**
    * ControlArmCommand - commanding the arm to move up or down and hold its position
    * when the arm reach the final position
-   * @param robotcontainer
+   * @param robotContainer
    * @param position
    */
-  public ControlArmCommand(RobotContainer robotcontainer, double position) {
-    armSubsystem = robotcontainer.getArmSubsystem();
+  public ControlArmCommand(RobotContainer robotContainer, double position) {
+    armSubsystem = robotContainer.getArmSubsystem();
     addRequirements(armSubsystem); // here to declare subsystem dependencies.
     setPoint = position;
  }

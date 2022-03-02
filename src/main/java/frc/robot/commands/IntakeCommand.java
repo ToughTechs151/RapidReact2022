@@ -14,9 +14,9 @@ public class IntakeCommand extends CommandBase {
   private int dir = 1;
 
   /** Creates a new RunIntake. */
-  public IntakeCommand(RobotContainer robotcontainer, int dir) {
+  public IntakeCommand(RobotContainer robotContainer, int dir) {
     // Use addRequirements() here to declare subsystem dependencies.
-    intakeSubsystem = robotcontainer.getIntakeSubsystem();
+    intakeSubsystem = robotContainer.getIntakeSubsystem();
     this.dir = dir;
     addRequirements(intakeSubsystem);
   }

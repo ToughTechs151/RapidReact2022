@@ -25,8 +25,8 @@ public final class Constants {
     public static final int SCALED_DRIVE = 0;
 
     // Directions
-    public static final int OUT = 1;
-    public static final int IN = -1;
+    public static final int INTAKE_OUT = 1;
+    public static final int INTAKE_IN = -1;
 
     // Position
     public static final double ARM_UP = 1;

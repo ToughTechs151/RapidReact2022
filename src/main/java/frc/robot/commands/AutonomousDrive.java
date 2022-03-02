@@ -22,83 +22,27 @@ public class AutonomousDrive extends SequentialCommandGroup {
     ChassisSubsystem chassisSubsystem = robotContainer.getChassisSubsystem();
     addCommands( 
 
-      
-      // new DriveDistanceGyroPID(0.5, 20, chassisSubsystem),
-      // new DriveDistanceGyroPID(-0.5, 20, chassisSubsystem),
-      // new DriveDistanceGyroPID(0.5, 20, chassisSubsystem),
-      // new DriveDistanceGyroPID(-0.5, 20, chassisSubsystem)
-
-      // new DriveDistanceGyroPID(0.5, 20, chassisSubsystem),
-      // new TurnDegreesGyroPID(0.5, 180, chassisSubsystem),
-      // new DriveDistanceGyroPID(0.5, 20, chassisSubsystem),
-      // new TurnDegreesGyroPID(0.5, 180, chassisSubsystem)
-
-      // new TurnDegreesGyroPID(0.5, 90, chassisSubsystem),
-      // new TurnDegreesGyroPID(0.5, 90, chassisSubsystem),
-      // new TurnDegreesGyroPID(0.5, 90, chassisSubsystem),
-      // new TurnDegreesGyroPID(0.5, 90, chassisSubsystem)
-
-      // new TurnDegreesGyroPID(0.5, 180, chassisSubsystem),
-      // new TurnDegreesGyroPID(0.5, 180, chassisSubsystem)
-
     new PrintCommand("startCommand"),
     new DriveDistanceGyroPID(0.5, 20, chassisSubsystem),
     new TurnDegreesGyroPID(0.7, 22.5, chassisSubsystem),
-    new IntakeCommand(robotContainer, Constants.OUT),
+    new IntakeCommand(robotContainer, Constants.INTAKE_OUT),
     new WaitCommand(1),
     new StopIntakeCommand(robotContainer),
     new DriveDistanceGyroPID(-0.5, 15, chassisSubsystem),
     new TurnDegreesGyroPID(0.5, 180, chassisSubsystem),
     new ControlArmCommand(robotContainer, Constants.ARM_DOWN),
     new DriveDistanceGyroPID(0.5, 20, chassisSubsystem),
-    new IntakeCommand(robotContainer, Constants.IN),
+    new IntakeCommand(robotContainer, Constants.INTAKE_IN),
     new WaitCommand(1),
     new StopIntakeCommand(robotContainer),
     new ControlArmCommand(robotContainer, Constants.ARM_UP),
     new TurnDegreesGyroPID(0.5, 180, chassisSubsystem),
     new DriveDistanceGyroPID(0.5, 50, chassisSubsystem),
-    new IntakeCommand(robotContainer, Constants.OUT),
+    new IntakeCommand(robotContainer, Constants.INTAKE_OUT),
     new WaitCommand(1),
     new StopIntakeCommand(robotContainer)
     
- 
-     //new DriveDistanceGyroPID(0.5, -, chassisSubsystem)
-    // new StopIntakeCommand(robotContainer),
-    // new DriveDistanceGyroPID(0.5, -30, chassisSubsystem),
-    //new ControlArmCommand(robotContainer, Constants.ARM_DOWN)
-    // new TurnDegreesGyroPID(0.5, 90, chassisSubsystem)
-    // new IntakeCommand(robotContainer, Constants.REVERSE),
-    // new ControlArmCommand(robotContainer, Constants.ARM_UP),
-    // new TurnDegreesGyroPID(0.5, 180, chassisSubsystem),
-    // new DriveDistanceGyroPID(0.5, 30, chassisSubsystem),
-    // new IntakeCommand(robotContainer, Constants.FORWARD),
-    // new WaitCommand(1),
-    // new StopIntakeCommand(robotContainer)
-
-    //new DriveDistanceGyroPID(0.5, -20, chassisSubsystem),
-    //new ControlArmCommand(robotContainer, Constants.ARM_DOWN),
-    //new TurnDegreesGyroPID(0.5, -90, chassisSubsystem), 
-    //new IntakeCommand(robotContainer, Constants.FORWARD),
-    //new DriveDistanceGyroPID(0.5, 10, chassisSubsystem),
-    //new TurnDegreesGyroPID(0.5, 180, chassisSubsystem),
-    //new DriveDistanceGyroPID(0.5, 20, chassisSubsystem),
-    //new StopIntakeCommand(robotContainer),
-    //new ControlArmCommand(robotContainer, Constants.ARM_UP),
-    //new TurnDegreesGyroPID(0.5, 180, chassisSubsystem),
-    //new DriveDistanceGyroPID(0.5, 10, chassisSubsystem),
-    //new TurnDegreesGyroPID(0.5, 90, chassisSubsystem),
-    //new DriveDistanceGyroPID(0.5, 10, chassisSubsystem),
-    //new IntakeCommand(robotContainer, Constants.REVERSE) 
-
-    // all possibble commands:
-      //new DriveDistanceGyroPID(0.5, 30, chassisSubsystem),
-      //new TurnDegreesGyroPID(0.5, 90, chassisSubsystem),
-      //new IntakeCommand(robotContainer, Constants.FORWARD),
-      //new IntakeCommand(robotContainer, Constants.REVERSE),
-      //new WaitCommand(2),
-      //new StopIntakeCommand(robotContainer),
-      //new ControlArmCommand(robotContainer, Constants.ARM_UP),
-      //new ControlArmCommand(robotContainer, Constants.ARM_DOWN),
     );
+
   } 
 }

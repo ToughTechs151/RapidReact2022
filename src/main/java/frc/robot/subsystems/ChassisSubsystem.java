@@ -90,7 +90,7 @@ public class ChassisSubsystem extends SubsystemBase {
   /**
    * The direction which is "forward"; 1 represents the hatch side and -1 represents the cargo side.
    */
-  private int dir = Constants.IN;
+  private int dir = Constants.INTAKE_IN;
 
   /** Creates a new ChassisSubsystem. */
   public ChassisSubsystem() {
@@ -171,14 +171,14 @@ public class ChassisSubsystem extends SubsystemBase {
   public void drive(RobotContainer robotContainer, DriverOI driverOI, int scale) {
     speedMultiplier = driverOI.getJoystick().getRawButton(Constants.RIGHT_BUMPER) ? crawl : normal;
     // LEFT_BUMPER is now changed to drive straight tankDrive.
-    //dir = driverOI.getJoystick().getRawButton(Constants.LEFT_BUMPER) ? Constants.OUT : Constants.IN;
-
+    // dir = driverOI.getJoystick().getRawButton(Constants.LEFT_BUMPER) ? Constants.INTAKE_OUT : Constants.INTAKE_IN;
+    
     RobotContainer.DriveTrainType driveTrainType = robotContainer.getDriveTrainType();
 
     if (driveTrainType == RobotContainer.DriveTrainType.TANK) {
       double rightVal;
       double leftVal;
-      if(dir == Constants.IN) {
+      if(dir == Constants.INTAKE_IN) {
         rightVal = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.RIGHT_JOYSTICK_Y), scale, RobotSide.RIGHT);
         leftVal = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.LEFT_JOYSTICK_Y), scale, RobotSide.LEFT);
       } else {
