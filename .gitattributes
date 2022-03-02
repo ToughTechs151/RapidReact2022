@@ -1,0 +1,13 @@
+# Our code formatter, Spotless, checks that file line endings match whatever
+# Git thinks they should be. Unfortunately, Git's default thinking is that
+# lines should follow the platform's native line ending: see
+# https://git-scm.com/docs/git-config#Documentation/git-config.txt-coreeol.
+# Git has this thought rattling around in the back of its mind even when
+# automatic line ending convertion (`core.autocrlf`) is turned off (`false`).
+# When Spotless rolls up and asks Git what it thinks on a Windows system, it'll
+# say “CRLF” (assuming the user hasn't overridden `core.eol`), even when all of
+# the checked-out files are LF-terminated. So Spotless will throw an error for
+# every. Single. Line of source.
+*.gradle text eol=crlf
+*.java text eol=crlf
+*.md text eol=crlf
