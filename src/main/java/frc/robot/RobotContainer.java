@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import frc.robot.commands.AutonomousLeftBehind;
 import frc.robot.commands.AutonomousDrive;
 import frc.robot.commands.DriveWithJoystickCommand;
 import frc.robot.oi.CoDriverOI;
@@ -51,6 +52,7 @@ public class RobotContainer {
   private DriveTrainType driveTrainType = DriveTrainType.TANK;
   private SendableChooser<Command> chooser = new SendableChooser<>();
   private AutonomousDrive autonomousDrive;
+  private AutonomousLeftBehind autonomousLeftBehind;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -70,8 +72,12 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // configure the autonomonous chooser
     autonomousDrive = new AutonomousDrive(this);
-    chooser.setDefaultOption("Auto Drive Right", autonomousDrive);
+    autonomousLeftBehind = new AutonomousLeftBehind(this);
+    // chooser.setDefaultOption("Auto Drive Right", autonomousDrive);
     chooser.addOption("No Auto", new PrintCommand("No Auto"));
+    chooser.addOption("Auto Drive Right", autonomousDrive);
+    chooser.setDefaultOption("Auto Left Behind", autonomousLeftBehind);
+    
 
     // Put the chooser on the dashboard
     SmartDashboard.putData(chooser);
@@ -113,6 +119,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return chooser.getSelected();
+    // return new AutonomousLeftBehind(this);
   }
 
   /**
