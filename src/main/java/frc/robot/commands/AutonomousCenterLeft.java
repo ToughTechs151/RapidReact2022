@@ -4,43 +4,37 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.ChassisSubsystem;
 
-public class AutonomousLeftBehind extends SequentialCommandGroup {
+public class AutonomousCenterLeft extends SequentialCommandGroup {
   /**
    * Creates a new Autonomous Drive based on distance. This will drive out for a specified distance,
    * turn around and drive back.
    *
    * @param drivetrain The drivetrain subsystem on which this command will run
    */
-  public AutonomousLeftBehind(RobotContainer robotContainer) {
+  public AutonomousCenterLeft(RobotContainer robotContainer) {
     ChassisSubsystem chassisSubsystem = robotContainer.getChassisSubsystem();
-    
     addCommands( 
-    
+    new DriveDistanceGyroPID(0.5, 50, chassisSubsystem),
+    new TurnDegreesGyroPID(0.5, 90, chassisSubsystem),
     new ControlArmCommand(robotContainer, Constants.ARM_DOWN),
     new IntakeCommand(robotContainer, Constants.INTAKE_IN),
-    new DriveDistanceGyroPID(0.4, 45, chassisSubsystem),
-    new WaitCommand(1),
-    new ControlArmCommand(robotContainer, Constants.ARM_UP),
+    new DriveDistanceGyroPID(0.5, 30, chassisSubsystem),
     new StopIntakeCommand(robotContainer),
-    new TurnDegreesGyroPID(0.7, 180, chassisSubsystem),
-    // new DriveDistanceGyroPID(0.5, 45, chassisSubsystem),
-    new DriveDistanceGyroPID(0.5, 65, chassisSubsystem),
-    // new WaitCommand(0.5),
-    // new TurnDegreesGyroPID(0.7, -22.5, chassisSubsystem),
-    // new DriveDistanceGyroPID(0.5, 20, chassisSubsystem),
+    new ControlArmCommand(robotContainer, Constants.ARM_UP),
+    new TurnDegreesGyroPID(0.5, 180, chassisSubsystem),
+    new DriveDistanceGyroPID(0.5, 10, chassisSubsystem),
+    new TurnDegreesGyroPID(-0.5, 90, chassisSubsystem),
+    new DriveDistanceGyroPID(0.5, 100, chassisSubsystem),
     new IntakeCommand(robotContainer, Constants.INTAKE_OUT),
     new WaitCommand(1),
     new StopIntakeCommand(robotContainer)
-
-    // new IntakeCommand(robotContainer, Constants.INTAKE_OUT)
-    
     );
-    
   } 
 }

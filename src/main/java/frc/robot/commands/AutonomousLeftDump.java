@@ -11,14 +11,14 @@ import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.ChassisSubsystem;
 
-public class AutonomousDrive extends SequentialCommandGroup {
+public class AutonomousLeftDump extends SequentialCommandGroup {
   /**
    * Creates a new Autonomous Drive based on distance. This will drive out for a specified distance,
    * turn around and drive back.
    *
    * @param drivetrain The drivetrain subsystem on which this command will run
    */
-  public AutonomousDrive(RobotContainer robotContainer) {
+  public AutonomousLeftDump(RobotContainer robotContainer) {
     ChassisSubsystem chassisSubsystem = robotContainer.getChassisSubsystem();
     addCommands( 
 
@@ -28,19 +28,7 @@ public class AutonomousDrive extends SequentialCommandGroup {
     new IntakeCommand(robotContainer, Constants.INTAKE_OUT),
     new WaitCommand(1),
     new StopIntakeCommand(robotContainer),
-    new DriveDistanceGyroPID(-0.5, 15, chassisSubsystem),
-    new TurnDegreesGyroPID(0.5, 180, chassisSubsystem),
-    new ControlArmCommand(robotContainer, Constants.ARM_DOWN),
-    new DriveDistanceGyroPID(0.5, 20, chassisSubsystem),
-    new IntakeCommand(robotContainer, Constants.INTAKE_IN),
-    new WaitCommand(1),
-    new StopIntakeCommand(robotContainer),
-    new ControlArmCommand(robotContainer, Constants.ARM_UP),
-    new TurnDegreesGyroPID(0.5, 180, chassisSubsystem),
-    new DriveDistanceGyroPID(0.5, 50, chassisSubsystem),
-    new IntakeCommand(robotContainer, Constants.INTAKE_OUT),
-    new WaitCommand(1),
-    new StopIntakeCommand(robotContainer)
+    new DriveDistanceGyroPID(-0.5, 40, chassisSubsystem)
     
     );
 
