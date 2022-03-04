@@ -11,8 +11,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
-import frc.robot.commands.AutonomousLeftBehind;
-import frc.robot.commands.AutonomousDrive;
+import frc.robot.commands.AutonomousBackwardForward;
+import frc.robot.commands.AutonomousCenterDump;
+import frc.robot.commands.AutonomousCenterLeft;
+import frc.robot.commands.AutonomousLeftDump;
 import frc.robot.commands.DriveWithJoystickCommand;
 import frc.robot.oi.CoDriverOI;
 import frc.robot.oi.DriverOI;
@@ -51,8 +53,10 @@ public class RobotContainer {
   private IntakeSubsystem intakeSubsystem;
   private DriveTrainType driveTrainType = DriveTrainType.TANK;
   private SendableChooser<Command> chooser = new SendableChooser<>();
-  private AutonomousDrive autonomousDrive;
-  private AutonomousLeftBehind autonomousLeftBehind;
+  private AutonomousLeftDump autonomousForwardDump;
+  private AutonomousCenterDump autonomousCenterDump;
+  private AutonomousBackwardForward autonomousBackForward;
+  private AutonomousCenterLeft autonomousCenterLeft;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -71,12 +75,14 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // configure the autonomonous chooser
-    autonomousDrive = new AutonomousDrive(this);
-    autonomousLeftBehind = new AutonomousLeftBehind(this);
-    // chooser.setDefaultOption("Auto Drive Right", autonomousDrive);
+    autonomousForwardDump = new AutonomousLeftDump(this);
+    autonomousBackForward = new AutonomousBackwardForward(this);
+    autonomousCenterDump = new AutonomousCenterDump(this);
+    chooser.setDefaultOption("Backward & Forward", autonomousBackForward);
+    chooser.addOption("Forward Dump", autonomousForwardDump);
     chooser.addOption("No Auto", new PrintCommand("No Auto"));
-    chooser.addOption("Auto Drive Right", autonomousDrive);
-    chooser.setDefaultOption("Auto Left Behind", autonomousLeftBehind);
+    chooser.addOption("Center Left", autonomousCenterLeft);
+    chooser.addOption("Center Dump", autonomousCenterDump);
     
 
     // Put the chooser on the dashboard
