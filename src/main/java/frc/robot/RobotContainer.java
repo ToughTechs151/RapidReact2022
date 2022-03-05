@@ -15,6 +15,7 @@ import frc.robot.commands.AutonomousBackwardForward;
 import frc.robot.commands.AutonomousCenterDump;
 import frc.robot.commands.AutonomousCenterLeft;
 import frc.robot.commands.AutonomousLeftDump;
+// import frc.robot.commands.AutonomousTaxi;
 import frc.robot.commands.DriveWithJoystickCommand;
 import frc.robot.oi.CoDriverOI;
 import frc.robot.oi.DriverOI;
@@ -57,6 +58,7 @@ public class RobotContainer {
   private AutonomousCenterDump autonomousCenterDump;
   private AutonomousBackwardForward autonomousBackForward;
   private AutonomousCenterLeft autonomousCenterLeft;
+  // private AutonomousTaxi autonomousTaxi;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {

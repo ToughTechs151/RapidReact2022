@@ -45,11 +45,11 @@ public class ArmSubsystem extends SubsystemBase {
     kIz = 0;
     kFF = 0.000156;
     kMaxOutput = 10;
-    kMinOutput = -1;
+    kMinOutput = -0.5;
 
     // Smart Motion Coefficients
     maxVel = 2000; // rpm
-    maxAcc = 1500;
+    maxAcc = 1000;
 
     // set PID coefficients
     m_pidController.setP(kP);

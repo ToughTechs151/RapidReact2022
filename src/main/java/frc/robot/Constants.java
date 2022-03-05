@@ -30,7 +30,7 @@ public final class Constants {
 
     // Position
     public static final double ARM_UP = 1;
-    public static final double ARM_DOWN = -17.8;
+    public static final double ARM_DOWN = -17.5;
 
     // Drive Train CAN IDs
     public static int FRONT_LEFT_MOTOR = 4;

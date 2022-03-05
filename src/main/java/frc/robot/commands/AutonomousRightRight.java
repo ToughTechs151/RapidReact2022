@@ -32,7 +32,8 @@ public class AutonomousRightRight extends SequentialCommandGroup {
     new DriveDistanceGyroPID(0.5, 100, chassisSubsystem),
     new IntakeCommand(robotContainer, Constants.INTAKE_OUT),
     new WaitCommand(1),
-    new StopIntakeCommand(robotContainer)
+    new StopIntakeCommand(robotContainer),
+    new DriveDistanceGyroPID(-0.5, 40, chassisSubsystem)   
 
     );
     
