@@ -14,8 +14,6 @@ package frc.robot;
  */
 public final class Constants {
 
-    private Constants() {}
-
     // Robot preferences
     public static final String DRIVE_TRAIN_TYPE = "DriveTrainType";
     public static final String TANK = "Tank";
@@ -43,9 +41,6 @@ public final class Constants {
     public static int ARM_MOTOR = 5;
 
     public static final int MOTOR_CURRENT_LIMITS = 30;
-
-    //Intake Subsystem Speed
-    public static final double INTAKE_SPEED = 0.5;
 
     // OI ports
     public static int DRIVER_OI = 0;

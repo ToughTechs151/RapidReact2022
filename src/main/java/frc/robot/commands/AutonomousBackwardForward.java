@@ -28,7 +28,7 @@ public class AutonomousBackwardForward extends SequentialCommandGroup {
     new WaitCommand(1),
     new ControlArmCommand(robotContainer, Constants.ARM_UP),
     new StopIntakeCommand(robotContainer),
-    new TurnDegreesGyroPID(0.7, 200, chassisSubsystem),
+    new TurnDegreesGyroPID(0.7, 190, chassisSubsystem),
     new DriveDistanceGyroPID(0.5, 70, chassisSubsystem),
     new IntakeCommand(robotContainer, Constants.INTAKE_OUT),
     new WaitCommand(1),

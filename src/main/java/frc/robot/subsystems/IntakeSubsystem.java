@@ -21,7 +21,7 @@ public class IntakeSubsystem extends SubsystemBase {
 
   public void runIntake(double dir) {
     isStop = false;
-    intakemotor.set(ControlMode.PercentOutput, Constants.INTAKE_SPEED * dir);
+    intakemotor.set(ControlMode.PercentOutput, dir);
   }
 
   public void stopIntake() {
