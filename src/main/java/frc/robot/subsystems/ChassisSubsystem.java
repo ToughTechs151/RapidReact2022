@@ -110,13 +110,13 @@ public class ChassisSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     // Use these to plot the input vs RPM onto a plot
-    SmartDashboard.putNumber("Front Left Motor RPM", frontLeftEncoder.getVelocity());
-    SmartDashboard.putNumber("Front Right Motor RPM", frontRightEncoder.getVelocity());
-    SmartDashboard.putNumber("Rear Left Motor RPM", rearLeftEncoder.getVelocity());
-    SmartDashboard.putNumber("Rear Right Motor RPM", rearRightEncoder.getVelocity());
-    SmartDashboard.putNumber("Left  POS", frontLeftEncoder.getPosition());
-    SmartDashboard.putNumber("Right POS", frontRightEncoder.getPosition());
-    SmartDashboard.putNumber("Gyro angle", m_gyro.getAngle());
+    // SmartDashboard.putNumber("Front Left Motor RPM", frontLeftEncoder.getVelocity());
+    // SmartDashboard.putNumber("Front Right Motor RPM", frontRightEncoder.getVelocity());
+    // SmartDashboard.putNumber("Rear Left Motor RPM", rearLeftEncoder.getVelocity());
+    // SmartDashboard.putNumber("Rear Right Motor RPM", rearRightEncoder.getVelocity());
+    // SmartDashboard.putNumber("Left  POS", frontLeftEncoder.getPosition());
+    // SmartDashboard.putNumber("Right POS", frontRightEncoder.getPosition());
+    // SmartDashboard.putNumber("Gyro angle", m_gyro.getAngle());
     SmartDashboard.putNumber("Sensor Range", getUltrasonicDistanceInch());
   }
 
@@ -174,21 +174,21 @@ public class ChassisSubsystem extends SubsystemBase {
         var pidOutput = controller.calculate(getGyroAngle(), 0) / 10;
 
         var speed = leftVal * speedMultiplier * dir;
-        SmartDashboard.putNumber("Left Speed", speed+pidOutput);
-        SmartDashboard.putNumber("Right Speed", speed-pidOutput);
+        // SmartDashboard.putNumber("Left Speed", speed+pidOutput);
+        // SmartDashboard.putNumber("Right Speed", speed-pidOutput);
         tankDrive(speed + pidOutput, speed - pidOutput);
       }
       else
       {
-        SmartDashboard.putNumber("Left Speed", leftVal);
-        SmartDashboard.putNumber("Right Speed", rightVal);
+        // SmartDashboard.putNumber("Left Speed", leftVal);
+        // SmartDashboard.putNumber("Right Speed", rightVal);
         tankDrive(leftVal * speedMultiplier * dir, rightVal * speedMultiplier * dir);
       }
     } else if (driveTrainType == RobotContainer.DriveTrainType.ARCADE) {
       double speed = driverOI.getJoystick().getRawAxis(Constants.LEFT_JOYSTICK_Y) * dir;
       double rotation = driverOI.getJoystick().getRawAxis(Constants.LEFT_JOYSTICK_X);
-      SmartDashboard.putNumber("Speed", speed);
-      SmartDashboard.putNumber("Rotation", rotation);
+      // SmartDashboard.putNumber("Speed", speed);
+      // SmartDashboard.putNumber("Rotation", rotation);
       arcadeDrive(speed, rotation);
     }
   }

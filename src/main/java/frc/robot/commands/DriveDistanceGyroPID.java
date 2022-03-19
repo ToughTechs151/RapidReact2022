@@ -8,7 +8,6 @@ import frc.robot.Constants;
 import frc.robot.subsystems.ChassisSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class DriveDistanceGyroPID extends CommandBase {
   private final ChassisSubsystem drive;
@@ -49,9 +48,9 @@ public class DriveDistanceGyroPID extends CommandBase {
     var pidOutput = controller.calculate(drive.getGyroAngle(), 0) / 10;
 
     //smartdashboard
-    SmartDashboard.putNumber("DriveStraightPID", pidOutput);
-    SmartDashboard.putNumber("left", speed+pidOutput);
-    SmartDashboard.putNumber("right", speed-pidOutput);
+    // SmartDashboard.putNumber("DriveStraightPID", pidOutput);
+    // SmartDashboard.putNumber("left", speed+pidOutput);
+    // SmartDashboard.putNumber("right", speed-pidOutput);
     drive.tankDrive(speed + pidOutput, speed - pidOutput);
   }
 

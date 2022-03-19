@@ -9,7 +9,6 @@ import frc.robot.subsystems.ChassisSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class TurnDegreesGyroPID extends CommandBase {
   private final ChassisSubsystem drive;
@@ -56,8 +55,8 @@ public class TurnDegreesGyroPID extends CommandBase {
       pidOutput = Math.max(pidOutput, 0.2);
     }
     pidOutput = MathUtil.clamp(pidOutput, -speed, speed);
-    SmartDashboard.putNumber("TurnPID", pidOutput);
-    SmartDashboard.putNumber("GyroValue", drive.getGyroAngle());
+    // SmartDashboard.putNumber("TurnPID", pidOutput);
+    // SmartDashboard.putNumber("GyroValue", drive.getGyroAngle());
     drive.arcadeDrive(0, pidOutput); 
   }
 
