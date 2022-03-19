@@ -1,3 +1,4 @@
+
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
@@ -80,6 +81,10 @@ public class ChassisSubsystem extends SubsystemBase {
     rearLeftMotor.setIdleMode(IdleMode.kCoast);
     rearRightMotor.setIdleMode(IdleMode.kCoast);
 
+    double rampRate = Constants.RAMP_RATE;
+    frontLeftMotor.setOpenLoopRampRate(rampRate);
+    frontRightMotor.setOpenLoopRampRate(rampRate);
+    
     rearLeftMotor.follow(frontLeftMotor);
     rearRightMotor.follow(frontRightMotor);
 
