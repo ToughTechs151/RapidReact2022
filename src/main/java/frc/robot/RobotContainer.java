@@ -10,9 +10,13 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.commands.AutonomousBackwardForward;
+import frc.robot.commands.AutonomousLeftDump2;
+import frc.robot.commands.AutonomousRightLeftDump;
+import frc.robot.commands.AutonomousRightLeftDump2;
+import frc.robot.commands.AutonomousRightRightDump;
+import frc.robot.commands.AutonomousRightRightDump2;
 import frc.robot.commands.AutonomousCenterDump;
-import frc.robot.commands.AutonomousCenterLeft;
+import frc.robot.commands.AutonomousDoNothing;
 import frc.robot.commands.AutonomousLeftDump;
 import frc.robot.commands.AutonomousTaxi;
 import frc.robot.commands.DriveWithJoystickCommand;
@@ -53,11 +57,19 @@ public class RobotContainer {
   private IntakeSubsystem intakeSubsystem;
   private DriveTrainType driveTrainType = DriveTrainType.TANK;
   private SendableChooser<Command> chooser = new SendableChooser<>();
-  private AutonomousLeftDump autonomousLeftDump;
-  private AutonomousCenterDump autonomousCenterDump;
-  private AutonomousBackwardForward autonomousBackForward;
-  private AutonomousCenterLeft autonomousCenterLeft;
+
+  private AutonomousDoNothing autonomousDoNothing;
   private AutonomousTaxi autonomousTaxi;
+
+  private AutonomousLeftDump autonomousLeftDump;
+  private AutonomousLeftDump2 autonomousLeftDump2;
+  
+  private AutonomousCenterDump autonomousCenterDump;
+  
+  private AutonomousRightLeftDump autonomousRightLeftDump;
+  private AutonomousRightLeftDump2 autonomousRightLeftDump2;
+  private AutonomousRightRightDump autonomousRightRightDump;
+  private AutonomousRightRightDump2 autonomousRightRightDump2;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -76,18 +88,34 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // configure the autonomonous chooser
-    autonomousLeftDump = new AutonomousLeftDump(this);
-    autonomousBackForward = new AutonomousBackwardForward(this);
-    autonomousCenterDump = new AutonomousCenterDump(this);
+    
+    autonomousDoNothing = new AutonomousDoNothing(this);
     autonomousTaxi = new AutonomousTaxi(this);
-    autonomousCenterLeft = new AutonomousCenterLeft(this);
-    // chooser.setDefaultOption("Backward & Forward", autonomousBackForward);
-    // chooser.addOption("Taxi", autonomousTaxi);
-    // chooser.addOption("Left Dump", autonomousLeftDump);
-    // chooser.addOption("No Auto", new PrintCommand("No Auto"));
-    // chooser.addOption("Center Left", autonomousCenterLeft);
-    // chooser.addOption("Center Dump", autonomousCenterDump);
-    chooser.setDefaultOption("Taxi", autonomousTaxi);
+
+    autonomousLeftDump = new AutonomousLeftDump(this);
+    autonomousLeftDump2 = new AutonomousLeftDump2(this);
+
+    autonomousCenterDump = new AutonomousCenterDump(this);
+
+    autonomousRightLeftDump = new AutonomousRightLeftDump(this);
+    autonomousRightLeftDump2 = new AutonomousRightLeftDump2(this);
+
+    autonomousRightRightDump = new AutonomousRightRightDump(this);
+    autonomousRightRightDump2 = new AutonomousRightRightDump2(this);
+
+    chooser.addOption("No Auto", autonomousDoNothing);
+    chooser.addOption("Taxi", autonomousTaxi);
+
+    chooser.addOption("Left Dump", autonomousLeftDump);
+    chooser.addOption("Left Dump 2", autonomousLeftDump2);
+
+    chooser.addOption("Center Dump", autonomousCenterDump);
+
+    chooser.addOption("Right Left Dump", autonomousRightLeftDump);
+    chooser.addOption("Right Left Dump 2", autonomousRightLeftDump2);
+
+    chooser.addOption("Right Right Dump", autonomousRightRightDump);
+    chooser.addOption("Right Right Dump 2", autonomousRightRightDump2);
 
     // Put the chooser on the dashboard
     SmartDashboard.putData(chooser);
