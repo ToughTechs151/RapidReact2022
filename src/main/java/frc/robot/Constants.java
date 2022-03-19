@@ -21,6 +21,7 @@ public final class Constants {
 
     // Scale Factor
     public static final int SCALED_DRIVE = 0;
+    public static final double RAMP_RATE = 0.8;
 
     // Directions
     public static final int INTAKE_OUT = 1;
@@ -29,6 +30,10 @@ public final class Constants {
     // Position
     public static final double ARM_UP = 1;
     public static final double ARM_DOWN = -17.5;
+
+    // Camera ID
+    public static final int CAMERA_0 = 0;
+    public static final int CAMERA_1 = 1;
 
     // Drive Train CAN IDs
     public static int FRONT_LEFT_MOTOR = 4;
