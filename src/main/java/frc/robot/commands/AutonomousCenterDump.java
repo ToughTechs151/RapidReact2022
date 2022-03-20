@@ -4,7 +4,6 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
@@ -22,13 +21,13 @@ public class AutonomousCenterDump extends SequentialCommandGroup {
     ChassisSubsystem chassisSubsystem = robotContainer.getChassisSubsystem();
     addCommands( 
 
-    new PrintCommand("startCommand"),
-    new DriveDistanceGyroPID(0.5, 20, chassisSubsystem),
-    new TurnDegreesGyroPID(-0.7, 22.5, chassisSubsystem),
+    new DriveDistanceGyroPID(0.5, 15, chassisSubsystem),
+    new TurnDegreesGyroPID(0.7, 22.5, chassisSubsystem),
+    new DriveDistanceGyroUltrasonic(0.4, 23, chassisSubsystem),
     new IntakeCommand(robotContainer, Constants.INTAKE_OUT),
     new WaitCommand(1),
     new StopIntakeCommand(robotContainer),
-    new DriveDistanceGyroPID(-0.5, 40, chassisSubsystem)
+    new DriveDistanceGyroPID(-0.5, 80, chassisSubsystem)
     
     );
 

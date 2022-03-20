@@ -49,7 +49,7 @@ public final class Constants {
 
     // OI ports
     public static int DRIVER_OI = 0;
-    public static int CODRIVE_OI = 1;
+    public static int CODRIVER_OI = 1;
 
     //OI AXES
     public static final int LEFT_JOYSTICK_X = 0;
@@ -72,8 +72,9 @@ public final class Constants {
 	public static final int LEFT_JOYSTICK = 9;
     public static final int RIGHT_JOYSTICK = 10;
 
+    // Arm Values
     public static final double ARM_REVOLUTION = 4.5;
-    public static final double POSTOLERANCE = 0.005;
+    public static final double POS_TOLERANCE = 0.005;
     public static final double ARM_KP = 0.05;
     public static final double ARM_KI = 0.0;
     public static final double ARM_KD = 0.0;
@@ -83,8 +84,7 @@ public final class Constants {
     public static final int GYRO_NOTUSED = -1;
 
     //PID Value
-    public static final double DRIVETRAIN_KP=0.06;
-    public static final double DRIVETRAIN_KI=0;
-    public static final double DRIVETRAIN_KD=0;
-
+    public static final double DRIVETRAIN_KP = 0.03;
+    public static final double DRIVETRAIN_KI = 0;
+    public static final double DRIVETRAIN_KD = 0;
 }

@@ -11,6 +11,7 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.Constants;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ArmSubsystem extends SubsystemBase {
@@ -84,7 +85,7 @@ public class ArmSubsystem extends SubsystemBase {
     // SmartDashboard.putNumber("ARM Current", armMotor.getOutputCurrent());
     // SmartDashboard.putNumber("ARM get", armMotor.get());
     // SmartDashboard.putNumber("ARM getCPR", armEncoder.getCountsPerRevolution());
-    // SmartDashboard.putNumber("ARM getPosition", armEncoder.getPosition());
+    SmartDashboard.putNumber("Arm position", armEncoder.getPosition());
     // SmartDashboard.putNumber("ARM getVelocityConversionFactor", armEncoder.getVelocityConversionFactor());
   }
 
