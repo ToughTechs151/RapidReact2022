@@ -12,6 +12,9 @@ import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.DigitalOutput;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -32,6 +35,11 @@ public class ChassisSubsystem extends SubsystemBase {
   // The gyro sensor
   private final ADXRS450_Gyro m_gyro = new ADXRS450_Gyro();
   private final PIDController controller = new PIDController(Constants.DRIVETRAIN_KP, Constants.DRIVETRAIN_KI, Constants.DRIVETRAIN_KD);
+  // Ultrasonic sensor
+  private final AnalogInput ultrasonic = new AnalogInput(0);
+  public DigitalOutput ultrasonicTriggerPin = new DigitalOutput(0);
+  public double ultrasonicSensorRange = 0;
+  public double voltageScaleFactor = 1; 
 
   // Encoder declarations
   private RelativeEncoder frontLeftEncoder;
@@ -109,6 +117,7 @@ public class ChassisSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Left  POS", frontLeftEncoder.getPosition());
     SmartDashboard.putNumber("Right POS", frontRightEncoder.getPosition());
     SmartDashboard.putNumber("Gyro angle", m_gyro.getAngle());
+    SmartDashboard.putNumber("Sensor Range", getUltrasonicDistanceInch());
   }
 
   /**
@@ -208,5 +217,12 @@ public class ChassisSubsystem extends SubsystemBase {
 
   public double getAverageDistanceInch() {
     return (getLeftDistanceInch() + getRightDistanceInch()) / 2.0;
+  }
+
+  public double getUltrasonicDistanceInch() {
+    voltageScaleFactor = 5/RobotController.getVoltage5V(); //Calculate what percentage of 5 Volts we are actually at
+    //Get a reading from the first sensor, scale it by the voltageScaleFactor, and then scale to Inches
+    ultrasonicSensorRange = ultrasonic.getValue()*voltageScaleFactor*0.0492;
+    return ultrasonicSensorRange;
   }
 }
