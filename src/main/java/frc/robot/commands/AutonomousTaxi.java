@@ -5,7 +5,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.ChassisSubsystem;
 
@@ -20,7 +19,6 @@ public class AutonomousTaxi extends SequentialCommandGroup {
     ChassisSubsystem chassisSubsystem = robotContainer.getChassisSubsystem();
     
     addCommands( 
-    new WaitCommand(1),    
     new DriveDistanceGyroPID(0.5, 50, chassisSubsystem)    
     );
     

@@ -7,17 +7,16 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.RobotContainer;
 
-public class AutonomousDoNothing extends SequentialCommandGroup {
+public class AutonomousNothing extends SequentialCommandGroup {
   /**
    * Creates a new Autonomous Drive based on distance. This will drive out for a specified distance,
    * turn around and drive back.
    *
    * @param drivetrain The drivetrain subsystem on which this command will run
    */
-  public AutonomousDoNothing(RobotContainer robotContainer) {
+  public AutonomousNothing(RobotContainer robotContainer) {
     
-    addCommands( 
-    
+    addCommands(
 
     );
     

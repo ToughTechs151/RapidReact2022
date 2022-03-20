@@ -11,14 +11,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.AutonomousLeftDump2;
-import frc.robot.commands.AutonomousRightLeftDump;
 import frc.robot.commands.AutonomousRightLeftDump2;
-import frc.robot.commands.AutonomousRightRightDump;
 import frc.robot.commands.AutonomousRightRightDump2;
 import frc.robot.commands.AutonomousCenterDump;
-import frc.robot.commands.AutonomousDoNothing;
+import frc.robot.commands.AutonomousNothing;
 import frc.robot.commands.AutonomousLeftDump;
 import frc.robot.commands.AutonomousTaxi;
+import frc.robot.commands.AutonomousTurn90;
 import frc.robot.commands.DriveWithJoystickCommand;
 import frc.robot.oi.CoDriverOI;
 import frc.robot.oi.DriverOI;
@@ -58,7 +57,7 @@ public class RobotContainer {
   private DriveTrainType driveTrainType = DriveTrainType.TANK;
   private SendableChooser<Command> chooser = new SendableChooser<>();
 
-  private AutonomousDoNothing autonomousDoNothing;
+  private AutonomousNothing autonomousNothing;
   private AutonomousTaxi autonomousTaxi;
 
   private AutonomousLeftDump autonomousLeftDump;
@@ -66,10 +65,10 @@ public class RobotContainer {
   
   private AutonomousCenterDump autonomousCenterDump;
   
-  private AutonomousRightLeftDump autonomousRightLeftDump;
   private AutonomousRightLeftDump2 autonomousRightLeftDump2;
-  private AutonomousRightRightDump autonomousRightRightDump;
   private AutonomousRightRightDump2 autonomousRightRightDump2;
+
+  private AutonomousTurn90 autonomousTurn90;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -89,7 +88,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     // configure the autonomonous chooser
     
-    autonomousDoNothing = new AutonomousDoNothing(this);
+    autonomousNothing = new AutonomousNothing(this);
     autonomousTaxi = new AutonomousTaxi(this);
 
     autonomousLeftDump = new AutonomousLeftDump(this);
@@ -97,13 +96,15 @@ public class RobotContainer {
 
     autonomousCenterDump = new AutonomousCenterDump(this);
 
-    autonomousRightLeftDump = new AutonomousRightLeftDump(this);
+    // autonomousRightLeftDump = new AutonomousRightLeftDump(this);
     autonomousRightLeftDump2 = new AutonomousRightLeftDump2(this);
 
-    autonomousRightRightDump = new AutonomousRightRightDump(this);
+    // autonomousRightRightDump = new AutonomousRightRightDump(this);
     autonomousRightRightDump2 = new AutonomousRightRightDump2(this);
 
-    chooser.addOption("No Auto", autonomousDoNothing);
+    autonomousTurn90 = new AutonomousTurn90(this);
+
+    chooser.addOption("No Auto", autonomousNothing);
     chooser.addOption("Taxi", autonomousTaxi);
 
     chooser.addOption("Left Dump", autonomousLeftDump);
@@ -111,18 +112,20 @@ public class RobotContainer {
 
     chooser.addOption("Center Dump", autonomousCenterDump);
 
-    chooser.addOption("Right Left Dump", autonomousRightLeftDump);
+    // chooser.addOption("Right Left Dump", autonomousRightLeftDump);
     chooser.addOption("Right Left Dump 2", autonomousRightLeftDump2);
 
-    chooser.addOption("Right Right Dump", autonomousRightRightDump);
+    // chooser.addOption("Right Right Dump", autonomousRightRightDump);
     chooser.addOption("Right Right Dump 2", autonomousRightRightDump2);
+    
+    chooser.addOption("Turn 90", autonomousTurn90);
 
     // Put the chooser on the dashboard
     SmartDashboard.putData(chooser);
 
     // create driver & codriver oi
     driverOI = new DriverOI(Constants.DRIVER_OI, this);
-    codriverOI = new CoDriverOI(Constants.CODRIVE_OI, this);
+    codriverOI = new CoDriverOI(Constants.CODRIVER_OI, this);
 
     // drive with joysticks
     chassisSubsystem.setDefaultCommand(new DriveWithJoystickCommand(this, driverOI));
@@ -134,7 +137,7 @@ public class RobotContainer {
    * @param type
    */
   public void setDriveTrainType(String type) {
-    SmartDashboard.putString(Constants.DRIVE_TRAIN_TYPE, type);
+    // SmartDashboard.putString(Constants.DRIVE_TRAIN_TYPE, type);
     if (type.equals(Constants.TANK)) {
       driveTrainType = DriveTrainType.TANK;
     } else if (type.equals(Constants.ARCADE)) {
@@ -157,7 +160,6 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return chooser.getSelected();
-    // return new AutonomousLeftBehind(this);
   }
 
   /**
