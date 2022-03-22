@@ -6,7 +6,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.ChassisSubsystem;
@@ -40,7 +39,7 @@ public class TurnDegreesGyroPID extends CommandBase {
     drive.resetEncoders();
     drive.resetGyro();
     // Sets the error tolerance to 5, and the error derivative tolerance to 10 per second
-    controller.setTolerance(1, 5);
+    controller.setTolerance(3, 5);
     System.out.println("TurnDegrees start");
   }
 

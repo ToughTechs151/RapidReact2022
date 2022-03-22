@@ -28,13 +28,13 @@ public class AutonomousRightRightDump2 extends SequentialCommandGroup {
     new WaitCommand(1),
     new ControlArmCommand(robotContainer, Constants.ARM_UP),
     new StopIntakeCommand(robotContainer),
-    new TurnDegreesGyroPID(0.6, 180, chassisSubsystem),
-    new DriveDistanceGyroPID(0.5, 50, chassisSubsystem),
-    new TurnDegreesGyroPID(0.6, 22, chassisSubsystem),
+    new TurnDegreesGyroPID(0.5, 180, chassisSubsystem),
+    new DriveDistanceGyroPID(0.5, 70, chassisSubsystem),
+    new TurnDegreesGyroPID(0.5, 10, chassisSubsystem),
     new IntakeCommand(robotContainer, Constants.INTAKE_OUT),
     new WaitCommand(1),
     new StopIntakeCommand(robotContainer),
-    new DriveDistanceGyroPID(-0.5, 40, chassisSubsystem)    
+    new DriveDistanceGyroPID(-0.5, 80, chassisSubsystem)    
     );
     
   } 

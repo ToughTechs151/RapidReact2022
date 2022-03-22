@@ -96,10 +96,8 @@ public class RobotContainer {
 
     autonomousCenterDump = new AutonomousCenterDump(this);
 
-    // autonomousRightLeftDump = new AutonomousRightLeftDump(this);
     autonomousRightLeftDump2 = new AutonomousRightLeftDump2(this);
 
-    // autonomousRightRightDump = new AutonomousRightRightDump(this);
     autonomousRightRightDump2 = new AutonomousRightRightDump2(this);
 
     autonomousTurn90 = new AutonomousTurn90(this);
@@ -112,10 +110,8 @@ public class RobotContainer {
 
     chooser.addOption("Center Dump", autonomousCenterDump);
 
-    // chooser.addOption("Right Left Dump", autonomousRightLeftDump);
     chooser.addOption("Right Left Dump 2", autonomousRightLeftDump2);
 
-    // chooser.addOption("Right Right Dump", autonomousRightRightDump);
     chooser.addOption("Right Right Dump 2", autonomousRightRightDump2);
     
     chooser.addOption("Turn 90", autonomousTurn90);

@@ -46,11 +46,6 @@ public class DriveDistanceGyroUltrasonic extends CommandBase {
   @Override
   public void execute() {
     var pidOutput = controller.calculate(drive.getGyroAngle(), 0) / 10;
-
-    //smartdashboard
-    // SmartDashboard.putNumber("DriveStraightPID", pidOutput);
-    // SmartDashboard.putNumber("left", speed+pidOutput);
-    // SmartDashboard.putNumber("right", speed-pidOutput);
     drive.tankDrive(speed + pidOutput, speed - pidOutput);
   }
 
@@ -66,7 +61,6 @@ public class DriveDistanceGyroUltrasonic extends CommandBase {
   @Override
   public boolean isFinished() {
     // Compare distance travelled from start to desired distance
-    // return Math.abs(drive.getAverageDistanceInch()) >= distance;
     return drive.getUltrasonic() < distance;
   }
 }
