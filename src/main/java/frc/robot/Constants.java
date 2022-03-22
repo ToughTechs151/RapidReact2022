@@ -87,4 +87,6 @@ public final class Constants {
     public static final double DRIVETRAIN_KP = 0.03;
     public static final double DRIVETRAIN_KI = 0;
     public static final double DRIVETRAIN_KD = 0;
+
+    public static final double LIMELIGHT_KP = 0.02;
 }

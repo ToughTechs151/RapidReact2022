@@ -20,6 +20,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.oi.DriverOI;
+import org.photonvision.PhotonCamera;
+import org.photonvision.common.hardware.VisionLEDMode;
 
 public class ChassisSubsystem extends SubsystemBase {
   public enum RobotSide {
@@ -38,7 +40,7 @@ public class ChassisSubsystem extends SubsystemBase {
   private final AnalogInput rightUltrasonic = new AnalogInput(0);
   private final AnalogInput leftUltrasonic = new AnalogInput(1);
   public double ultrasonicSensorRange = 0;
-  public double voltageScaleFactor = 1; 
+  public double voltageScaleFactor = 1;
 
   // Encoder declarations
   private RelativeEncoder frontLeftEncoder;
@@ -48,6 +50,9 @@ public class ChassisSubsystem extends SubsystemBase {
 
   private DifferentialDrive driveTrain;
   private double m_gyroAngle = Constants.GYRO_NOTUSED;
+  private PhotonCamera m_camera;
+  private boolean m_AimBall = false;
+  private double yaw;
 
   //drive constants
   /**
@@ -91,7 +96,7 @@ public class ChassisSubsystem extends SubsystemBase {
     double rampRate = Constants.RAMP_RATE;
     frontLeftMotor.setOpenLoopRampRate(rampRate);
     frontRightMotor.setOpenLoopRampRate(rampRate);
-    
+
     rearLeftMotor.follow(frontLeftMotor);
     rearRightMotor.follow(frontRightMotor);
 
@@ -146,6 +151,30 @@ public class ChassisSubsystem extends SubsystemBase {
   public void endDriveStraight() {
     m_gyroAngle = Constants.GYRO_NOTUSED;
   }
+  public void startAimRedBall() {
+    m_camera.setLED(VisionLEDMode.kOn);
+    m_camera.setPipelineIndex(0); // This is the first pipeline from http://gloworm.local:5800
+    yaw = 0;
+    m_AimBall = true;
+    controller.setTolerance(1, 5);
+  }
+  public void startAimBlueBall() {
+    m_camera.setLED(VisionLEDMode.kOn);
+    m_camera.setPipelineIndex(1); // This is the second pipeline from http://gloworm.local:5800
+    yaw = 0;
+    m_AimBall = true;
+    controller.setTolerance(1, 5);
+  }
+  public void endAimBall() {
+    m_camera.setLED(VisionLEDMode.kOff);
+    m_AimBall = false;
+  }
+  public void startLedOn() {
+    m_camera.setLED(VisionLEDMode.kOn);
+  }
+  public void startLedOff() {
+    m_camera.setLED(VisionLEDMode.kOff);
+  }
 
   /**
    * drive - set speed to chassis with the joystick input with a scale
@@ -153,10 +182,11 @@ public class ChassisSubsystem extends SubsystemBase {
    * @param scale
    */
   public void drive(RobotContainer robotContainer, DriverOI driverOI, int scale) {
+    m_camera = robotContainer.getCamera();
     speedMultiplier = driverOI.getJoystick().getRawButton(Constants.RIGHT_BUMPER) ? crawl : normal;
     // LEFT_BUMPER is now changed to drive straight tankDrive.
     // dir = driverOI.getJoystick().getRawButton(Constants.LEFT_BUMPER) ? Constants.INTAKE_OUT : Constants.INTAKE_IN;
-    
+
     RobotContainer.DriveTrainType driveTrainType = robotContainer.getDriveTrainType();
 
     if (driveTrainType == RobotContainer.DriveTrainType.TANK) {
@@ -169,19 +199,44 @@ public class ChassisSubsystem extends SubsystemBase {
         rightVal = driverOI.getJoystick().getRawAxis(Constants.LEFT_JOYSTICK_Y);
         leftVal = driverOI.getJoystick().getRawAxis(Constants.RIGHT_JOYSTICK_Y);
       }
+
       if(m_gyroAngle != Constants.GYRO_NOTUSED)
       {
         var pidOutput = controller.calculate(getGyroAngle(), 0) / 10;
 
         var speed = leftVal * speedMultiplier * dir;
-        // SmartDashboard.putNumber("Left Speed", speed+pidOutput);
-        // SmartDashboard.putNumber("Right Speed", speed-pidOutput);
+        SmartDashboard.putNumber("Left Speed", speed+pidOutput);
+        SmartDashboard.putNumber("Right Speed", speed-pidOutput);
+        tankDrive(speed + pidOutput, speed - pidOutput);
+      }
+      else if(m_AimBall)
+      {
+        // Vision-alignment mode
+        // Query the latest result from PhotonVision
+        var result = m_camera.getLatestResult();
+        if (result.hasTargets()) {
+          yaw = result.getBestTarget().getYaw();
+          SmartDashboard.putNumber("Yaw", yaw);
+        }
+
+        var pidOutput = controller.calculate(-yaw, 0) / 2;
+        // Set minimum voltage for motors
+        if(pidOutput < 0) {
+          pidOutput = Math.min(pidOutput, -0.3);
+        } else {
+          pidOutput = Math.max(pidOutput, 0.3);
+        }
+        SmartDashboard.putNumber("TurnPID", pidOutput);
+
+        var speed = leftVal * dir;
+        SmartDashboard.putNumber("Left Speed", speed+pidOutput);
+        SmartDashboard.putNumber("Right Speed", speed-pidOutput);
         tankDrive(speed + pidOutput, speed - pidOutput);
       }
       else
       {
-        // SmartDashboard.putNumber("Left Speed", leftVal);
-        // SmartDashboard.putNumber("Right Speed", rightVal);
+        SmartDashboard.putNumber("Left Speed", leftVal * speedMultiplier * dir);
+        SmartDashboard.putNumber("Right Speed", rightVal * speedMultiplier * dir);
         tankDrive(leftVal * speedMultiplier * dir, rightVal * speedMultiplier * dir);
       }
     } else if (driveTrainType == RobotContainer.DriveTrainType.ARCADE) {
