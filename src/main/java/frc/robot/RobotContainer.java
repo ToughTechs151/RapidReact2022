@@ -24,6 +24,8 @@ import frc.robot.oi.DriverOI;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ChassisSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import org.photonvision.PhotonCamera;
+import org.photonvision.common.hardware.VisionLEDMode;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -55,6 +57,7 @@ public class RobotContainer {
   private CoDriverOI codriverOI;
   private IntakeSubsystem intakeSubsystem;
   private DriveTrainType driveTrainType = DriveTrainType.TANK;
+  private PhotonCamera m_camera = new PhotonCamera("gloworm");
   private SendableChooser<Command> chooser = new SendableChooser<>();
 
   private AutonomousNothing autonomousNothing;
@@ -125,7 +128,7 @@ public class RobotContainer {
 
     // drive with joysticks
     chassisSubsystem.setDefaultCommand(new DriveWithJoystickCommand(this, driverOI));
-    
+    m_camera.setLED(VisionLEDMode.kOff);  
   }
 
   /**
@@ -181,6 +184,10 @@ public class RobotContainer {
    */
   public IntakeSubsystem getIntakeSubsystem() {
     return intakeSubsystem;
+  }
+
+  public PhotonCamera getCamera() {
+    return m_camera;
   }
 
 }
