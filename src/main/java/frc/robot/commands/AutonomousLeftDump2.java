@@ -21,19 +21,6 @@ public class AutonomousLeftDump2 extends SequentialCommandGroup {
     ChassisSubsystem chassisSubsystem = robotContainer.getChassisSubsystem();
     
     addCommands( 
-    
-    /*new ControlArmCommand(robotContainer, Constants.ARM_DOWN),
-    new IntakeCommand(robotContainer, Constants.INTAKE_IN),
-    new DriveDistanceGyroPID(0.4, 50, chassisSubsystem),
-    new WaitCommand(1),
-    new ControlArmCommand(robotContainer, Constants.ARM_UP),
-    new StopIntakeCommand(robotContainer),
-    new TurnDegreesGyroPID(0.5, 180, chassisSubsystem),
-    new DriveDistanceGyroPID(0.5, 50, chassisSubsystem),
-    new IntakeCommand(robotContainer, Constants.INTAKE_OUT),
-    new WaitCommand(1),
-    new StopIntakeCommand(robotContainer),
-    new DriveDistanceGyroPID(-0.5, 80, chassisSubsystem)*/
 
     new ControlArmCommand(robotContainer, Constants.ARM_DOWN),
     new IntakeCommand(robotContainer, Constants.INTAKE_IN),

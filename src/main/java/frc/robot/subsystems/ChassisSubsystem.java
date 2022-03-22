@@ -117,7 +117,7 @@ public class ChassisSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("Right Encoder", frontRightEncoder.getPosition());
     SmartDashboard.putNumber("Gyro angle", m_gyro.getAngle());
     SmartDashboard.putNumber("Left Ultrasonic", getLeftUltrasonic());
-    SmartDashboard.putNumber("Right Ultrasonic", getRightUltrasonic());
+    SmartDashboard.putNumber("Right Ultrasonic  ", getRightUltrasonic());
   }
 
   /**
@@ -223,6 +223,9 @@ public class ChassisSubsystem extends SubsystemBase {
     voltageScaleFactor = 5/RobotController.getVoltage5V(); //Calculate what percentage of 5 Volts we are actually at
     //Get a reading from the first sensor, scale it by the voltageScaleFactor, and then scale to Inches
     ultrasonicSensorRange = rightUltrasonic.getValue()*voltageScaleFactor*0.0492;
+    if (ultrasonicSensorRange < 18) {
+      ultrasonicSensorRange = 195;
+    }
     return ultrasonicSensorRange;
   }
 
@@ -230,6 +233,9 @@ public class ChassisSubsystem extends SubsystemBase {
     voltageScaleFactor = 5/RobotController.getVoltage5V(); //Calculate what percentage of 5 Volts we are actually at
     //Get a reading from the first sensor, scale it by the voltageScaleFactor, and then scale to Inches
     ultrasonicSensorRange = leftUltrasonic.getValue()*voltageScaleFactor*0.0492;
+    if (ultrasonicSensorRange < 18) {
+      ultrasonicSensorRange = 195;
+    }
     return ultrasonicSensorRange;
   }
 
