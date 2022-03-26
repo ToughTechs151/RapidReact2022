@@ -39,7 +39,7 @@ public class TurnDegreesGyroPID extends CommandBase {
     drive.resetEncoders();
     drive.resetGyro();
     // Sets the error tolerance to 5, and the error derivative tolerance to 10 per second
-    controller.setTolerance(3, 5);
+    controller.setTolerance(6, 5);
     System.out.println("TurnDegrees start");
   }
 
@@ -49,9 +49,9 @@ public class TurnDegreesGyroPID extends CommandBase {
     var pidOutput = controller.calculate(drive.getGyroAngle(), degrees);
     // Clamps the controller output output between -0.5 and 0.5
     if(pidOutput < 0) {
-      pidOutput = Math.min(pidOutput, -0.32);
+      pidOutput = Math.min(pidOutput, -0.28);
     } else {
-      pidOutput = Math.max(pidOutput, 0.32);
+      pidOutput = Math.max(pidOutput, 0.28);
     }
     pidOutput = MathUtil.clamp(pidOutput, -speed, speed);
     // SmartDashboard.putNumber("TurnPID", pidOutput);
