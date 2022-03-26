@@ -28,7 +28,7 @@ public class ArmSubsystem extends SubsystemBase {
     armMotor.restoreFactoryDefaults();
     armMotor.setInverted(false);
     armMotor.setIdleMode(IdleMode.kBrake);
-    armEncoder.setPosition(Constants.ARM_UP);
+    armEncoder.setPosition(0);
 
     /**
      * In order to use PID functionality for a controller, a SparkMaxPIDController object

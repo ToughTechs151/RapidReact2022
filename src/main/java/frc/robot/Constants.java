@@ -28,8 +28,8 @@ public final class Constants {
     public static final int INTAKE_IN = -1;
 
     // Position
-    public static final double ARM_UP = 1;
-    public static final double ARM_DOWN = -17.5;
+    public static final double ARM_UP = 0.5;
+    public static final double ARM_DOWN = -18.5;
 
     // Camera ID
     public static final int CAMERA_0 = 0;
