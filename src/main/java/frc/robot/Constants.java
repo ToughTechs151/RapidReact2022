@@ -21,15 +21,15 @@ public final class Constants {
 
     // Scale Factor
     public static final int SCALED_DRIVE = 0;
-    public static final double RAMP_RATE = 0.8;
+    public static final double RAMP_RATE = 0.0;
 
     // Directions
     public static final int INTAKE_OUT = 1;
     public static final int INTAKE_IN = -1;
 
     // Position
-    public static final double ARM_UP = 0.5;
-    public static final double ARM_DOWN = -18.5;
+    public static final double ARM_UP = -0.5;
+    public static final double ARM_DOWN = -18;
 
     // Camera ID
     public static final int CAMERA_0 = 0;
