@@ -106,7 +106,7 @@ public class RobotContainer {
     autonomousTurn90 = new AutonomousTurn90(this);
 
     chooser.addOption("No Auto", autonomousNothing);
-    chooser.addOption("Taxi", autonomousTaxi);
+    chooser.setDefaultOption("Taxi", autonomousTaxi);
 
     chooser.addOption("Left Dump", autonomousLeftDump);
     chooser.addOption("Left Dump 2", autonomousLeftDump2);
