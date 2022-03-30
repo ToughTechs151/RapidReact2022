@@ -7,12 +7,21 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class IntakeSubsystem extends SubsystemBase { 
-  WPI_TalonSRX intakemotor = new WPI_TalonSRX(Constants.INTAKE_MOTOR);
+  WPI_TalonSRX intakemotor;
   boolean isStop;
+
+  public IntakeSubsystem()
+  {
+    if(RobotBase.isReal())
+    {
+      intakemotor = new WPI_TalonSRX(Constants.INTAKE_MOTOR);
+    }
+  }
   
   @Override
   public void periodic() {
