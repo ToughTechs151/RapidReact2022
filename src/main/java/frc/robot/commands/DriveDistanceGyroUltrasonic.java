@@ -5,12 +5,12 @@
 package frc.robot.commands;
 
 import frc.robot.Constants;
-import frc.robot.subsystems.ChassisSubsystem;
+import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.math.controller.PIDController;
 
 public class DriveDistanceGyroUltrasonic extends CommandBase {
-  private final ChassisSubsystem drive;
+  private final DriveSubsystem drive;
   private final double distance;
   private final double speed;
   private final PIDController controller = new PIDController(Constants.DRIVETRAIN_KP, Constants.DRIVETRAIN_KI, Constants.DRIVETRAIN_KD);
@@ -23,18 +23,18 @@ public class DriveDistanceGyroUltrasonic extends CommandBase {
    * @param inches The number of inches the robot will drive
    * @param drive The drivetrain subsystem on which this command will run
    */
-  public DriveDistanceGyroUltrasonic(double speed, double inches, ChassisSubsystem drive) {
+  public DriveDistanceGyroUltrasonic(double speed, double inches, DriveSubsystem robotDrive) {
     distance = inches;
     this.speed = speed;
-    this.drive = drive;
-    addRequirements(drive);
+    this.drive = robotDrive;
+    addRequirements(robotDrive);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     // Set motors to stop, read encoder values for starting point
-    //drive.tankDrive(0, 0);
+    //m_robotDrive.tankDrive(0, 0);
     drive.resetEncoders();
     drive.resetGyro();
     // Sets the error tolerance to 5, and the error derivative tolerance to 10 per second

@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.ChassisSubsystem;
+import frc.robot.subsystems.DriveSubsystem;
 
 public class AutonomousCenterDump extends SequentialCommandGroup {
   /**
@@ -18,16 +18,16 @@ public class AutonomousCenterDump extends SequentialCommandGroup {
    * @param drivetrain The drivetrain subsystem on which this command will run
    */
   public AutonomousCenterDump(RobotContainer robotContainer) {
-    ChassisSubsystem chassisSubsystem = robotContainer.getChassisSubsystem();
+    DriveSubsystem m_robotDrive = robotContainer.getRobotDrive();
     addCommands( 
 
-    new DriveDistanceGyroPID(0.5, 15, chassisSubsystem),
-    new TurnDegreesGyroPID(0.7, 22.5, chassisSubsystem),
-    new DriveDistanceGyroUltrasonic(0.4, 23, chassisSubsystem),
+    new DriveDistanceGyroPID(0.5, 15, m_robotDrive),
+    new TurnDegreesGyroPID(0.7, 22.5, m_robotDrive),
+    new DriveDistanceGyroUltrasonic(0.4, 23, m_robotDrive),
     new IntakeCommand(robotContainer, Constants.INTAKE_OUT),
     new WaitCommand(1),
     new StopIntakeCommand(robotContainer),
-    new DriveDistanceGyroPID(-0.5, 80, chassisSubsystem)
+    new DriveDistanceGyroPID(-0.5, 80, m_robotDrive)
     
     );
 

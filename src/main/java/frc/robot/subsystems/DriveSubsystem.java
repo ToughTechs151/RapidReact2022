@@ -4,38 +4,44 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.VecBuilder;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import frc.robot.Constants.DriveConstants;
-import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
-import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj.simulation.ADXRS450_GyroSim;
 import edu.wpi.first.wpilibj.simulation.DifferentialDrivetrainSim;
 import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.Constants.DriveConstants;
+import org.photonvision.common.hardware.VisionLEDMode;
+import org.photonvision.PhotonCamera;
 
 public class DriveSubsystem extends SubsystemBase {
   // The motors on the left side of the drive.
   private final MotorControllerGroup m_leftMotors =
       new MotorControllerGroup(
-          new PWMSparkMax(DriveConstants.kLeftMotor1Port),
-          new PWMSparkMax(DriveConstants.kLeftMotor2Port));
+          new CANSparkMax(DriveConstants.kLeftMotor1Port, MotorType.kBrushless),
+          new CANSparkMax(DriveConstants.kLeftMotor2Port, MotorType.kBrushless));
 
   // The motors on the right side of the drive.
   private final MotorControllerGroup m_rightMotors =
       new MotorControllerGroup(
-          new PWMSparkMax(DriveConstants.kRightMotor1Port),
-          new PWMSparkMax(DriveConstants.kRightMotor2Port));
+          new CANSparkMax(DriveConstants.kRightMotor1Port, MotorType.kBrushless),
+          new CANSparkMax(DriveConstants.kRightMotor2Port, MotorType.kBrushless));
 
   // The robot's drive
   private final DifferentialDrive m_drive = new DifferentialDrive(m_leftMotors, m_rightMotors);
@@ -56,6 +62,17 @@ public class DriveSubsystem extends SubsystemBase {
 
   // The gyro sensor
   private final ADXRS450_Gyro m_gyro = new ADXRS450_Gyro();
+  private final PIDController controller = new PIDController(Constants.DRIVETRAIN_KP, Constants.DRIVETRAIN_KI, Constants.DRIVETRAIN_KD);
+  // Ultrasonic sensor
+  private final AnalogInput rightUltrasonic = new AnalogInput(0);
+  private final AnalogInput leftUltrasonic = new AnalogInput(1);
+  public double ultrasonicSensorRange = 0;
+  public double voltageScaleFactor = 1;
+
+  private double m_gyroAngle = Constants.GYRO_NOTUSED;
+  private PhotonCamera m_camera;
+  private boolean m_AimBall = false;
+  private double yaw;
 
   // Odometry class for tracking robot pose
   private final DifferentialDriveOdometry m_odometry;
@@ -97,6 +114,7 @@ public class DriveSubsystem extends SubsystemBase {
       m_leftEncoderSim = new EncoderSim(m_leftEncoder);
       m_rightEncoderSim = new EncoderSim(m_rightEncoder);
       m_gyroSim = new ADXRS450_GyroSim(m_gyro);
+      m_gyroAngle = Constants.GYRO_NOTUSED;
 
       // the Field2d class lets us visualize our robot in the simulation GUI.
       m_fieldSim = new Field2d();
@@ -182,6 +200,51 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   /**
+   *
+   * @param leftspeed - The left joystick controller spped -1 to 1
+   * @param rightspeed - The right joystick controller speed -1 to 1
+   */
+  public void tankDrive(double leftSpeed, double rightSpeed) {
+    if(m_gyroAngle != Constants.GYRO_NOTUSED)
+    {
+      var pidOutput = controller.calculate(getGyroAngle(), 0) / 10;
+      SmartDashboard.putNumber("Left Speed", leftSpeed+pidOutput);
+      SmartDashboard.putNumber("Right Speed", rightSpeed-pidOutput);
+      m_drive.tankDrive(leftSpeed + pidOutput, rightSpeed - pidOutput);
+    }
+    else if(m_AimBall)
+    {
+      // Vision-alignment mode
+      // Query the latest result from PhotonVision
+      var result = m_camera.getLatestResult();
+      if (result.hasTargets()) {
+        yaw = result.getBestTarget().getYaw();
+        SmartDashboard.putNumber("Yaw", yaw);
+      }
+
+      var pidOutput = controller.calculate(-yaw, 0) / 2;
+      // Set minimum voltage for motors
+      if(pidOutput < 0) {
+        pidOutput = Math.min(pidOutput, -0.3);
+      } else {
+        pidOutput = Math.max(pidOutput, 0.3);
+      }
+      SmartDashboard.putNumber("TurnPID", pidOutput);
+
+      var speed = leftSpeed;
+      SmartDashboard.putNumber("Left Speed", speed+pidOutput);
+      SmartDashboard.putNumber("Right Speed", speed-pidOutput);
+      m_drive.tankDrive(leftSpeed + pidOutput, rightSpeed - pidOutput);
+    }
+    else
+    {
+      SmartDashboard.putNumber("Left Speed", leftSpeed);
+      SmartDashboard.putNumber("Right Speed", rightSpeed);
+      m_drive.tankDrive(leftSpeed, rightSpeed);
+    }
+  }
+
+  /**
    * Controls the left and right sides of the drive directly with voltages.
    *
    * @param leftVolts the commanded left output
@@ -198,6 +261,40 @@ public class DriveSubsystem extends SubsystemBase {
     m_drive.feed();
   }
 
+  public void startDriveStraight() {
+    resetGyro();
+    m_gyroAngle = m_gyro.getAngle();
+    controller.setTolerance(1, 5);
+  }
+  public void endDriveStraight() {
+    m_gyroAngle = Constants.GYRO_NOTUSED;
+  }
+
+  public void startAimRedBall() {
+    m_camera.setLED(VisionLEDMode.kOn);
+    m_camera.setPipelineIndex(0); // This is the first pipeline from http://gloworm.local:5800
+    yaw = 0;
+    m_AimBall = true;
+    controller.setTolerance(1, 5);
+  }
+  public void startAimBlueBall() {
+    m_camera.setLED(VisionLEDMode.kOn);
+    m_camera.setPipelineIndex(1); // This is the second pipeline from http://gloworm.local:5800
+    yaw = 0;
+    m_AimBall = true;
+    controller.setTolerance(1, 5);
+  }
+  public void endAimBall() {
+    m_camera.setLED(VisionLEDMode.kOff);
+    m_AimBall = false;
+  }
+  public void startLedOn() {
+    m_camera.setLED(VisionLEDMode.kOn);
+  }
+  public void startLedOff() {
+    m_camera.setLED(VisionLEDMode.kOff);
+  }
+
   /** Resets the drive encoders to currently read a position of 0. */
   public void resetEncoders() {
     m_leftEncoder.reset();
@@ -212,7 +309,9 @@ public class DriveSubsystem extends SubsystemBase {
   public double getAverageEncoderDistance() {
     return (m_leftEncoder.getDistance() + m_rightEncoder.getDistance()) / 2.0;
   }
-
+  public double getAverageDistanceInch() {
+    return (m_leftEncoder.getDistance() + m_rightEncoder.getDistance()) / 2.0;
+  }
   /**
    * Gets the left drive encoder.
    *
@@ -240,6 +339,13 @@ public class DriveSubsystem extends SubsystemBase {
     m_drive.setMaxOutput(maxOutput);
   }
 
+  public double getGyroAngle() {
+    return m_gyro.getAngle();
+  }
+  /** Reset the gyro. */
+  public void resetGyro() {
+    m_gyro.reset();
+  }
   /** Zeroes the heading of the robot. */
   public void zeroHeading() {
     m_gyro.reset();
@@ -252,5 +358,29 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public double getHeading() {
     return Math.IEEEremainder(m_gyro.getAngle(), 360) * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+  }
+
+  private double getRightUltrasonic() {
+    voltageScaleFactor = 5/RobotController.getVoltage5V(); //Calculate what percentage of 5 Volts we are actually at
+    //Get a reading from the first sensor, scale it by the voltageScaleFactor, and then scale to Inches
+    ultrasonicSensorRange = rightUltrasonic.getValue()*voltageScaleFactor*0.0492;
+    if (ultrasonicSensorRange < 18) {
+      ultrasonicSensorRange = 195;
+    }
+    return ultrasonicSensorRange;
+  }
+
+  private double getLeftUltrasonic() {
+    voltageScaleFactor = 5/RobotController.getVoltage5V(); //Calculate what percentage of 5 Volts we are actually at
+    //Get a reading from the first sensor, scale it by the voltageScaleFactor, and then scale to Inches
+    ultrasonicSensorRange = leftUltrasonic.getValue()*voltageScaleFactor*0.0492;
+    if (ultrasonicSensorRange < 18) {
+      ultrasonicSensorRange = 195;
+    }
+    return ultrasonicSensorRange;
+  }
+
+  public double getUltrasonic() {
+    return Math.min(getLeftUltrasonic(), getRightUltrasonic());
   }
 }

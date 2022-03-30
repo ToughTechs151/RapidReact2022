@@ -6,7 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.ChassisSubsystem;
+import frc.robot.subsystems.DriveSubsystem;
 
 public class AutonomousTaxi extends SequentialCommandGroup {
   /**
@@ -16,10 +16,10 @@ public class AutonomousTaxi extends SequentialCommandGroup {
    * @param drivetrain The drivetrain subsystem on which this command will run
    */
   public AutonomousTaxi(RobotContainer robotContainer) {
-    ChassisSubsystem chassisSubsystem = robotContainer.getChassisSubsystem();
+    DriveSubsystem m_robotDrive = robotContainer.getRobotDrive();
     
     addCommands( 
-    new DriveDistanceGyroPID(0.5, 50, chassisSubsystem)    
+    new DriveDistanceGyroPID(0.5, 50, m_robotDrive)    
     );
     
   } 

@@ -7,6 +7,8 @@ package frc.robot;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.simulation.BatterySim;
+import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
@@ -17,11 +19,11 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * project.
  */
 public class Robot extends TimedRobot {
-  
+
   private String driveTrainType;
   private Command autonomousCommand;
 
-  private RobotContainer robotContainer;
+  private RobotContainer m_robotContainer;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -33,7 +35,7 @@ public class Robot extends TimedRobot {
     if (!Preferences.containsKey(Constants.DRIVE_TRAIN_TYPE)) {
       Preferences.setString(Constants.DRIVE_TRAIN_TYPE, Constants.ARCADE);
     }
-    
+
     // Start the Camera server
     CameraServer.startAutomaticCapture(Constants.CAMERA_0);
     CameraServer.startAutomaticCapture(Constants.CAMERA_1);
@@ -41,7 +43,22 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     Splash.printAllStatusFiles();
-    robotContainer = new RobotContainer();
+    m_robotContainer = new RobotContainer();
+
+    // Flush NetworkTables every loop. This ensures that robot pose and other values
+    // are sent during every loop iteration.
+    setNetworkTablesFlushEnabled(true);
+  }
+
+  @Override
+  public void simulationPeriodic() {
+    // Here we calculate the battery voltage based on drawn current.
+    // As our robot draws more power from the battery its voltage drops.
+    // The estimated voltage is highly dependent on the battery's internal
+    // resistance.
+    double drawCurrent = m_robotContainer.getRobotDrive().getDrawnCurrentAmps();
+    double loadedVoltage = BatterySim.calculateDefaultBatteryLoadedVoltage(drawCurrent);
+    RoboRioSim.setVInVoltage(loadedVoltage);
   }
 
   /**
@@ -64,7 +81,9 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     driveTrainType = Preferences.getString(Constants.DRIVE_TRAIN_TYPE, Constants.ARCADE);
-    robotContainer.setDriveTrainType(driveTrainType);
+    m_robotContainer.setDriveTrainType(driveTrainType);
+    CommandScheduler.getInstance().cancelAll();
+    m_robotContainer.zeroAllOutputs();
   }
 
   @Override
@@ -73,7 +92,7 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    autonomousCommand = robotContainer.getAutonomousCommand();
+    autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
     if (autonomousCommand != null) {

@@ -5,12 +5,12 @@
 package frc.robot.commands;
 
 import frc.robot.Constants;
-import frc.robot.subsystems.ChassisSubsystem;
+import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.math.controller.PIDController;
 
 public class DriveDistanceGyroPID extends CommandBase {
-  private final ChassisSubsystem drive;
+  private final DriveSubsystem drive;
   private final double distance;
   private final double speed;
   private final PIDController controller = new PIDController(Constants.DRIVETRAIN_KP, Constants.DRIVETRAIN_KI, Constants.DRIVETRAIN_KD);
@@ -23,7 +23,7 @@ public class DriveDistanceGyroPID extends CommandBase {
    * @param inches The number of inches the robot will drive
    * @param drive The drivetrain subsystem on which this command will run
    */
-  public DriveDistanceGyroPID(double speed, double inches, ChassisSubsystem drive) {
+  public DriveDistanceGyroPID(double speed, double inches, DriveSubsystem drive) {
     distance = inches;
     this.speed = speed;
     this.drive = drive;

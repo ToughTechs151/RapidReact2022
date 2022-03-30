@@ -4,17 +4,29 @@
 
 package frc.robot;
 
+import java.util.List;
+
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.RamseteController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.commands.AutonomousLeftDump2;
-import frc.robot.commands.AutonomousRightLeftDump2;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import frc.robot.commands.AutonomousRightRightDump2;
 import frc.robot.commands.AutonomousCenterDump;
 import frc.robot.commands.AutonomousNothing;
+import frc.robot.commands.AutonomousRightLeftDump2;
 import frc.robot.commands.AutonomousLeftDump;
 import frc.robot.commands.AutonomousTaxi;
 import frc.robot.commands.AutonomousTurn90;
@@ -22,7 +34,7 @@ import frc.robot.commands.DriveWithJoystickCommand;
 import frc.robot.oi.CoDriverOI;
 import frc.robot.oi.DriverOI;
 import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.ChassisSubsystem;
+import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import org.photonvision.PhotonCamera;
 import org.photonvision.common.hardware.VisionLEDMode;
@@ -40,7 +52,7 @@ public class RobotContainer {
     ARCADE("Arcade");
 
     private String type;
-      
+
     DriveTrainType(String type) {
       this.type = type;
     }
@@ -51,7 +63,7 @@ public class RobotContainer {
   }
 
     // The robot's subsystems and commands are defined here...
-  private ChassisSubsystem chassisSubsystem;
+  private DriveSubsystem m_robotDrive;
   private ArmSubsystem armSubsystem;
   private DriverOI driverOI;
   private CoDriverOI codriverOI;
@@ -65,9 +77,9 @@ public class RobotContainer {
 
   private AutonomousLeftDump autonomousLeftDump;
   private AutonomousLeftDump2 autonomousLeftDump2;
-  
+
   private AutonomousCenterDump autonomousCenterDump;
-  
+
   private AutonomousRightLeftDump2 autonomousRightLeftDump2;
   private AutonomousRightRightDump2 autonomousRightRightDump2;
 
@@ -75,7 +87,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    chassisSubsystem = new ChassisSubsystem();
+    m_robotDrive = new DriveSubsystem();
     armSubsystem = new ArmSubsystem();
     intakeSubsystem = new IntakeSubsystem();
     // Configure the button bindings for all buttons
@@ -90,7 +102,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // configure the autonomonous chooser
-    
+
     autonomousNothing = new AutonomousNothing(this);
     autonomousTaxi = new AutonomousTaxi(this);
 
@@ -116,7 +128,7 @@ public class RobotContainer {
     chooser.addOption("Right Left Dump 2", autonomousRightLeftDump2);
 
     chooser.addOption("Right Right Dump 2", autonomousRightRightDump2);
-    
+
     chooser.addOption("Turn 90", autonomousTurn90);
 
     // Put the chooser on the dashboard
@@ -127,8 +139,8 @@ public class RobotContainer {
     codriverOI = new CoDriverOI(Constants.CODRIVER_OI, this);
 
     // drive with joysticks
-    chassisSubsystem.setDefaultCommand(new DriveWithJoystickCommand(this, driverOI));
-    m_camera.setLED(VisionLEDMode.kOff);  
+    m_robotDrive.setDefaultCommand(new DriveWithJoystickCommand(this, driverOI));
+    m_camera.setLED(VisionLEDMode.kOff);
   }
 
   /**
@@ -152,30 +164,86 @@ public class RobotContainer {
     return driveTrainType;
   }
 
+  public DriveSubsystem getRobotDrive() {
+    return m_robotDrive;
+  }
+
+  /** Zeros the outputs of all subsystems. */
+  public void zeroAllOutputs() {
+    m_robotDrive.tankDriveVolts(0, 0);
+  }
+
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return chooser.getSelected();
-  }
+    //return chooser.getSelected();
+    // Create a voltage constraint to ensure we don't accelerate too fast
+    var autoVoltageConstraint =
+        new DifferentialDriveVoltageConstraint(
+            new SimpleMotorFeedforward(
+                Constants.DriveConstants.ksVolts,
+                Constants.DriveConstants.kvVoltSecondsPerMeter,
+                Constants.DriveConstants.kaVoltSecondsSquaredPerMeter),
+            Constants.DriveConstants.kDriveKinematics,
+            7);
 
-  /**
-   * retrieves chassis subsystem
-   * @return
-   */
-  public ChassisSubsystem getChassisSubsystem() { 
-    return chassisSubsystem; 
+    // Create config for trajectory
+    TrajectoryConfig config =
+        new TrajectoryConfig(
+                Constants.AutoConstants.kMaxSpeedMetersPerSecond,
+                Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+            // Add kinematics to ensure max speed is actually obeyed
+            .setKinematics(Constants.DriveConstants.kDriveKinematics)
+            // Apply the voltage constraint
+            .addConstraint(autoVoltageConstraint);
+
+    // An example trajectory to follow.  All units in meters.
+    Trajectory exampleTrajectory =
+        TrajectoryGenerator.generateTrajectory(
+            // Start at (1, 2) facing the +X direction
+            new Pose2d(1, 2, new Rotation2d(0)),
+            // Pass through these two interior waypoints, making an 's' curve path
+            List.of(new Translation2d(2, 3), new Translation2d(3, 1)),
+            // End 3 meters straight ahead of where we started, facing forward
+            new Pose2d(4, 2, new Rotation2d(0)),
+            // Pass config
+            config);
+
+    RamseteCommand ramseteCommand =
+        new RamseteCommand(
+            exampleTrajectory,
+            m_robotDrive::getPose,
+            new RamseteController(
+                Constants.AutoConstants.kRamseteB, Constants.AutoConstants.kRamseteZeta),
+            new SimpleMotorFeedforward(
+                Constants.DriveConstants.ksVolts,
+                Constants.DriveConstants.kvVoltSecondsPerMeter,
+                Constants.DriveConstants.kaVoltSecondsSquaredPerMeter),
+            Constants.DriveConstants.kDriveKinematics,
+            m_robotDrive::getWheelSpeeds,
+            new PIDController(Constants.DriveConstants.kPDriveVel, 0, 0),
+            new PIDController(Constants.DriveConstants.kPDriveVel, 0, 0),
+            // RamseteCommand passes volts to the callback
+            m_robotDrive::tankDriveVolts,
+            m_robotDrive);
+
+    // Reset odometry to starting pose of trajectory.
+    m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose());
+
+    // Run path following command, then stop at the end.
+    return ramseteCommand.andThen(() -> m_robotDrive.tankDriveVolts(0, 0));
   }
 
   /**
    * retrieves the arm subsystem
-   * 
+   *
    * @return
    */
-  public ArmSubsystem getArmSubsystem() { 
-    return armSubsystem; 
+  public ArmSubsystem getArmSubsystem() {
+    return armSubsystem;
   }
 
   /**

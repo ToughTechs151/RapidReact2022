@@ -6,7 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.ChassisSubsystem;
+import frc.robot.subsystems.DriveSubsystem;
 
 public class AutonomousTurn90 extends SequentialCommandGroup {
   /**
@@ -16,12 +16,12 @@ public class AutonomousTurn90 extends SequentialCommandGroup {
    * @param drivetrain The drivetrain subsystem on which this command will run
    */
   public AutonomousTurn90(RobotContainer robotContainer) {
-    ChassisSubsystem chassisSubsystem = robotContainer.getChassisSubsystem();
+    DriveSubsystem m_robotDrive = robotContainer.getRobotDrive();
     addCommands( 
-    new TurnDegreesGyroPID(0.6, 90, chassisSubsystem),
-    new TurnDegreesGyroPID(0.6, 90, chassisSubsystem),
-    new TurnDegreesGyroPID(0.6, 90, chassisSubsystem),
-    new TurnDegreesGyroPID(0.6, 90, chassisSubsystem)
+    new TurnDegreesGyroPID(0.6, 90, m_robotDrive),
+    new TurnDegreesGyroPID(0.6, 90, m_robotDrive),
+    new TurnDegreesGyroPID(0.6, 90, m_robotDrive),
+    new TurnDegreesGyroPID(0.6, 90, m_robotDrive)
     );
   } 
 }

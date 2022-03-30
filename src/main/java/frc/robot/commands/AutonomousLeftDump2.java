@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
-import frc.robot.subsystems.ChassisSubsystem;
+import frc.robot.subsystems.DriveSubsystem;
 
 public class AutonomousLeftDump2 extends SequentialCommandGroup {
   /**
@@ -18,23 +18,23 @@ public class AutonomousLeftDump2 extends SequentialCommandGroup {
    * @param drivetrain The drivetrain subsystem on which this command will run
    */
   public AutonomousLeftDump2(RobotContainer robotContainer) {
-    ChassisSubsystem chassisSubsystem = robotContainer.getChassisSubsystem();
+    DriveSubsystem m_robotDrive = robotContainer.getRobotDrive();
     
     addCommands( 
 
     new ControlArmCommand(robotContainer, Constants.ARM_DOWN),
     new IntakeCommand(robotContainer, Constants.INTAKE_IN),
-    new DriveDistanceGyroPID(0.4, 50, chassisSubsystem),
+    new DriveDistanceGyroPID(0.4, 50, m_robotDrive),
     new WaitCommand(1),
     new ControlArmCommand(robotContainer, Constants.ARM_UP),
     new StopIntakeCommand(robotContainer),
-    new TurnDegreesGyroPID(0.6, 180, chassisSubsystem),
-    new DriveDistanceGyroPID(0.5, 50, chassisSubsystem),
-    new DriveDistanceGyroUltrasonic(0.4, 23, chassisSubsystem),
+    new TurnDegreesGyroPID(0.6, 180, m_robotDrive),
+    new DriveDistanceGyroPID(0.5, 50, m_robotDrive),
+    new DriveDistanceGyroUltrasonic(0.4, 23, m_robotDrive),
     new IntakeCommand(robotContainer, Constants.INTAKE_OUT),
     new WaitCommand(1),
     new StopIntakeCommand(robotContainer),
-    new DriveDistanceGyroPID(-0.5, 80, chassisSubsystem)
+    new DriveDistanceGyroPID(-0.5, 80, m_robotDrive)
     
     );
     

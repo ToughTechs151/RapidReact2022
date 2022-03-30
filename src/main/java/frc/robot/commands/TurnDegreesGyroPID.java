@@ -4,14 +4,14 @@
 
 package frc.robot.commands;
 
+import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.ChassisSubsystem;
 
 public class TurnDegreesGyroPID extends CommandBase {
-  private final ChassisSubsystem drive;
+  private final DriveSubsystem drive;
   private final double degrees;
   private final double speed;
   private final PIDController controller = new PIDController(Constants.DRIVETRAIN_KP, Constants.DRIVETRAIN_KI, Constants.DRIVETRAIN_KD);
@@ -25,7 +25,7 @@ public class TurnDegreesGyroPID extends CommandBase {
    * @param degrees Degrees to turn. Leverages encoders to compare distance.
    * @param drive The drive subsystem on which this command will run
    */
-  public TurnDegreesGyroPID(double speed, double degrees, ChassisSubsystem drive) {
+  public TurnDegreesGyroPID(double speed, double degrees, DriveSubsystem drive) {
     this.speed = Math.abs(speed);
     this.degrees = degrees;
     this.drive = drive;

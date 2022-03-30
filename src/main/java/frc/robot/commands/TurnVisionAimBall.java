@@ -5,7 +5,7 @@
 package frc.robot.commands;
 
 import frc.robot.Constants;
-import frc.robot.subsystems.ChassisSubsystem;
+import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -14,7 +14,7 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.common.hardware.VisionLEDMode;
 
 public class TurnVisionAimBall extends CommandBase {
-  private final ChassisSubsystem drive;
+  private final DriveSubsystem m_robotDrive;
   private final double speed;
   private final PIDController controller = new PIDController(Constants.LIMELIGHT_KP, Constants.DRIVETRAIN_KI, Constants.DRIVETRAIN_KD);
   private final PhotonCamera m_camera;
@@ -29,11 +29,11 @@ public class TurnVisionAimBall extends CommandBase {
    * @param degrees Degrees to turn. Leverages encoders to compare distance.
    * @param drive The drive subsystem on which this command will run
    */
-  public TurnVisionAimBall(double speed, ChassisSubsystem drive, PhotonCamera camera) {
+  public TurnVisionAimBall(double speed, DriveSubsystem robotDrive, PhotonCamera camera) {
     this.speed = speed;
-    this.drive = drive;
+    this.m_robotDrive = robotDrive;
     this.m_camera = camera;
-    addRequirements(drive);
+    addRequirements(m_robotDrive);
   }
 
   // Called when the command is initially scheduled.
@@ -64,13 +64,13 @@ public class TurnVisionAimBall extends CommandBase {
     // Clamps the controller output output
     pidOutput = MathUtil.clamp(pidOutput, -speed, speed);
     SmartDashboard.putNumber("TurnPID", pidOutput);
-    drive.arcadeDrive(0, pidOutput);
+    m_robotDrive.arcadeDrive(0, pidOutput);
 }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    drive.arcadeDrive(0, 0);
+    m_robotDrive.arcadeDrive(0, 0);
     m_camera.setLED(VisionLEDMode.kOff);
     System.out.println("TurnVisionAimBall end " + interrupted);
   }
