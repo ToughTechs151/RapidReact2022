@@ -17,10 +17,7 @@ public class AutonomousTaxi extends SequentialCommandGroup {
    */
   public AutonomousTaxi(RobotContainer robotContainer) {
     ChassisSubsystem chassisSubsystem = robotContainer.getChassisSubsystem();
-    
-    addCommands( 
-    new DriveDistanceGyroPID(0.5, 50, chassisSubsystem)    
-    );
-    
-  } 
+
+    addCommands(new DriveDistanceGyroPID(0.5, 50, chassisSubsystem));
+  }
 }

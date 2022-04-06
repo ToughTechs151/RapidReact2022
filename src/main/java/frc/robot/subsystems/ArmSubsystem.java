@@ -5,17 +5,17 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import frc.robot.Constants;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxPIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class ArmSubsystem extends SubsystemBase {
-    // Put methods for controlling this subsystem
+  // Put methods for controlling this subsystem
   // here. Call these from Commands.
   private CANSparkMax armMotor = new CANSparkMax(Constants.ARM_MOTOR, MotorType.kBrushless);
   private SparkMaxPIDController m_pidController;
@@ -31,9 +31,8 @@ public class ArmSubsystem extends SubsystemBase {
     armEncoder.setPosition(0);
 
     /**
-     * In order to use PID functionality for a controller, a SparkMaxPIDController object
-     * is constructed by calling the getPIDController() method on an existing
-     * CANSparkMax object
+     * In order to use PID functionality for a controller, a SparkMaxPIDController object is
+     * constructed by calling the getPIDController() method on an existing CANSparkMax object
      */
     m_pidController = armMotor.getPIDController();
 
@@ -62,20 +61,17 @@ public class ArmSubsystem extends SubsystemBase {
     /**
      * Smart Motion coefficients are set on a SparkMaxPIDController object
      *
-     * - setSmartMotionMaxVelocity() will limit the velocity in RPM of
-     * the pid controller in Smart Motion mode
-     * - setSmartMotionMinOutputVelocity() will put a lower bound in
-     * RPM of the pid controller in Smart Motion mode
-     * - setSmartMotionMaxAccel() will limit the acceleration in RPM^2
-     * of the pid controller in Smart Motion mode
-     * - setSmartMotionAllowedClosedLoopError() will set the max allowed
-     * error for the pid controller in Smart Motion mode
+     * <p>- setSmartMotionMaxVelocity() will limit the velocity in RPM of the pid controller in
+     * Smart Motion mode - setSmartMotionMinOutputVelocity() will put a lower bound in RPM of the
+     * pid controller in Smart Motion mode - setSmartMotionMaxAccel() will limit the acceleration in
+     * RPM^2 of the pid controller in Smart Motion mode - setSmartMotionAllowedClosedLoopError()
+     * will set the max allowed error for the pid controller in Smart Motion mode
      */
     int smartMotionSlot = 0;
     m_pidController.setSmartMotionMaxVelocity(maxVel, smartMotionSlot);
     m_pidController.setSmartMotionMinOutputVelocity(minVel, smartMotionSlot);
     m_pidController.setSmartMotionMaxAccel(maxAcc, smartMotionSlot);
-    //m_pidController.setSmartMotionAllowedClosedLoopError(allowedErr, smartMotionSlot);
+    // m_pidController.setSmartMotionAllowedClosedLoopError(allowedErr, smartMotionSlot);
   }
 
   public void periodic() {
@@ -86,10 +82,11 @@ public class ArmSubsystem extends SubsystemBase {
     // SmartDashboard.putNumber("ARM get", armMotor.get());
     // SmartDashboard.putNumber("ARM getCPR", armEncoder.getCountsPerRevolution());
     SmartDashboard.putNumber("Arm position", armEncoder.getPosition());
-    // SmartDashboard.putNumber("ARM getVelocityConversionFactor", armEncoder.getVelocityConversionFactor());
+    // SmartDashboard.putNumber("ARM getVelocityConversionFactor",
+    // armEncoder.getVelocityConversionFactor());
   }
 
-  public void armSetpoint(double armSetpoint){
+  public void armSetpoint(double armSetpoint) {
     m_armSetpoint = armSetpoint;
     m_pidController.setReference(armSetpoint, ControlType.kSmartMotion);
   }

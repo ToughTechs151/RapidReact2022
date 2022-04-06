@@ -19,17 +19,13 @@ public class AutonomousCenterDump extends SequentialCommandGroup {
    */
   public AutonomousCenterDump(RobotContainer robotContainer) {
     ChassisSubsystem chassisSubsystem = robotContainer.getChassisSubsystem();
-    addCommands( 
-
-    new DriveDistanceGyroPID(0.5, 15, chassisSubsystem),
-    new TurnDegreesGyroPID(0.7, 22.5, chassisSubsystem),
-    new DriveDistanceGyroUltrasonic(0.4, 23, chassisSubsystem),
-    new IntakeCommand(robotContainer, Constants.INTAKE_OUT),
-    new WaitCommand(1),
-    new StopIntakeCommand(robotContainer),
-    new DriveDistanceGyroPID(-0.5, 80, chassisSubsystem)
-    
-    );
-
-  } 
+    addCommands(
+        new DriveDistanceGyroPID(0.5, 15, chassisSubsystem),
+        new TurnDegreesGyroPID(0.7, 22.5, chassisSubsystem),
+        new DriveDistanceGyroUltrasonic(0.4, 23, chassisSubsystem),
+        new IntakeCommand(robotContainer, Constants.INTAKE_OUT),
+        new WaitCommand(1),
+        new StopIntakeCommand(robotContainer),
+        new DriveDistanceGyroPID(-0.5, 80, chassisSubsystem));
+  }
 }

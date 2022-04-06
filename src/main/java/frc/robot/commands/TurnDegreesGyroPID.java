@@ -14,14 +14,14 @@ public class TurnDegreesGyroPID extends CommandBase {
   private final ChassisSubsystem drive;
   private final double degrees;
   private final double speed;
-  private final PIDController controller = new PIDController(Constants.DRIVETRAIN_KP, Constants.DRIVETRAIN_KI, Constants.DRIVETRAIN_KD);
-
+  private final PIDController controller =
+      new PIDController(Constants.DRIVETRAIN_KP, Constants.DRIVETRAIN_KI, Constants.DRIVETRAIN_KD);
 
   /**
    * Creates a new TurnDegrees. This command will turn your robot for a desired rotation (in
    * degrees) and rotational speed.
    *
-   * @param speed The speed which the robot will drive. 
+   * @param speed The speed which the robot will drive.
    * @param degrees Degrees to turn. Leverages encoders to compare distance.
    * @param drive The drive subsystem on which this command will run
    */
@@ -48,7 +48,7 @@ public class TurnDegreesGyroPID extends CommandBase {
   public void execute() {
     var pidOutput = controller.calculate(drive.getGyroAngle(), degrees);
     // Clamps the controller output output between -0.5 and 0.5
-    if(pidOutput < 0) {
+    if (pidOutput < 0) {
       pidOutput = Math.min(pidOutput, -0.28);
     } else {
       pidOutput = Math.max(pidOutput, 0.28);
@@ -56,7 +56,7 @@ public class TurnDegreesGyroPID extends CommandBase {
     pidOutput = MathUtil.clamp(pidOutput, -speed, speed);
     // SmartDashboard.putNumber("TurnPID", pidOutput);
     // SmartDashboard.putNumber("GyroValue", drive.getGyroAngle());
-    drive.arcadeDrive(0, pidOutput); 
+    drive.arcadeDrive(0, pidOutput);
   }
 
   // Called once the command ends or is interrupted.
@@ -69,6 +69,6 @@ public class TurnDegreesGyroPID extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-   return controller.atSetpoint();
+    return controller.atSetpoint();
   }
 }

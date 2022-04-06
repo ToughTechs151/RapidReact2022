@@ -17,11 +17,10 @@ public class AutonomousTurn90 extends SequentialCommandGroup {
    */
   public AutonomousTurn90(RobotContainer robotContainer) {
     ChassisSubsystem chassisSubsystem = robotContainer.getChassisSubsystem();
-    addCommands( 
-    new TurnDegreesGyroPID(0.6, 90, chassisSubsystem),
-    new TurnDegreesGyroPID(0.6, 90, chassisSubsystem),
-    new TurnDegreesGyroPID(0.6, 90, chassisSubsystem),
-    new TurnDegreesGyroPID(0.6, 90, chassisSubsystem)
-    );
-  } 
+    addCommands(
+        new TurnDegreesGyroPID(0.6, 90, chassisSubsystem),
+        new TurnDegreesGyroPID(0.6, 90, chassisSubsystem),
+        new TurnDegreesGyroPID(0.6, 90, chassisSubsystem),
+        new TurnDegreesGyroPID(0.6, 90, chassisSubsystem));
+  }
 }
