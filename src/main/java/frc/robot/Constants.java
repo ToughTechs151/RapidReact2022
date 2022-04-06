@@ -14,8 +14,6 @@ package frc.robot;
  */
 public final class Constants {
 
-    private Constants() {}
-
     // Robot preferences
     public static final String DRIVE_TRAIN_TYPE = "DriveTrainType";
     public static final String TANK = "Tank";
@@ -23,14 +21,19 @@ public final class Constants {
 
     // Scale Factor
     public static final int SCALED_DRIVE = 0;
+    public static final double RAMP_RATE = 0.0;
 
     // Directions
-    public static final int OUT = 1;
-    public static final int IN = -1;
+    public static final int INTAKE_OUT = 1;
+    public static final int INTAKE_IN = -1;
 
     // Position
-    public static final double ARM_UP = 1;
-    public static final double ARM_DOWN = -17.3;
+    public static final double ARM_UP = -0.5;
+    public static final double ARM_DOWN = -18;
+
+    // Camera ID
+    public static final int CAMERA_0 = 0;
+    public static final int CAMERA_1 = 1;
 
     // Drive Train CAN IDs
     public static int FRONT_LEFT_MOTOR = 4;
@@ -44,12 +47,9 @@ public final class Constants {
 
     public static final int MOTOR_CURRENT_LIMITS = 30;
 
-    //Intake Subsystem Speed
-    public static final double INTAKE_SPEED = 0.5;
-
     // OI ports
     public static int DRIVER_OI = 0;
-    public static int CODRIVE_OI = 1;
+    public static int CODRIVER_OI = 1;
 
     //OI AXES
     public static final int LEFT_JOYSTICK_X = 0;
@@ -72,8 +72,9 @@ public final class Constants {
 	public static final int LEFT_JOYSTICK = 9;
     public static final int RIGHT_JOYSTICK = 10;
 
+    // Arm Values
     public static final double ARM_REVOLUTION = 4.5;
-    public static final double POSTOLERANCE = 0.005;
+    public static final double POS_TOLERANCE = 0.005;
     public static final double ARM_KP = 0.05;
     public static final double ARM_KI = 0.0;
     public static final double ARM_KD = 0.0;
@@ -83,8 +84,9 @@ public final class Constants {
     public static final int GYRO_NOTUSED = -1;
 
     //PID Value
-    public static final double DRIVETRAIN_KP=0.06;
-    public static final double DRIVETRAIN_KI=0;
-    public static final double DRIVETRAIN_KD=0;
+    public static final double DRIVETRAIN_KP = 0.03;
+    public static final double DRIVETRAIN_KI = 0;
+    public static final double DRIVETRAIN_KD = 0;
 
+    public static final double LIMELIGHT_KP = 0.02;
 }

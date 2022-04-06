@@ -28,7 +28,7 @@ public class ArmSubsystem extends SubsystemBase {
     armMotor.restoreFactoryDefaults();
     armMotor.setInverted(false);
     armMotor.setIdleMode(IdleMode.kBrake);
-    armEncoder.setPosition(Constants.ARM_UP);
+    armEncoder.setPosition(0);
 
     /**
      * In order to use PID functionality for a controller, a SparkMaxPIDController object
@@ -45,11 +45,11 @@ public class ArmSubsystem extends SubsystemBase {
     kIz = 0;
     kFF = 0.000156;
     kMaxOutput = 10;
-    kMinOutput = -1;
+    kMinOutput = -0.5;
 
     // Smart Motion Coefficients
     maxVel = 2000; // rpm
-    maxAcc = 1500;
+    maxAcc = 1000;
 
     // set PID coefficients
     m_pidController.setP(kP);
@@ -81,12 +81,12 @@ public class ArmSubsystem extends SubsystemBase {
   public void periodic() {
     super.periodic();
 
-    SmartDashboard.putNumber("ARM Speed in RPM", armEncoder.getVelocity());
-    SmartDashboard.putNumber("ARM Current", armMotor.getOutputCurrent());
-    SmartDashboard.putNumber("ARM get", armMotor.get());
-    SmartDashboard.putNumber("ARM getCPR", armEncoder.getCountsPerRevolution());
-    SmartDashboard.putNumber("ARM getPosition", armEncoder.getPosition());
-    SmartDashboard.putNumber("ARM getVelocityConversionFactor", armEncoder.getVelocityConversionFactor());
+    // SmartDashboard.putNumber("ARM Speed in RPM", armEncoder.getVelocity());
+    // SmartDashboard.putNumber("ARM Current", armMotor.getOutputCurrent());
+    // SmartDashboard.putNumber("ARM get", armMotor.get());
+    // SmartDashboard.putNumber("ARM getCPR", armEncoder.getCountsPerRevolution());
+    SmartDashboard.putNumber("Arm position", armEncoder.getPosition());
+    // SmartDashboard.putNumber("ARM getVelocityConversionFactor", armEncoder.getVelocityConversionFactor());
   }
 
   public void armSetpoint(double armSetpoint){

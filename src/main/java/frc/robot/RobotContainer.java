@@ -10,14 +10,22 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
-import frc.robot.commands.AutonomousDrive;
+import frc.robot.commands.AutonomousLeftDump2;
+import frc.robot.commands.AutonomousRightLeftDump2;
+import frc.robot.commands.AutonomousRightRightDump2;
+import frc.robot.commands.AutonomousCenterDump;
+import frc.robot.commands.AutonomousNothing;
+import frc.robot.commands.AutonomousLeftDump;
+import frc.robot.commands.AutonomousTaxi;
+import frc.robot.commands.AutonomousTurn90;
 import frc.robot.commands.DriveWithJoystickCommand;
 import frc.robot.oi.CoDriverOI;
 import frc.robot.oi.DriverOI;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ChassisSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import org.photonvision.PhotonCamera;
+import org.photonvision.common.hardware.VisionLEDMode;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -49,8 +57,21 @@ public class RobotContainer {
   private CoDriverOI codriverOI;
   private IntakeSubsystem intakeSubsystem;
   private DriveTrainType driveTrainType = DriveTrainType.TANK;
+  private PhotonCamera m_camera = new PhotonCamera("gloworm");
   private SendableChooser<Command> chooser = new SendableChooser<>();
-  private AutonomousDrive autonomousDrive;
+
+  private AutonomousNothing autonomousNothing;
+  private AutonomousTaxi autonomousTaxi;
+
+  private AutonomousLeftDump autonomousLeftDump;
+  private AutonomousLeftDump2 autonomousLeftDump2;
+  
+  private AutonomousCenterDump autonomousCenterDump;
+  
+  private AutonomousRightLeftDump2 autonomousRightLeftDump2;
+  private AutonomousRightRightDump2 autonomousRightRightDump2;
+
+  private AutonomousTurn90 autonomousTurn90;
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -69,20 +90,45 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // configure the autonomonous chooser
-    autonomousDrive = new AutonomousDrive(this);
-    chooser.setDefaultOption("Auto Drive Right", autonomousDrive);
-    chooser.addOption("No Auto", new PrintCommand("No Auto"));
+    
+    autonomousNothing = new AutonomousNothing(this);
+    autonomousTaxi = new AutonomousTaxi(this);
+
+    autonomousLeftDump = new AutonomousLeftDump(this);
+    autonomousLeftDump2 = new AutonomousLeftDump2(this);
+
+    autonomousCenterDump = new AutonomousCenterDump(this);
+
+    autonomousRightLeftDump2 = new AutonomousRightLeftDump2(this);
+
+    autonomousRightRightDump2 = new AutonomousRightRightDump2(this);
+
+    autonomousTurn90 = new AutonomousTurn90(this);
+
+    chooser.addOption("No Auto", autonomousNothing);
+    chooser.setDefaultOption("Taxi", autonomousTaxi);
+
+    chooser.addOption("Left Dump", autonomousLeftDump);
+    chooser.addOption("Left Dump 2", autonomousLeftDump2);
+
+    chooser.addOption("Center Dump", autonomousCenterDump);
+
+    chooser.addOption("Right Left Dump 2", autonomousRightLeftDump2);
+
+    chooser.addOption("Right Right Dump 2", autonomousRightRightDump2);
+    
+    chooser.addOption("Turn 90", autonomousTurn90);
 
     // Put the chooser on the dashboard
     SmartDashboard.putData(chooser);
 
     // create driver & codriver oi
     driverOI = new DriverOI(Constants.DRIVER_OI, this);
-    codriverOI = new CoDriverOI(Constants.CODRIVE_OI, this);
+    codriverOI = new CoDriverOI(Constants.CODRIVER_OI, this);
 
     // drive with joysticks
     chassisSubsystem.setDefaultCommand(new DriveWithJoystickCommand(this, driverOI));
-    
+    m_camera.setLED(VisionLEDMode.kOff);  
   }
 
   /**
@@ -90,7 +136,7 @@ public class RobotContainer {
    * @param type
    */
   public void setDriveTrainType(String type) {
-    SmartDashboard.putString(Constants.DRIVE_TRAIN_TYPE, type);
+    // SmartDashboard.putString(Constants.DRIVE_TRAIN_TYPE, type);
     if (type.equals(Constants.TANK)) {
       driveTrainType = DriveTrainType.TANK;
     } else if (type.equals(Constants.ARCADE)) {
@@ -138,6 +184,10 @@ public class RobotContainer {
    */
   public IntakeSubsystem getIntakeSubsystem() {
     return intakeSubsystem;
+  }
+
+  public PhotonCamera getCamera() {
+    return m_camera;
   }
 
 }

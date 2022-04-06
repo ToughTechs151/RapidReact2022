@@ -29,5 +29,12 @@ public class DriverOI extends OI {
         leftBumper = new JoystickButton(joystick, Constants.LEFT_BUMPER);
         leftBumper.whenPressed(new InstantCommand(chassisSubsystem::startDriveStraight, chassisSubsystem));
         leftBumper.whenReleased(new InstantCommand(chassisSubsystem::endDriveStraight, chassisSubsystem));
+
+        b.whenPressed(new InstantCommand(chassisSubsystem::startAimRedBall, chassisSubsystem));
+        b.whenReleased(new InstantCommand(chassisSubsystem::endAimBall, chassisSubsystem));
+        x.whenPressed(new InstantCommand(chassisSubsystem::startAimBlueBall, chassisSubsystem));
+        x.whenReleased(new InstantCommand(chassisSubsystem::endAimBall, chassisSubsystem));
+        a.whenPressed(new InstantCommand(chassisSubsystem::startLedOn, chassisSubsystem));
+        y.whenPressed(new InstantCommand(chassisSubsystem::startLedOff, chassisSubsystem));
     }
 }

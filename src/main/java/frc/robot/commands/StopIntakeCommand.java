@@ -10,7 +10,6 @@ import frc.robot.subsystems.IntakeSubsystem;
 
 public class StopIntakeCommand extends CommandBase {
   private IntakeSubsystem intakeSubsystem_;
-  private boolean isFinished_;
   /** Creates a new StopIntakeCommand. */
   public StopIntakeCommand(RobotContainer robotContainer) {
     intakeSubsystem_ = robotContainer.getIntakeSubsystem();

@@ -22,11 +22,11 @@ public class CoDriverOI extends OI {
         super(channel);
         
         rightBumper = new JoystickButton(joystick, Constants.RIGHT_BUMPER);
-        rightBumper.whileHeld(new IntakeCommand(robotContainer, Constants.OUT));
+        rightBumper.whileHeld(new IntakeCommand(robotContainer, Constants.INTAKE_OUT));
         rightBumper.whenReleased(new StopIntakeCommand(robotContainer));
     
         leftBumper = new JoystickButton(joystick, Constants.LEFT_BUMPER);    
-        leftBumper.whileHeld(new IntakeCommand(robotContainer, Constants.IN));
+        leftBumper.whileHeld(new IntakeCommand(robotContainer, Constants.INTAKE_IN));
         leftBumper.whenReleased(new StopIntakeCommand(robotContainer));
 
         // ARM Control Up

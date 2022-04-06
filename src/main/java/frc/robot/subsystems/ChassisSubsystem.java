@@ -1,3 +1,4 @@
+
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
@@ -11,12 +12,16 @@ import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.oi.DriverOI;
+import org.photonvision.PhotonCamera;
+import org.photonvision.common.hardware.VisionLEDMode;
 
 public class ChassisSubsystem extends SubsystemBase {
   public enum RobotSide {
@@ -31,6 +36,11 @@ public class ChassisSubsystem extends SubsystemBase {
   // The gyro sensor
   private final ADXRS450_Gyro m_gyro = new ADXRS450_Gyro();
   private final PIDController controller = new PIDController(Constants.DRIVETRAIN_KP, Constants.DRIVETRAIN_KI, Constants.DRIVETRAIN_KD);
+  // Ultrasonic sensor
+  private final AnalogInput rightUltrasonic = new AnalogInput(0);
+  private final AnalogInput leftUltrasonic = new AnalogInput(1);
+  public double ultrasonicSensorRange = 0;
+  public double voltageScaleFactor = 1;
 
   // Encoder declarations
   private RelativeEncoder frontLeftEncoder;
@@ -40,6 +50,9 @@ public class ChassisSubsystem extends SubsystemBase {
 
   private DifferentialDrive driveTrain;
   private double m_gyroAngle = Constants.GYRO_NOTUSED;
+  private PhotonCamera m_camera;
+  private boolean m_AimBall = false;
+  private double yaw;
 
   //drive constants
   /**
@@ -57,40 +70,10 @@ public class ChassisSubsystem extends SubsystemBase {
    */
   private static final double crawl = 0.3;
 
-    /**
-   * The minimum (closest to 0) speed controller command for the right side of the drive train to start moving forward. Must be empirically derived.
-   */
-  private static double mechDeadbandRightForward = 0.25;
-
-  /**
-   * The maximum (closest to 0) speed controller command for the right side of the drive train to start moving backward. Must be empirically derived.
-   * Must be negative.
-   */
-  private static double mechDeadbandRightBackward = -0.27;
-
-  /**
-   * The minimum (closest to 0) speed controller command for the left side of the drive train to start moving forward. Must be empirically derived.
-   */
-  private static double mechDeadbandLeftForward = 0.23;
-
-  /**
-   * The maximum (closest to 0) speed controller command for the left side of the drive train to start moving backward. Must be empirically derived.
-   * Must be negative.
-   */
-  private static double mechDeadbandLeftBackward = -0.29;
-
-  /**
-   * The minimum joystick value to actually send a command to the speed controller, to prevent noise near 0.
-   */
-  private static double softwareDeadband = 0.05;
-
-  //arcade drive constant
-  private double turnGain = 0.75;
-
   /**
    * The direction which is "forward"; 1 represents the hatch side and -1 represents the cargo side.
    */
-  private int dir = Constants.IN;
+  private int dir = Constants.INTAKE_IN;
 
   /** Creates a new ChassisSubsystem. */
   public ChassisSubsystem() {
@@ -110,6 +93,10 @@ public class ChassisSubsystem extends SubsystemBase {
     rearLeftMotor.setIdleMode(IdleMode.kCoast);
     rearRightMotor.setIdleMode(IdleMode.kCoast);
 
+    double rampRate = Constants.RAMP_RATE;
+    frontLeftMotor.setOpenLoopRampRate(rampRate);
+    frontRightMotor.setOpenLoopRampRate(rampRate);
+
     rearLeftMotor.follow(frontLeftMotor);
     rearRightMotor.follow(frontRightMotor);
 
@@ -127,13 +114,15 @@ public class ChassisSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     // Use these to plot the input vs RPM onto a plot
-    SmartDashboard.putNumber("Front Left Motor RPM", frontLeftEncoder.getVelocity());
-    SmartDashboard.putNumber("Front Right Motor RPM", frontRightEncoder.getVelocity());
-    SmartDashboard.putNumber("Rear Left Motor RPM", rearLeftEncoder.getVelocity());
-    SmartDashboard.putNumber("Rear Right Motor RPM", rearRightEncoder.getVelocity());
-    SmartDashboard.putNumber("Left  POS", frontLeftEncoder.getPosition());
-    SmartDashboard.putNumber("Right POS", frontRightEncoder.getPosition());
+    // SmartDashboard.putNumber("Front Left Motor RPM", frontLeftEncoder.getVelocity());
+    // SmartDashboard.putNumber("Front Right Motor RPM", frontRightEncoder.getVelocity());
+    // SmartDashboard.putNumber("Rear Left Motor RPM", rearLeftEncoder.getVelocity());
+    // SmartDashboard.putNumber("Rear Right Motor RPM", rearRightEncoder.getVelocity());
+    SmartDashboard.putNumber("Left Encoder", frontLeftEncoder.getPosition());
+    SmartDashboard.putNumber("Right Encoder", frontRightEncoder.getPosition());
     SmartDashboard.putNumber("Gyro angle", m_gyro.getAngle());
+    SmartDashboard.putNumber("Left Ultrasonic", getLeftUltrasonic());
+    SmartDashboard.putNumber("Right Ultrasonic  ", getRightUltrasonic());
   }
 
   /**
@@ -142,7 +131,7 @@ public class ChassisSubsystem extends SubsystemBase {
    * @param rightspeed - The right joystick controller speed -1 to 1
    */
   public void tankDrive(double leftSpeed, double rightSpeed) {
-    driveTrain.tankDrive(leftSpeed, rightSpeed);
+    driveTrain.tankDrive(leftSpeed, rightSpeed, true);
   }
 
   /**
@@ -162,6 +151,30 @@ public class ChassisSubsystem extends SubsystemBase {
   public void endDriveStraight() {
     m_gyroAngle = Constants.GYRO_NOTUSED;
   }
+  public void startAimRedBall() {
+    m_camera.setLED(VisionLEDMode.kOn);
+    m_camera.setPipelineIndex(0); // This is the first pipeline from http://gloworm.local:5800
+    yaw = 0;
+    m_AimBall = true;
+    controller.setTolerance(1, 5);
+  }
+  public void startAimBlueBall() {
+    m_camera.setLED(VisionLEDMode.kOn);
+    m_camera.setPipelineIndex(1); // This is the second pipeline from http://gloworm.local:5800
+    yaw = 0;
+    m_AimBall = true;
+    controller.setTolerance(1, 5);
+  }
+  public void endAimBall() {
+    m_camera.setLED(VisionLEDMode.kOff);
+    m_AimBall = false;
+  }
+  public void startLedOn() {
+    m_camera.setLED(VisionLEDMode.kOn);
+  }
+  public void startLedOff() {
+    m_camera.setLED(VisionLEDMode.kOff);
+  }
 
   /**
    * drive - set speed to chassis with the joystick input with a scale
@@ -169,22 +182,24 @@ public class ChassisSubsystem extends SubsystemBase {
    * @param scale
    */
   public void drive(RobotContainer robotContainer, DriverOI driverOI, int scale) {
+    m_camera = robotContainer.getCamera();
     speedMultiplier = driverOI.getJoystick().getRawButton(Constants.RIGHT_BUMPER) ? crawl : normal;
     // LEFT_BUMPER is now changed to drive straight tankDrive.
-    //dir = driverOI.getJoystick().getRawButton(Constants.LEFT_BUMPER) ? Constants.OUT : Constants.IN;
+    // dir = driverOI.getJoystick().getRawButton(Constants.LEFT_BUMPER) ? Constants.INTAKE_OUT : Constants.INTAKE_IN;
 
     RobotContainer.DriveTrainType driveTrainType = robotContainer.getDriveTrainType();
 
     if (driveTrainType == RobotContainer.DriveTrainType.TANK) {
       double rightVal;
       double leftVal;
-      if(dir == Constants.IN) {
-        rightVal = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.RIGHT_JOYSTICK_Y), scale, RobotSide.RIGHT);
-        leftVal = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.LEFT_JOYSTICK_Y), scale, RobotSide.LEFT);
+      if(dir == Constants.INTAKE_IN) {
+        rightVal = driverOI.getJoystick().getRawAxis(Constants.RIGHT_JOYSTICK_Y);
+        leftVal = driverOI.getJoystick().getRawAxis(Constants.LEFT_JOYSTICK_Y);
       } else {
-        rightVal = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.LEFT_JOYSTICK_Y), scale, RobotSide.RIGHT);
-        leftVal = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.RIGHT_JOYSTICK_Y), scale, RobotSide.LEFT);
+        rightVal = driverOI.getJoystick().getRawAxis(Constants.LEFT_JOYSTICK_Y);
+        leftVal = driverOI.getJoystick().getRawAxis(Constants.RIGHT_JOYSTICK_Y);
       }
+
       if(m_gyroAngle != Constants.GYRO_NOTUSED)
       {
         var pidOutput = controller.calculate(getGyroAngle(), 0) / 10;
@@ -194,68 +209,43 @@ public class ChassisSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Right Speed", speed-pidOutput);
         tankDrive(speed + pidOutput, speed - pidOutput);
       }
+      else if(m_AimBall)
+      {
+        // Vision-alignment mode
+        // Query the latest result from PhotonVision
+        var result = m_camera.getLatestResult();
+        if (result.hasTargets()) {
+          yaw = result.getBestTarget().getYaw();
+          SmartDashboard.putNumber("Yaw", yaw);
+        }
+
+        var pidOutput = controller.calculate(-yaw, 0) / 2;
+        // Set minimum voltage for motors
+        if(pidOutput < 0) {
+          pidOutput = Math.min(pidOutput, -0.3);
+        } else {
+          pidOutput = Math.max(pidOutput, 0.3);
+        }
+        SmartDashboard.putNumber("TurnPID", pidOutput);
+
+        var speed = leftVal * dir;
+        SmartDashboard.putNumber("Left Speed", speed+pidOutput);
+        SmartDashboard.putNumber("Right Speed", speed-pidOutput);
+        tankDrive(speed + pidOutput, speed - pidOutput);
+      }
       else
       {
-        SmartDashboard.putNumber("Left Speed", leftVal);
-        SmartDashboard.putNumber("Right Speed", rightVal);
+        SmartDashboard.putNumber("Left Speed", leftVal * speedMultiplier * dir);
+        SmartDashboard.putNumber("Right Speed", rightVal * speedMultiplier * dir);
         tankDrive(leftVal * speedMultiplier * dir, rightVal * speedMultiplier * dir);
       }
     } else if (driveTrainType == RobotContainer.DriveTrainType.ARCADE) {
-      double speed = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.LEFT_JOYSTICK_Y), scale, RobotSide.LEFT) * dir;
-      double rotation = getScaledValue(driverOI.getJoystick().getRawAxis(Constants.LEFT_JOYSTICK_X), scale, RobotSide.RIGHT);
-      SmartDashboard.putNumber("Speed", speed);
-      SmartDashboard.putNumber("Rotation", rotation);
+      double speed = driverOI.getJoystick().getRawAxis(Constants.LEFT_JOYSTICK_Y) * dir;
+      double rotation = driverOI.getJoystick().getRawAxis(Constants.LEFT_JOYSTICK_X);
+      // SmartDashboard.putNumber("Speed", speed);
+      // SmartDashboard.putNumber("Rotation", rotation);
       arcadeDrive(speed, rotation);
     }
-  }
-
-  /**
-   * Find the scale factor based on the input value and scale on each side of the Robot's motors
-   *
-   * @param val
-   * @param scale
-   * @param side
-   * @return
-   */
-  private double getScaledValue(double val, int scale, RobotSide side) {
-    double forward, back;
-
-    if(side.equals(RobotSide.RIGHT)) {
-        forward = Math.abs(mechDeadbandRightForward);
-        back = Math.abs(mechDeadbandRightBackward);
-    } else {
-        forward = Math.abs(mechDeadbandLeftForward);
-        back = Math.abs(mechDeadbandLeftBackward);
-    }
-
-    if(Math.abs(val) < softwareDeadband) {
-        return 0;
-    } else if(scale == 0) {
-        return deadzone(val);
-    } else if(scale == 1) {
-        if(val > 0) {
-            return (((1.0 - forward) * (val - 1.0) / (1.0 - softwareDeadband)) + 1.0);
-        } else {
-            return (((1.0 - back) * (val + 1.0) / (1.0 - softwareDeadband)) -  1.0);
-        }
-    } else if(scale == 2) {
-        if(val > 0) {
-            return (1- forward) / Math.pow(1 - softwareDeadband, 2) * Math.pow(val - softwareDeadband, 2) + forward;
-        } else {
-            return (-1 + back) / Math.pow(-1 + softwareDeadband, 2) * Math.pow(val + softwareDeadband, 2) - back;
-        }
-    } else {
-        return 0;
-    }
-  }
-
-  /**
-   * Method to reduce noise around the 0 position of the joystick.
-   * @param val The raw joystick input.
-   * @return If the input is outside the range <code> (-softwareDeadband < val < softwareDeadband)</code>, it is returned. Else, 0 is returned.
-   */
-  private double deadzone(double val) {
-    return Math.abs(val) > softwareDeadband ? val : 0;
   }
 
   public double getGyroAngle() {
@@ -283,4 +273,29 @@ public class ChassisSubsystem extends SubsystemBase {
   public double getAverageDistanceInch() {
     return (getLeftDistanceInch() + getRightDistanceInch()) / 2.0;
   }
+
+  private double getRightUltrasonic() {
+    voltageScaleFactor = 5/RobotController.getVoltage5V(); //Calculate what percentage of 5 Volts we are actually at
+    //Get a reading from the first sensor, scale it by the voltageScaleFactor, and then scale to Inches
+    ultrasonicSensorRange = rightUltrasonic.getValue()*voltageScaleFactor*0.0492;
+    if (ultrasonicSensorRange < 18) {
+      ultrasonicSensorRange = 195;
+    }
+    return ultrasonicSensorRange;
+  }
+
+  private double getLeftUltrasonic() {
+    voltageScaleFactor = 5/RobotController.getVoltage5V(); //Calculate what percentage of 5 Volts we are actually at
+    //Get a reading from the first sensor, scale it by the voltageScaleFactor, and then scale to Inches
+    ultrasonicSensorRange = leftUltrasonic.getValue()*voltageScaleFactor*0.0492;
+    if (ultrasonicSensorRange < 18) {
+      ultrasonicSensorRange = 195;
+    }
+    return ultrasonicSensorRange;
+  }
+
+  public double getUltrasonic() {
+    return Math.min(getLeftUltrasonic(), getRightUltrasonic());
+  }
+
 }

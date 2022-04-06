@@ -9,7 +9,7 @@ import frc.robot.subsystems.ChassisSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.math.controller.PIDController;
 
-public class DriveDistanceGyroPID extends CommandBase {
+public class DriveDistanceGyroUltrasonic extends CommandBase {
   private final ChassisSubsystem drive;
   private final double distance;
   private final double speed;
@@ -23,7 +23,7 @@ public class DriveDistanceGyroPID extends CommandBase {
    * @param inches The number of inches the robot will drive
    * @param drive The drivetrain subsystem on which this command will run
    */
-  public DriveDistanceGyroPID(double speed, double inches, ChassisSubsystem drive) {
+  public DriveDistanceGyroUltrasonic(double speed, double inches, ChassisSubsystem drive) {
     distance = inches;
     this.speed = speed;
     this.drive = drive;
@@ -39,18 +39,13 @@ public class DriveDistanceGyroPID extends CommandBase {
     drive.resetGyro();
     // Sets the error tolerance to 5, and the error derivative tolerance to 10 per second
     controller.setTolerance(1, 5);
-    System.out.println("DriveDistanceGyroPID start");
+    System.out.println("Ultrasonic start");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     var pidOutput = controller.calculate(drive.getGyroAngle(), 0) / 10;
-
-    //smartdashboard
-    // SmartDashboard.putNumber("DriveStraightPID", pidOutput);
-    // SmartDashboard.putNumber("left", speed+pidOutput);
-    // SmartDashboard.putNumber("right", speed-pidOutput);
     drive.tankDrive(speed + pidOutput, speed - pidOutput);
   }
 
@@ -59,13 +54,13 @@ public class DriveDistanceGyroPID extends CommandBase {
   public void end(boolean interrupted) {
     drive.tankDrive(0, 0);
     controller.close();
-    System.out.println("DriveDistanceGyroPID end " + interrupted);
+    System.out.println("Ultrasonic end " + interrupted);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     // Compare distance travelled from start to desired distance
-    return Math.abs(drive.getAverageDistanceInch()) >= distance;
+    return drive.getUltrasonic() < distance;
   }
 }
