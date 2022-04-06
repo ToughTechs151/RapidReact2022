@@ -10,12 +10,12 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.commands.AutonomousCenterDump;
+import frc.robot.commands.AutonomousLeftDump;
 import frc.robot.commands.AutonomousLeftDump2;
+import frc.robot.commands.AutonomousNothing;
 import frc.robot.commands.AutonomousRightLeftDump2;
 import frc.robot.commands.AutonomousRightRightDump2;
-import frc.robot.commands.AutonomousCenterDump;
-import frc.robot.commands.AutonomousNothing;
-import frc.robot.commands.AutonomousLeftDump;
 import frc.robot.commands.AutonomousTaxi;
 import frc.robot.commands.AutonomousTurn90;
 import frc.robot.commands.DriveWithJoystickCommand;
@@ -35,12 +35,13 @@ import org.photonvision.common.hardware.VisionLEDMode;
  */
 public class RobotContainer {
   public static PIDController armSubsystemPID;
+
   public enum DriveTrainType {
     TANK("Tank"),
     ARCADE("Arcade");
 
     private String type;
-      
+
     DriveTrainType(String type) {
       this.type = type;
     }
@@ -50,7 +51,7 @@ public class RobotContainer {
     }
   }
 
-    // The robot's subsystems and commands are defined here...
+  // The robot's subsystems and commands are defined here...
   private ChassisSubsystem chassisSubsystem;
   private ArmSubsystem armSubsystem;
   private DriverOI driverOI;
@@ -65,9 +66,9 @@ public class RobotContainer {
 
   private AutonomousLeftDump autonomousLeftDump;
   private AutonomousLeftDump2 autonomousLeftDump2;
-  
+
   private AutonomousCenterDump autonomousCenterDump;
-  
+
   private AutonomousRightLeftDump2 autonomousRightLeftDump2;
   private AutonomousRightRightDump2 autonomousRightRightDump2;
 
@@ -90,7 +91,7 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // configure the autonomonous chooser
-    
+
     autonomousNothing = new AutonomousNothing(this);
     autonomousTaxi = new AutonomousTaxi(this);
 
@@ -116,7 +117,7 @@ public class RobotContainer {
     chooser.addOption("Right Left Dump 2", autonomousRightLeftDump2);
 
     chooser.addOption("Right Right Dump 2", autonomousRightRightDump2);
-    
+
     chooser.addOption("Turn 90", autonomousTurn90);
 
     // Put the chooser on the dashboard
@@ -128,11 +129,12 @@ public class RobotContainer {
 
     // drive with joysticks
     chassisSubsystem.setDefaultCommand(new DriveWithJoystickCommand(this, driverOI));
-    m_camera.setLED(VisionLEDMode.kOff);  
+    m_camera.setLED(VisionLEDMode.kOff);
   }
 
   /**
    * set the drive train type
+   *
    * @param type
    */
   public void setDriveTrainType(String type) {
@@ -146,6 +148,7 @@ public class RobotContainer {
 
   /**
    * getDriveTrainType
+   *
    * @return returns the DriveTrainType - Tank Drive or Arcade Drive
    */
   public DriveTrainType getDriveTrainType() {
@@ -163,23 +166,25 @@ public class RobotContainer {
 
   /**
    * retrieves chassis subsystem
+   *
    * @return
    */
-  public ChassisSubsystem getChassisSubsystem() { 
-    return chassisSubsystem; 
+  public ChassisSubsystem getChassisSubsystem() {
+    return chassisSubsystem;
   }
 
   /**
    * retrieves the arm subsystem
-   * 
+   *
    * @return
    */
-  public ArmSubsystem getArmSubsystem() { 
-    return armSubsystem; 
+  public ArmSubsystem getArmSubsystem() {
+    return armSubsystem;
   }
 
   /**
    * retrives the IntakeSubsystem
+   *
    * @return
    */
   public IntakeSubsystem getIntakeSubsystem() {
@@ -189,5 +194,4 @@ public class RobotContainer {
   public PhotonCamera getCamera() {
     return m_camera;
   }
-
 }
