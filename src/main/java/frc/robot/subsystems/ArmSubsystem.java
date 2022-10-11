@@ -81,12 +81,21 @@ public class ArmSubsystem extends SubsystemBase {
   public void periodic() {
     super.periodic();
 
-    // SmartDashboard.putNumber("ARM Speed in RPM", armEncoder.getVelocity());
-    // SmartDashboard.putNumber("ARM Current", armMotor.getOutputCurrent());
-    // SmartDashboard.putNumber("ARM get", armMotor.get());
-    // SmartDashboard.putNumber("ARM getCPR", armEncoder.getCountsPerRevolution());
+     SmartDashboard.putNumber("ARM Speed in RPM", armEncoder.getVelocity());
+    SmartDashboard.putNumber("ARM Current", armMotor.getOutputCurrent());
+    SmartDashboard.putNumber("ARM get", armMotor.get());
+    SmartDashboard.putNumber("ARM getCPR", armEncoder.getCountsPerRevolution());
     SmartDashboard.putNumber("Arm position", armEncoder.getPosition());
-    // SmartDashboard.putNumber("ARM getVelocityConversionFactor", armEncoder.getVelocityConversionFactor());
+    SmartDashboard.putNumber("kP", kP);
+    SmartDashboard.putNumber("kI", kI);
+    SmartDashboard.putNumber("kD", kD);
+    SmartDashboard.putNumber("kIz", kIz);
+    SmartDashboard.putNumber("kFF", kFF);
+    SmartDashboard.putNumber("kMaxOutput", kMaxOutput);
+    SmartDashboard.putNumber("kMinOutput", kMinOutput);
+
+
+    SmartDashboard.putNumber("ARM getVelocityConversionFactor", armEncoder.getVelocityConversionFactor());
   }
 
   public void armSetpoint(double armSetpoint){

@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.ArmSubsystem;
@@ -21,6 +22,7 @@ public class ControlArmCommand extends CommandBase {
     armSubsystem = robotContainer.getArmSubsystem();
     addRequirements(armSubsystem); // here to declare subsystem dependencies.
     setPoint = position;
+    DataLogManager.log("ControlArmCommand:" + String.format("%f", position));
  }
 
   // Called when the command is initially scheduled.
