@@ -29,6 +29,8 @@ public class ArmSubsystem extends SubsystemBase {
     armMotor.setInverted(false);
     armMotor.setIdleMode(IdleMode.kBrake);
     armEncoder.setPosition(0);
+    SmartDashboard.putNumber("ARM Target", 0.0);
+
 
     /**
      * In order to use PID functionality for a controller, a SparkMaxPIDController object

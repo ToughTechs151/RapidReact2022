@@ -5,6 +5,7 @@
 package frc.robot.commands;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.ArmSubsystem;
 
@@ -24,12 +25,16 @@ public class ControlArmCommand extends CommandBase {
     setPoint = position;
     DataLogManager.log("ControlArmCommand:" + String.format("%f", position));
  }
-
+ 
+  public ControlArmCommand(RobotContainer robotContainer) {
+    this(robotContainer, SmartDashboard.getNumber("ARM Target", 0.0));
+    DataLogManager.log("ControlArmCommand: Read position from dashboard");
+  }
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     armSubsystem.armSetpoint(setPoint);
-    System.out.println("arm start");
+    DataLogManager.log("arm start");
   }
 
   public void execute() {
@@ -40,7 +45,7 @@ public class ControlArmCommand extends CommandBase {
    // Called once the command ends or is interrupted.
    @Override
    public void end(boolean interrupted) {
-     System.out.println("arm end");
+     DataLogManager.log("arm end");
    }
 
   // Returns true when the command should end.

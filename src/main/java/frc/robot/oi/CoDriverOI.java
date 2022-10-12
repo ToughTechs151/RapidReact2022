@@ -36,7 +36,11 @@ public class CoDriverOI extends OI {
         // ARM Control down
         b = new JoystickButton(joystick, Constants.B);
             b.whenPressed(new ControlArmCommand(robotContainer, Constants.ARM_DOWN));
-    
+
+        // ARM Control down
+        x = new JoystickButton(joystick, Constants.X);
+            x.whenPressed(new ControlArmCommand(robotContainer));
+
         leftJoystick = new JoystickButton(joystick, Constants.LEFT_JOYSTICK);
         rightJoystick = new JoystickButton(joystick, Constants.RIGHT_JOYSTICK);
     }
