@@ -89,6 +89,9 @@ public class ArmSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("ARM getCPR", armEncoder.getCountsPerRevolution());
     SmartDashboard.putNumber("Arm position", armEncoder.getPosition());
     SmartDashboard.putNumber("ARM getVelocityConversionFactor", armEncoder.getVelocityConversionFactor());
+    SmartDashboard.putNumber("ARM BusVoltage", armMotor.getBusVoltage());
+    SmartDashboard.putNumber("ARM Applied", armMotor.getAppliedOutput());
+    SmartDashboard.putNumber("ARM Temp", armMotor.getMotorTemperature());
     SmartDashboard.putNumber("kP", kP);
     SmartDashboard.putNumber("kI", kI);
     SmartDashboard.putNumber("kD", kD);
@@ -96,6 +99,11 @@ public class ArmSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("kFF", kFF);
     SmartDashboard.putNumber("kMaxOutput", kMaxOutput);
     SmartDashboard.putNumber("kMinOutput", kMinOutput);
+    if(armMotor.getIdleMode() == IdleMode.kCoast) {
+      SmartDashboard.putString("ARM Idle Mode", "Coast");
+    } else {
+      SmartDashboard.putString("ARM Idle Mode", "Brake");
+    }
   }
 
   public void armSetpoint(double armSetpoint){
