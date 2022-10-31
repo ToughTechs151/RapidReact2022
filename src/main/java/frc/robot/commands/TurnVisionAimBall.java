@@ -4,22 +4,22 @@
 
 package frc.robot.commands;
 
-import frc.robot.Constants;
-import frc.robot.subsystems.ChassisSubsystem;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
+import frc.robot.subsystems.ChassisSubsystem;
 import org.photonvision.PhotonCamera;
 import org.photonvision.common.hardware.VisionLEDMode;
 
 public class TurnVisionAimBall extends CommandBase {
   private final ChassisSubsystem drive;
   private final double speed;
-  private final PIDController controller = new PIDController(Constants.LIMELIGHT_KP, Constants.DRIVETRAIN_KI, Constants.DRIVETRAIN_KD);
+  private final PIDController controller =
+      new PIDController(Constants.LIMELIGHT_KP, Constants.DRIVETRAIN_KI, Constants.DRIVETRAIN_KD);
   private final PhotonCamera m_camera;
   private double yaw = 0;
-
 
   /**
    * Creates a new TurnDegrees. This command will turn your robot for a desired rotation (in
@@ -56,7 +56,7 @@ public class TurnVisionAimBall extends CommandBase {
     }
     var pidOutput = controller.calculate(yaw, 0);
     // Set minimum voltage for motors
-    if(pidOutput < 0) {
+    if (pidOutput < 0) {
       pidOutput = Math.min(pidOutput, -0.35);
     } else {
       pidOutput = Math.max(pidOutput, 0.35);
@@ -65,7 +65,7 @@ public class TurnVisionAimBall extends CommandBase {
     pidOutput = MathUtil.clamp(pidOutput, -speed, speed);
     SmartDashboard.putNumber("TurnPID", pidOutput);
     drive.arcadeDrive(0, pidOutput);
-}
+  }
 
   // Called once the command ends or is interrupted.
   @Override
@@ -78,9 +78,7 @@ public class TurnVisionAimBall extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(yaw < 2)
-      return true;
-    else
-      return false;
+    if (yaw < 2) return true;
+    else return false;
   }
 }

@@ -4,16 +4,17 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.ChassisSubsystem;
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.math.controller.PIDController;
 
 public class DriveDistanceGyroUltrasonic extends CommandBase {
   private final ChassisSubsystem drive;
   private final double distance;
   private final double speed;
-  private final PIDController controller = new PIDController(Constants.DRIVETRAIN_KP, Constants.DRIVETRAIN_KI, Constants.DRIVETRAIN_KD);
+  private final PIDController controller =
+      new PIDController(Constants.DRIVETRAIN_KP, Constants.DRIVETRAIN_KI, Constants.DRIVETRAIN_KD);
 
   /**
    * Creates a new DriveDistance. This command will drive your your robot for a desired distance at
@@ -34,7 +35,7 @@ public class DriveDistanceGyroUltrasonic extends CommandBase {
   @Override
   public void initialize() {
     // Set motors to stop, read encoder values for starting point
-    //drive.tankDrive(0, 0);
+    // drive.tankDrive(0, 0);
     drive.resetEncoders();
     drive.resetGyro();
     // Sets the error tolerance to 5, and the error derivative tolerance to 10 per second

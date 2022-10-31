@@ -5,16 +5,13 @@
 package frc.robot;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Preferences;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj.DataLogManager;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.RobotController;
-
-
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -23,11 +20,11 @@ import edu.wpi.first.wpilibj.RobotController;
  * project.
  */
 public class Robot extends TimedRobot {
-  
-  private String driveTrainType;
+
   private Command autonomousCommand;
 
   private RobotContainer robotContainer;
+  private DataLogging datalog;
 
   /**
    * This function is run when the robot is first started up and should be used for any
@@ -35,22 +32,26 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    DataLogManager.start();
 
-    DriverStation.startDataLog(DataLogManager.getLog());
+    // Initialize the data logging.
+    datalog = new DataLogging(this);
+    datalog.init();
+
+    // Print our splash screen info.
+    Splash.printAllStatusFiles();
+
     // set default DriveTrainType preference
     if (!Preferences.containsKey(Constants.DRIVE_TRAIN_TYPE)) {
       Preferences.setString(Constants.DRIVE_TRAIN_TYPE, Constants.ARCADE);
     }
-    
+
     // Start the Camera server
     CameraServer.startAutomaticCapture(Constants.CAMERA_0);
     CameraServer.startAutomaticCapture(Constants.CAMERA_1);
 
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
-    Splash.printAllStatusFiles();
-    robotContainer = new RobotContainer();
+    this.robotContainer = new RobotContainer();
   }
 
   /**
@@ -69,33 +70,47 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
     SmartDashboard.putNumber("Robot Bat V", RobotController.getBatteryVoltage());
     SmartDashboard.putNumber("Robot Brown V", RobotController.getBrownoutVoltage());
-    SmartDashboard.putNumber("Robot CAN Stat", RobotController.getCANStatus().percentBusUtilization);
+    SmartDashboard.putNumber(
+        "Robot CAN Stat", RobotController.getCANStatus().percentBusUtilization);
+
+    // must be at the end of robotPeriodic
+    datalog.periodic();
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
+    String driveTrainType;
     driveTrainType = Preferences.getString(Constants.DRIVE_TRAIN_TYPE, Constants.ARCADE);
     robotContainer.setDriveTrainType(driveTrainType);
   }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    datalog.startLoopTime();
+  }
 
-  /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
+  /** This autonomous runs the autonomous command selected in the Container class. */
   @Override
   public void autonomousInit() {
-    autonomousCommand = robotContainer.getAutonomousCommand();
+    if (this.robotContainer == null) {
+      DriverStation.reportError("autonomousInit called with null robotContainer", false);
+    } else {
 
-    // schedule the autonomous command (example)
-    if (autonomousCommand != null) {
-      autonomousCommand.schedule();
+      this.autonomousCommand = this.robotContainer.getAutonomousCommand();
+
+      // schedule the autonomous command (example)
+      if (this.autonomousCommand != null) {
+        this.autonomousCommand.schedule();
+      }
     }
   }
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    datalog.startLoopTime();
+  }
 
   @Override
   public void teleopInit() {
@@ -106,21 +121,41 @@ public class Robot extends TimedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
-    //driveTrainType = Preferences.getString(Constants.DRIVE_TRAIN_TYPE, Constants.TANK);
-    //robotContainer.setDriveTrainType(driveTrainType);
   }
 
   /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    datalog.startLoopTime();
+  }
 
   @Override
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
+    teleopInit();
   }
 
   /** This function is called periodically during test mode. */
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+    // Empty method to stop warning message.
+    teleopPeriodic();
+  }
+
+  /** This function is called once when the robot is first started up. */
+  @Override
+  public void simulationInit() {
+    // Add code to run when the robot is initialized during simulations.
+  }
+
+  /** This function is called periodically whilst in simulation. */
+  @Override
+  public void simulationPeriodic() {
+    // Add code to run repeatedly during simulations.
+  }
+
+  public RobotContainer getrobotContainer() {
+    return robotContainer;
+  }
 }

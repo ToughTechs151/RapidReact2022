@@ -15,10 +15,7 @@ public class AutonomousNothing extends SequentialCommandGroup {
    * @param drivetrain The drivetrain subsystem on which this command will run
    */
   public AutonomousNothing(RobotContainer robotContainer) {
-    
-    addCommands(
 
-    );
-    
-  } 
+    addCommands();
+  }
 }

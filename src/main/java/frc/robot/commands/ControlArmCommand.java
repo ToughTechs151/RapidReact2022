@@ -3,9 +3,10 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands;
+
 import edu.wpi.first.wpilibj.DataLogManager;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.ArmSubsystem;
 
@@ -14,8 +15,9 @@ public class ControlArmCommand extends CommandBase {
   private double setPoint;
 
   /**
-   * ControlArmCommand - commanding the arm to move up or down and hold its position
-   * when the arm reach the final position
+   * ControlArmCommand - commanding the arm to move up or down and hold its position when the arm
+   * reach the final position
+   *
    * @param robotContainer
    * @param position
    */
@@ -24,8 +26,8 @@ public class ControlArmCommand extends CommandBase {
     addRequirements(armSubsystem); // here to declare subsystem dependencies.
     setPoint = position;
     DataLogManager.log("ControlArmCommand:" + String.format("%f", position));
- }
- 
+  }
+
   public ControlArmCommand(RobotContainer robotContainer) {
     this(robotContainer, SmartDashboard.getNumber("ARM Target", 0.0));
     DataLogManager.log("ControlArmCommand: Read position from dashboard");
@@ -38,20 +40,20 @@ public class ControlArmCommand extends CommandBase {
   }
 
   public void execute() {
-    //smartdashboard
-    //SmartDashboard.putNumber("DriveStraightPID",  );
+    // smartdashboard
+    // SmartDashboard.putNumber("DriveStraightPID",  );
   }
 
-   // Called once the command ends or is interrupted.
-   @Override
-   public void end(boolean interrupted) {
-     DataLogManager.log("arm end");
-   }
+  // Called once the command ends or is interrupted.
+  @Override
+  public void end(boolean interrupted) {
+    DataLogManager.log("arm end");
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return true;
-    //return armSubsystem.atSetpoint();
+    // return armSubsystem.atSetpoint();
   }
 }

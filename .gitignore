@@ -148,9 +148,6 @@ gradle-app.setting
 # Cache of project
 .gradletasknamecache
 
-# gradle splash generated files
-resources
-
 # # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 # gradle/wrapper/gradle-wrapper.properties
 
@@ -168,9 +165,17 @@ bin/
 # Ignore Splash Screen txt files
 src/main/resources/*.txt
 
-# Robot deploy directory
-deploy
+# Robot deploy txt files
+src/main/deploy/*.txt
 
-### NetworkTable Persistence ###
+# NetworkTable Persistence files
 networktables.ini
 networktables.ini.bak
+
+# Data Log Files
+FRC_202*
+FRC_TBD*
+datalogtool.json
+
+# Simulation Gui files
+simgui*.json
