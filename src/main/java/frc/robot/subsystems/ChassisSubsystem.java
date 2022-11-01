@@ -110,6 +110,9 @@ public class ChassisSubsystem extends SubsystemBase {
     driveTrain = new DifferentialDrive(frontLeftMotor, frontRightMotor);
     frontRightMotor.setInverted(true);
     mmgyroAngle = Constants.GYRO_NOTUSED;
+    // Calibrate the gyro
+    mmgyro.calibrate();
+    
   }
 
   @Override
