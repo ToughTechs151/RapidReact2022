@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -24,13 +25,13 @@ public class IntakeCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    System.out.println("IntakeCommand start");
+    DataLogManager.log("IntakeCommand start");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    System.out.println("IntakeCommand execute");
+    DataLogManager.log("IntakeCommand execute");
     intakeSubsystem.runIntake(dir);
     if (intakeSubsystem.isStop()) {
       isFinished = true;
@@ -40,7 +41,7 @@ public class IntakeCommand extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    System.out.println("IntakeCommand end");
+    DataLogManager.log("IntakeCommand end");
   }
 
   // Returns true when the command should end.

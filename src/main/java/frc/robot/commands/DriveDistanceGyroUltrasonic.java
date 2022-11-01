@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.ChassisSubsystem;
@@ -40,7 +41,7 @@ public class DriveDistanceGyroUltrasonic extends CommandBase {
     drive.resetGyro();
     // Sets the error tolerance to 5, and the error derivative tolerance to 10 per second
     controller.setTolerance(1, 5);
-    System.out.println("Ultrasonic start");
+    DataLogManager.log("Ultrasonic start");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -55,7 +56,7 @@ public class DriveDistanceGyroUltrasonic extends CommandBase {
   public void end(boolean interrupted) {
     drive.tankDrive(0, 0);
     controller.close();
-    System.out.println("Ultrasonic end " + interrupted);
+    DataLogManager.log("Ultrasonic end " + interrupted);
   }
 
   // Returns true when the command should end.

@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.ChassisSubsystem;
@@ -40,7 +41,7 @@ public class DriveDistanceGyroPID extends CommandBase {
     drive.resetGyro();
     // Sets the error tolerance to 5, and the error derivative tolerance to 10 per second
     controller.setTolerance(1, 5);
-    System.out.println("DriveDistanceGyroPID start");
+    DataLogManager.log("DriveDistanceGyroPID start");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -60,7 +61,7 @@ public class DriveDistanceGyroPID extends CommandBase {
   public void end(boolean interrupted) {
     drive.tankDrive(0, 0);
     controller.close();
-    System.out.println("DriveDistanceGyroPID end " + interrupted);
+    DataLogManager.log("DriveDistanceGyroPID end " + interrupted);
   }
 
   // Returns true when the command should end.

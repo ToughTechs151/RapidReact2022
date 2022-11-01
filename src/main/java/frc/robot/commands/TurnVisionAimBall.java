@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
@@ -43,7 +44,7 @@ public class TurnVisionAimBall extends CommandBase {
     controller.setTolerance(3, 5);
     m_camera.setLED(VisionLEDMode.kOn);
     yaw = 0;
-    System.out.println("TurnVisionAimBall start");
+    DataLogManager.log("TurnVisionAimBall start");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -72,7 +73,7 @@ public class TurnVisionAimBall extends CommandBase {
   public void end(boolean interrupted) {
     drive.arcadeDrive(0, 0);
     m_camera.setLED(VisionLEDMode.kOff);
-    System.out.println("TurnVisionAimBall end " + interrupted);
+    DataLogManager.log("TurnVisionAimBall end " + interrupted);
   }
 
   // Returns true when the command should end.

@@ -6,6 +6,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.ChassisSubsystem;
@@ -40,7 +41,7 @@ public class TurnDegreesGyroPID extends CommandBase {
     drive.resetGyro();
     // Sets the error tolerance to 5, and the error derivative tolerance to 10 per second
     controller.setTolerance(6, 5);
-    System.out.println("TurnDegrees start");
+    DataLogManager.log("TurnDegrees start");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -63,7 +64,7 @@ public class TurnDegreesGyroPID extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     drive.arcadeDrive(0, 0);
-    System.out.println("TurnDegreesGyroPID end " + interrupted);
+    DataLogManager.log("TurnDegreesGyroPID end " + interrupted);
   }
 
   // Returns true when the command should end.
