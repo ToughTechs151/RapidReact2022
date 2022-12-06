@@ -5,11 +5,10 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxPIDController;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -18,7 +17,9 @@ public class ArmSubsystem extends SubsystemBase {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
   private CANSparkMax armMotor = new CANSparkMax(Constants.ARM_MOTOR, MotorType.kBrushless);
-  private SparkMaxPIDController smPidController;
+  // armMotor.setSmartCurrent
+  PIDController pid = new PIDController(0, 0, 0);
+  // private SparkMaxPIDController pid;
   private RelativeEncoder armEncoder = armMotor.getEncoder();
   public double konP;
   public double konI;
@@ -44,10 +45,10 @@ public class ArmSubsystem extends SubsystemBase {
      * In order to use PID functionality for a controller, a SparkMaxPIDController object is
      * constructed by calling the getPIDController() method on an existing CANSparkMax object
      */
-    smPidController = armMotor.getPIDController();
+    // pid = armMotor.getPIDController();
 
     // The following is based on SparkMax Smart Motion Example
-    // PID coefficients
+    // f coefficients
     konP = 5e-5;
     konI = 1e-6;
     konD = 0;
@@ -59,14 +60,13 @@ public class ArmSubsystem extends SubsystemBase {
     // Smart Motion Coefficients
     maxVel = 2000; // rpm
     maxAcc = 1000;
-
     // set PID coefficients
-    smPidController.setP(konP);
-    smPidController.setI(konI);
-    smPidController.setD(konD);
-    smPidController.setIZone(konIz);
-    smPidController.setFF(konFF);
-    smPidController.setOutputRange(konMinOutput, konMaxOutput);
+    pid.setP(konP);
+    pid.setI(konI);
+    pid.setD(konD);
+    // pid.setIZone(konIz);
+    // pid.setFF(konFF);
+    // pid.setOutputRange(konMinOutput, konMaxOutput);
 
     /**
      * Smart Motion coefficients are set on a SparkMaxPIDController object.
@@ -77,17 +77,18 @@ public class ArmSubsystem extends SubsystemBase {
      * RPM^2 of the pid controller in Smart Motion mode - setSmartMotionAllowedClosedLoopError()
      * will set the max allowed error for the pid controller in Smart Motion mode
      */
-    int smartMotionSlot = 0;
-    smPidController.setSmartMotionMaxVelocity(maxVel, smartMotionSlot);
-    smPidController.setSmartMotionMinOutputVelocity(minVel, smartMotionSlot);
-    smPidController.setSmartMotionMaxAccel(maxAcc, smartMotionSlot);
+    // int smartMotionSlot = 0;
+    // pid.setSmartMotionMaxVelocity(maxVel, smartMotionSlot);
+    // pid.setSmartMotionMinOutputVelocity(minVel, smartMotionSlot);
+    // pid.setSmartMotionMaxAccel(maxAcc, smartMotionSlot);
   }
 
   /** Run subsystem code periodically. */
   @Override
   public void periodic() {
     super.periodic();
-
+    armMotor.set(pid.calculate(armEncoder.getPosition() - armSetpoint));
+    SmartDashboard.putData("Arm PID", pid);
     SmartDashboard.putNumber("ARM Speed in RPM", armEncoder.getVelocity());
     SmartDashboard.putNumber("ARM Current", armMotor.getOutputCurrent());
     SmartDashboard.putNumber("ARM get", armMotor.get());
@@ -114,10 +115,6 @@ public class ArmSubsystem extends SubsystemBase {
 
   public void armSetpoint(double armSetpoint) {
     this.armSetpoint = armSetpoint;
-    smPidController.setReference(armSetpoint, ControlType.kSmartMotion);
-  }
-
-  public boolean atSetpoint() {
-    return armEncoder.getPosition() == armSetpoint;
+    // pid.setReference(armSetpoint, ControlType.kSmartMotion);
   }
 }
